@@ -1,6 +1,5 @@
 import crypto from "crypto";
 import { ValidationError } from "@packages/error-handler";
-import { NextFunction } from "express";
 import redis from "@packages/libs/redis";
 import { sendEmail } from "./mail";
 
