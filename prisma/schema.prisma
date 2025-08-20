@@ -30,4 +30,5 @@ model User {
   avatar    Image?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  imageId   String   @db.ObjectId
 }

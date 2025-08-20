@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import bcrypt from "bcryptjs"
 import {
   checkOtpRestriction,
   sendOtp,
@@ -8,7 +9,6 @@ import {
 } from "../utils/auth.helper";
 import prisma from "@packages/libs/prisma";
 import { ValidationError } from "@packages/error-handler";
-import bcrypt from "bcryptjs";
 
 // Register a new user
 export const userRegistration = async (
