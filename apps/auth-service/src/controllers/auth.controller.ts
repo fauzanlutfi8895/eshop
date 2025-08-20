@@ -30,8 +30,8 @@ export const userRegistration = async (
       return next(new ValidationError("User already exist with this email!"));
     }
 
-    await checkOtpRestriction(email, next);
-    await trackOtpRequest(email, next);
+    await checkOtpRestriction(email);
+    await trackOtpRequest(email);
     await sendOtp(name, email, "user-activation-mail");
 
     res.status(200).json({
@@ -63,10 +63,11 @@ export const verifyUser = async (
       return next(new ValidationError("User already exist with this email!"));
     }
 
-    await verifyOtp(email, otp, next);
+    await verifyOtp(email, otp);
 
     const hashPassword = await bcrypt.hash(password, 10);
 
+    //Todo: Nama & Password beda masih bisa
     await prisma.user.create({
       data: {
         name,

@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "npx nx run-many --target=serve -all",
-    "auth-docs": "node apps/auth-service/src/swagger.js"
+    "auth-docs": "cd apps/auth-service/src && node swagger.js"
   },
   "private": true,
   "dependencies": {
