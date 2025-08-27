@@ -11,7 +11,7 @@ import {
 } from "../utils/auth.helper";
 import prisma from "@packages/libs/prisma";
 import { AuthError, ValidationError } from "@packages/error-handler";
-import jwt from "jsonwebtoken";
+import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import { setCookie } from "../utils/cookie";
 
 // Register a new user
@@ -143,6 +143,53 @@ export const loginUser = async (
   }
 };
 
+export const refreshToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const refreshToken = req.cookies.refresh_token;
+
+    if (!refreshToken)
+      return next(new ValidationError("Unauthorized! No refresh token."));
+
+    const decoded = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET as string
+    ) as { id: string; role: string };
+
+    if (!decoded || !decoded.id || !decoded.role) {
+      return next(new JsonWebTokenError("Forbidden! Invalid refresh token."));
+    }
+
+    // let account;
+    // if(decoded.role === "user")
+    const user = await prisma.user.findUnique({
+      where: {
+        id: decoded.id,
+      },
+    });
+
+    if(!user){
+      return next(new AuthError("Forbidden! User/Seller not found"))
+    }
+
+    const newAccessToken = jwt.sign({
+      id: decoded.id,
+      role: decoded.role
+    }, process.env.ACCESS_TOKEN_SECRET as string, {expiresIn: "15m"});
+
+    setCookie(res, "access_token", newAccessToken);
+    return res.status(201).json({
+      success: true
+    })
+
+  } catch (error) {
+    return next(error);
+  }
+};
+
 export const userForgotPassword = async (
   req: Request,
   res: Response,
@@ -170,7 +217,7 @@ export const resetPassword = async (
       return next(new ValidationError("Email and new password are required!"));
 
     const user = await prisma.user.findUnique({
-      where: email,
+      where: { email },
     });
     if (!user) throw next(new ValidationError("User not found!"));
 
@@ -187,7 +234,7 @@ export const resetPassword = async (
     const hashPassword = await bcrypt.hash(newPassword, 10);
 
     await prisma.user.update({
-      where: email,
+      where: { email },
       data: {
         password: hashPassword,
       },
