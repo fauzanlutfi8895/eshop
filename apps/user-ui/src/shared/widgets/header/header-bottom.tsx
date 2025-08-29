@@ -1,5 +1,6 @@
 "use client";
 import { navItem } from "apps/user-ui/src/app/config/constant";
+import useUser from "apps/user-ui/src/hooks/useUser";
 import {
   AlignLeft,
   ChevronDown,
@@ -13,6 +14,7 @@ import React, { useEffect, useState } from "react";
 const HeaderBottom = () => {
   const [show, setShow] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+  const { user, isLoading } = useUser();
 
   //Track scroll position
   useEffect(() => {
@@ -76,20 +78,41 @@ const HeaderBottom = () => {
 
         <div>
           {isSticky && (
-            <div className="flex items-center gap-8 pb-2">
-              <div className="flex items-center gap-2">
-                <Link
-                  href={"/login"}
-                  className="border-2 flex items-center justify-center rounded-full w-[50px] h-[50px] border-gray-300"
-                >
-                  <User />
-                </Link>
-                <Link href={"/login"}>
-                  <span className="block font-medium">Hello, </span>
-                  <span className="font-semibold">Sign In</span>
-                </Link>
+            <>
+              <div className="flex items-center gap-8">
+                {!isLoading && user ? (
+                  <>
+                    <Link
+                      href={"/profile"}
+                      className="border-2 flex items-center justify-center rounded-full w-[50px] h-[50px] border-gray-300"
+                    >
+                      <User />
+                    </Link>
+                    <Link href={"/profile"}>
+                      <span className="block font-medium">Hello, </span>
+                      <span className="font-semibold">
+                        {user?.name.split(" ")[0]}
+                      </span>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href={"/login"}
+                      className="border-2 flex items-center justify-center rounded-full w-[50px] h-[50px] border-gray-300"
+                    >
+                      <User />
+                    </Link>
+                    <Link href={"/login"}>
+                      <span className="block font-medium">Hello, </span>
+                      <span className="font-semibold">
+                        {isLoading ? "..." : "Sign In"}
+                      </span>
+                    </Link>
+                  </>
+                )}
               </div>
-              <div className="flex items-center gap-5">
+              <div className="gap-5 flex">
                 <Link href={"/whislist"} className="relative">
                   <HeartIcon />
                   <div className="w-6 h-6 bg-red-500 border-2 border-white rounded-full absolute top-[-10px] right-[-10px] flex items-center justify-center">
@@ -103,7 +126,7 @@ const HeaderBottom = () => {
                   </div>
                 </Link>
               </div>
-            </div>
+            </>
           )}
         </div>
       </div>

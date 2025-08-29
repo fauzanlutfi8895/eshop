@@ -171,22 +171,37 @@ export const refreshToken = async (
       },
     });
 
-    if(!user){
-      return next(new AuthError("Forbidden! User/Seller not found"))
+    if (!user) {
+      return next(new AuthError("Forbidden! User/Seller not found"));
     }
 
-    const newAccessToken = jwt.sign({
-      id: decoded.id,
-      role: decoded.role
-    }, process.env.ACCESS_TOKEN_SECRET as string, {expiresIn: "15m"});
+    const newAccessToken = jwt.sign(
+      {
+        id: decoded.id,
+        role: decoded.role,
+      },
+      process.env.ACCESS_TOKEN_SECRET as string,
+      { expiresIn: "15m" }
+    );
 
     setCookie(res, "access_token", newAccessToken);
     return res.status(201).json({
-      success: true
-    })
-
+      success: true,
+    });
   } catch (error) {
     return next(error);
+  }
+};
+
+export const getUser = async (req: any, res: Response, next: NextFunction) => {
+  try {
+    const user = req.user;
+    res.status(201).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    next(error);
   }
 };
 
