@@ -114,18 +114,10 @@ export const handleForgotPassword = async (
     if (!email) throw new ValidationError("Email is required!");
 
     //find user/seller in DB
-    let user;
-    if (userType === "seller") {
-      // Menggunakan prisma.seller jika userType adalah 'seller'
-      // user = await prisma.seller.findUnique({
-      //   where: { email: email },
-      // });
-    } else {
-      // Menggunakan prisma.user jika userType adalah 'user'
-      user = await prisma.user.findUnique({
-        where: { email },
-      });
-    }
+    const user =
+      userType === "user"
+        ? await prisma.user.findUnique({ where: { email } })
+        : await prisma.seller.findUnique({ where: { email } });
 
     if (!user) throw new ValidationError(`${userType} not found!`);
 
@@ -134,7 +126,13 @@ export const handleForgotPassword = async (
     await trackOtpRequest(email, next);
 
     //Generate OTP and send mail
-    await sendOtp(user.name, email, "forgot-password-user-mail");
+    await sendOtp(
+      user.name,
+      email,
+      userType === "user"
+        ? "forgot-password-user-mail"
+        : "forgot-password-seller-mail"
+    );
 
     res.status(200).json({
       message: "OTP sent to email. Please verify your account.",
