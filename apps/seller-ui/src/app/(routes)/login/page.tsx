@@ -26,22 +26,28 @@ const Login = () => {
   } = useForm<FormData>();
 
   const loginMutation = useMutation({
-    mutationFn: async(data: FormData) => {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/login`, data, {withCredentials: true})
+    mutationFn: async (data: FormData) => {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URI}/api/login-seller`,
+        data,
+        { withCredentials: true }
+      );
       return response.data;
     },
     onSuccess: (data) => {
       setServerError(null);
-      router.push("/")
+      router.push("/");
     },
     onError: (error: AxiosError) => {
-      const errorMessage = (error.response?.data as {message?: string})?.message || "Invalid credentials";
-      setServerError(errorMessage)
-    }
-  })
+      const errorMessage =
+        (error.response?.data as { message?: string })?.message ||
+        "Invalid credentials";
+      setServerError(errorMessage);
+    },
+  });
 
   const onSubmit = (data: FormData) => {
-    loginMutation.mutate(data)
+    loginMutation.mutate(data);
   };
   return (
     <div className="w-full py-10 min-h-screen bg-[#f1f1f1]">
@@ -138,7 +144,7 @@ const Login = () => {
               {loginMutation?.isPending ? "Loggin in..." : "Login"}
             </button>
             {serverError && (
-                <p className="text-red-500 text-sm mt-2">{serverError}</p>
+              <p className="text-red-500 text-sm mt-2">{serverError}</p>
             )}
           </form>
         </div>

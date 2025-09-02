@@ -5,9 +5,10 @@ import jwt from "jsonwebtoken";
 const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
   try {
     const token =
-      req.cookies.access_token || req.headers.authorization?.split(" ")[1];
+      req.cookies["access_token"] ||
+      req.cookies["seller_access_token"] ||
+      req.headers.authorization?.split(" ")[1];
 
-    
     if (!token) {
       return res.status(401).json({
         message: "Unauthorized! Token missing.",
@@ -20,27 +21,40 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
       role: "user" | "seller";
     };
 
-
     if (!decoded) {
       return res.status(401).json({
         message: "Unauthorized! Invalid token.",
       });
     }
 
+    let account;
     //rentan error di prisma (salah nama) bukan prismadb
-    const account = await prisma.user.findUnique({
-      where: {
-        id: decoded.id,
-      },
-    });
-
-    req.user = account;
+    if (decoded.role === "user") {
+      account = await prisma.user.findUnique({
+        where: {
+          id: decoded.id,
+        },
+      });
+      req.user = account;
+    } else if (decoded.role === "seller") {
+      account = await prisma.seller.findUnique({
+        where: {
+          id: decoded.id,
+        },
+        include: {
+          shop: true
+        }
+      });
+      req.seller = account;
+    }
 
     if (!account) {
       return res.status(401).json({
         message: "Account not found!.",
       });
     }
+
+    req.role = decoded.role
 
     return next();
   } catch (error) {
