@@ -7,7 +7,7 @@ import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios, { AxiosError } from "axios";
 import { countries } from "apps/seller-ui/src/utils/countries";
-import CreateShop from "../../shared/module/auth/create-shop";
+import CreateShop from "../../../shared/module/auth/create-shop";
 import StripeLogo from "apps/seller-ui/src/asset/svg/stripe-logo";
 
 const Signup = () => {

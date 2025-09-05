@@ -6,7 +6,7 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
   try {
     const token =
       req.cookies["access_token"] ||
-      req.cookies["seller_access_token"] ||
+      req.cookies["seller-access-token"] ||
       req.headers.authorization?.split(" ")[1];
 
     if (!token) {
@@ -42,8 +42,8 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
           id: decoded.id,
         },
         include: {
-          shop: true
-        }
+          shop: true,
+        },
       });
       req.seller = account;
     }
@@ -54,7 +54,7 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
       });
     }
 
-    req.role = decoded.role
+    req.role = decoded.role;
 
     return next();
   } catch (error) {
