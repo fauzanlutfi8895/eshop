@@ -80,4 +80,8 @@ model Seller {
   updatedAt    DateTime @updatedAt
 }
 
-// product
+model site_config {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  categories    String[]
+  subCategories Json
+}
