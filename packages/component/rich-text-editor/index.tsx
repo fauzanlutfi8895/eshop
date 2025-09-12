@@ -1,6 +1,12 @@
-import React, { useRef, useState, useMemo } from "react";
+"use client";
+
+import React, { useState, useMemo } from "react";
 import "react-quill-new/dist/quill.snow.css";
-import ReactQuill from "react-quill-new";
+import dynamic from "next/dynamic";
+
+const ReactQuill = dynamic(() => import("react-quill-new"), {
+  ssr: false,
+});
 
 const RichTextEditor = ({
   value,
@@ -10,22 +16,21 @@ const RichTextEditor = ({
   onChange: (content: string) => void;
 }) => {
   const [editorValue, setEditorValue] = useState(value || "");
-  const quillRef = useRef<ReactQuill | null>(null);
 
-  //   useEffect(() => {
-  //     if (!quillRef.current) {
-  //       quillRef.current = true; //Mark as mounted
+  // useEffect(() => {
+  //   if (!quillRef.current) {
+  //     quillRef.current = true; //Mark as mounted
 
-  //       //Ensure only one toolbar is present
-  //       setTimeout(() => {
-  //         document.querySelectorAll(".ql-toolbar").forEach((toolbar, index) => {
-  //           if (index > 0) {
-  //             toolbar.remove(); //remove extra toolbars
-  //           }
-  //         });
-  //       }, 100); //short delay ensure Quill is fully initialized
-  //     }
-  //   }, []);
+  //     //Ensure only one toolbar is present
+  //     setTimeout(() => {
+  //       document.querySelectorAll(".ql-toolbar").forEach((toolbar, index) => {
+  //         if (index > 0) {
+  //           toolbar.remove(); //remove extra toolbars
+  //         }
+  //       });
+  //     }, 100); //short delay ensure Quill is fully initialized
+  //   }
+  // }, []);
 
   const modules = useMemo(
     () => ({
@@ -51,7 +56,6 @@ const RichTextEditor = ({
     <div className="relative">
       {/* No Duplicate Quill instance */}
       <ReactQuill
-        ref={quillRef}
         theme="snow"
         value={editorValue}
         onChange={(content) => {

@@ -3,21 +3,22 @@ import { Controller, useFieldArray } from "react-hook-form";
 import Input from "../input";
 import { PlusCircle, Trash } from "lucide-react";
 
-const CustomSpesification = ({ control, error }: any) => {
+const CustomSpecification = ({ control, error }: any) => {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "custom_spesification",
+    name: "custom_specification",
   });
   return (
     <div>
       <label className="block font-semibold text-gray-300 mb-1">
-        Custom Spesification
+        Custom Specification
       </label>
       <div className="flex flex-col gap-3">
         {fields.map((value, index) => (
+          //value.id diambil dari fields yg otomatis punya sendiri ketika deklarasi
           <div key={value.id} className="flex gap-2 ">
             <Controller
-              name={`custom-specification.${index}.name`}
+              name={`custom_specification.${index}.name`}
               control={control}
               rules={{ required: "Specification name is required" }}
               //field harus di dalam object, (options)
@@ -30,7 +31,7 @@ const CustomSpesification = ({ control, error }: any) => {
               )}
             />
             <Controller
-              name={`custom-specification.${index}.value`}
+              name={`custom_specification.${index}.value`}
               control={control}
               rules={{ required: "Value is required" }}
               render={({ field }) => (
@@ -55,16 +56,16 @@ const CustomSpesification = ({ control, error }: any) => {
           className="flex items-center gap-2 text-blue-500 hover:text-blue-600"
           onClick={() => append({ name: "", value: "" })}
         >
-          <PlusCircle size={20} /> Add Spesification
+          <PlusCircle size={20} /> Add Specification
         </button>
       </div>
-      {error?.custom_spesification && (
+      {error?.custom_specification && (
         <p className="text-red-500 text-xs mt-1">
-          {error.custom_spesification.message as string}
+          {error.custom_specification.message as string}
         </p>
       )}
     </div>
   );
 };
 
-export default CustomSpesification;
+export default CustomSpecification;

@@ -181,13 +181,13 @@ const SidebarBarWrapper = () => {
             </SidebarMenu>
             <SidebarMenu title={"Extras"}>
               <SidebarItem
-                isActive={activeSidebar === "/dashboard/dicount-codes"}
+                isActive={activeSidebar === "/dashboard/discount-codes"}
                 title="Discount Codes"
-                href="/dashboard/dicount-codes"
+                href="/dashboard/discount-codes"
                 icon={
                   <TicketPercent
                     size={22}
-                    color={getIconColor("/dashboard/dicount-codes")}
+                    color={getIconColor("/dashboard/discount-codes")}
                   />
                 }
               />

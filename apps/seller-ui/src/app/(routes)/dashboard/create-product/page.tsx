@@ -1,16 +1,25 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import ImagePlaceHolder from "apps/seller-ui/src/shared/component/image-placeholder";
+import { enhancements } from "apps/seller-ui/src/utils/AI.enhancement";
 import axiosInstance from "apps/seller-ui/src/utils/axiosInstance";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Wand, X } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import ColorSelector from "packages/component/color-selector";
 import CustomProperties from "packages/component/custom-properties";
-import CustomSpesification from "packages/component/custom-spesification";
+import CustomSpecification from "packages/component/custom-spesification";
 import Input from "packages/component/input";
 import RichTextEditor from "packages/component/rich-text-editor";
 import SizeSelector from "packages/component/size-selector";
 import React, { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import toast, { Toaster } from "react-hot-toast";
+
+interface UploadedImage {
+  fileId: string;
+  file_url: string;
+}
 
 const Page = () => {
   const {
@@ -24,8 +33,13 @@ const Page = () => {
 
   const [openImageModal, setOpenImageModal] = useState(false);
   const [isChanged, setIsChanged] = useState(true);
-  const [images, setImages] = useState<(File | null)[]>([null]);
+  const [activeEffect, setActiveEffect] = useState<string | null>(null);
+  const [images, setImages] = useState<(UploadedImage | null)[]>([null]);
+  const [selectedImage, setSelectedImage] = useState("");
+  const [pictureUploadingLoader, setPictureUploadingLoader] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [processing, setProcessing] = useState(false);
+  const router = useRouter();
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["categories"],
@@ -42,6 +56,14 @@ const Page = () => {
     retry: 2,
   });
 
+  const { data: discountCodes = [], isLoading: discountLoading } = useQuery({
+    queryKey: ["shop-discounts"],
+    queryFn: async () => {
+      const res = await axiosInstance.get("/product/api/get-discount-code");
+      return res?.data?.discount_codes || [];
+    },
+  });
+
   const categoriesData = data?.categories || [];
   const subCategoriesData = data?.subCategories || {};
 
@@ -53,22 +75,124 @@ const Page = () => {
 
   console.log(categoriesData, subCategoriesData);
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const onSubmit = async (data: any) => {
+    try {
+      setLoading(true);
+      await axiosInstance.post("/product/api/create-product", data);
+      router.push("/dashboard/all-product");
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        "Something went wrong!";
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleImageChange = (file: File | null, index: number) => {
-    const updatedImages = [...images];
+  const convertFileToBase64 = (file: File) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
 
-    updatedImages[index] = file;
+  const handleImageChange = async (file: File | null, index: number) => {
+    if (!file) return;
+    setPictureUploadingLoader(true);
 
-    //pada akhir gambar memberikan placeholder null menampilkan kosong
-    if (index === images.length - 1 && images.length < 8) {
-      updatedImages.push(null);
+    try {
+      const fileName = await convertFileToBase64(file);
+
+      const response = await axiosInstance.post(
+        "/product/api/upload-product-image",
+        { fileName }
+      );
+
+      const updatedImages = [...images];
+      const uploadedImage = {
+        fileId: response.data.fileId,
+        file_url: response.data.file_url,
+      };
+
+      updatedImages[index] = uploadedImage;
+
+      if (index === images.length - 1 && updatedImages.length < 8) {
+        updatedImages.push(null);
+      }
+
+      setImages(updatedImages);
+      setValue("images", updatedImages);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setPictureUploadingLoader(false);
     }
+  };
 
-    setImages(updatedImages);
-    setValue("images", updatedImages);
+  const handleRemoveImage = async (index: number) => {
+    try {
+      const updatedImages = [...images];
+
+      const imageToDelete = updatedImages[index];
+
+      if (imageToDelete && typeof imageToDelete === "object") {
+        await axiosInstance.delete("/product/api/delete-product-image", {
+          data: {
+            fileId: imageToDelete.fileId,
+          },
+        });
+      }
+
+      updatedImages.splice(index, 1);
+
+      //add null placeholder
+      if (!updatedImages.includes(null) && updatedImages.length < 8) {
+        updatedImages.push(null);
+      }
+
+      setImages(updatedImages);
+      setValue("images", updatedImages);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const applyTransformation = async (transformation: string) => {
+    if (!selectedImage || processing) return;
+    setProcessing(true);
+    setActiveEffect(transformation);
+
+    try {
+      const baseUrl = selectedImage.split("?tr=")[0];
+      const transformedUrl = `${baseUrl}?tr=${transformation}`;
+
+      // Fungsi helper untuk cek apakah image masih intermediate
+      const checkReady = async () => {
+        const res = await fetch(transformedUrl, { method: "HEAD" });
+        const isIntermediate = res.headers.get("is-intermediate-response");
+        return isIntermediate !== "true"; // true berarti sudah siap
+      };
+
+      // Polling setiap 3 detik sampai image siap
+      let ready = false;
+      while (!ready) {
+        ready = await checkReady();
+        if (!ready) {
+          console.log("Masih diproses...");
+          await new Promise((r) => setTimeout(r, 1000));
+        }
+      }
+
+      setSelectedImage(transformedUrl);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleSaveDraft = () => {};
@@ -94,23 +218,31 @@ const Page = () => {
         <div className="md:w-[35%]">
           {images?.length > 0 && (
             <ImagePlaceHolder
+              pictureUploadingLoader={pictureUploadingLoader}
               setOpenImageModal={setOpenImageModal}
               size="765 x 850"
               small={false}
+              images={images}
               index={0}
               onImageChange={handleImageChange}
+              setSelectedImage={setSelectedImage}
+              onRemove={handleRemoveImage}
             />
           )}
           {/* If images more than 1, so start from index 1 */}
           <div className="grid grid-cols-2 gap-3 mt-4">
             {images.slice(1).map((_, i) => (
               <ImagePlaceHolder
+                pictureUploadingLoader={pictureUploadingLoader}
                 setOpenImageModal={setOpenImageModal}
+                images={images}
                 key={i}
                 size="765 x 850"
                 small
                 index={i + 1}
+                setSelectedImage={setSelectedImage}
                 onImageChange={handleImageChange}
+                onRemove={handleRemoveImage}
               />
             ))}
           </div>
@@ -137,7 +269,7 @@ const Page = () => {
                   cols={10}
                   label="Short Description * (Max 150 words)"
                   placeholder="Enter product description for quick view"
-                  {...register("description", {
+                  {...register("short_description", {
                     required: "Description is required",
                     validate: (value) => {
                       const wordCount = value.trim().split(/\s+/).length;
@@ -148,6 +280,11 @@ const Page = () => {
                     },
                   })}
                 />
+                {errors.short_description && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.short_description.message as string}
+                  </p>
+                )}
               </div>
               <div className="mt-2">
                 <Input
@@ -220,7 +357,7 @@ const Page = () => {
                 <ColorSelector control={control} error={errors} />
               </div>
               <div className="mt-2">
-                <CustomSpesification control={control} error={errors} />
+                <CustomSpecification control={control} error={errors} />
               </div>
               <div className="mt-2">
                 <CustomProperties control={control} error={errors} />
@@ -367,6 +504,11 @@ const Page = () => {
                     />
                   )}
                 />
+                {errors.detailed_description && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.detailed_description.message as string}
+                  </p>
+                )}
               </div>
               <div className="mt-2">
                 <Input
@@ -375,12 +517,17 @@ const Page = () => {
                   {...register("video_url", {
                     pattern: {
                       value:
-                        /^https:\/\/(www\.)?youtube\.com\/embed\/[a-zA-Z0-9_-]+$/,
+                        /^https:\/\/(www\.)?youtube\.com\/embed\/[a-zA-Z0-9_-]{11}(\?.*)?$/,
                       message:
                         "Invalid Youtube embed URL! Use Format: https://www.youtube.com/embed/dQw4w9WgXcQ?si=fkqlZWh9j0xi514W",
                     },
                   })}
                 />
+                {errors.video_url && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.video_url.message as string}
+                  </p>
+                )}
               </div>
               <div className="mt-2">
                 <Input
@@ -422,6 +569,11 @@ const Page = () => {
                     },
                   })}
                 />
+                {errors.sale_price && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.sale_price.message as string}
+                  </p>
+                )}
               </div>
               <div className="mt-2">
                 <Input
@@ -446,6 +598,11 @@ const Page = () => {
                     },
                   })}
                 />
+                {errors.stock && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.stock.message as string}
+                  </p>
+                )}
               </div>
               <div className="mt-2">
                 <SizeSelector control={control} error={errors} />
@@ -454,11 +611,104 @@ const Page = () => {
                 <label className="block font-semibold text-gray-300 mb-1">
                   Select Discount Codes (optional)
                 </label>
+                {discountLoading ? (
+                  <p className="text-gray-400">Loading discount codes....</p>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {discountCodes?.map((code: any) => (
+                      <button
+                        key={code.id}
+                        type="button"
+                        className={`px-3 py-1 rounded-md text-sm font-semibold border ${
+                          watch("discountCodes")?.includes(code.id)
+                            ? "bg-blue-600 text-white border-blue-600"
+                            : "bg-gray-800 text-gray-300 border-gray-600 hover:bg-gray-700"
+                        }`}
+                        onClick={() => {
+                          //Pada awal jika belum ada, otomatis array kosong
+                          const currentSelection = watch("discountCodes") || [];
+                          const updateSelection = currentSelection?.includes(
+                            code.id
+                          )
+                            ? currentSelection?.filter(
+                                (id: string) => id !== code.id
+                              )
+                            : [...currentSelection, code.id];
+                          setValue("discountCodes", updateSelection); //setValue untuk menyimpan input tombol toggle banyak
+                        }}
+                      >
+                        {code?.public_name} (
+                        {code.discountType === "percentage"
+                          ? `${code.discountValue}%`
+                          : `$${code.discountValue}`}
+                        )
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {errors.discountCodes && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.discountCodes.message as string}
+                  </p>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
+      {openImageModal && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-60 z-50">
+          <div className="bg-gray-800 p-6 rounded-lg w-[450px] text-white">
+            <div className="flex justify-between items-center pb-3 mb-4">
+              <h2 className="text-lg font-semibold">Enhance Product Image</h2>
+              <X
+                size={20}
+                className="cursor-pointer"
+                onClick={() => setOpenImageModal(!openImageModal)}
+              />
+            </div>
+            <div className="relative w-full h-[250px] rounded-md overflow-hidden border border-gray-600 flex items-center justify-center">
+              {/* SelectedImage berisi file_url */}
+              {processing ? (
+                // Saat sedang applyTransformation
+                <p className="text-gray-400 text-sm animate-pulse">
+                  Please wait, enhancement in progress...
+                </p>
+              ) : selectedImage ? (
+                <Image src={selectedImage} alt="product-image" layout="fill" />
+              ) : (
+                // Saat belum ada gambar sama sekali
+                <p className="text-gray-500 text-sm">No image selected</p>
+              )}
+            </div>
+            {selectedImage && (
+              <div className="mt-4 space-y-2">
+                <h3 className="text-white text-sm font-semibold">
+                  AI Enhancements
+                </h3>
+                <div className="grid grid-cols-2 gap-3 max-h-[250px] overflow-y-auto">
+                  {enhancements?.map(({ label, effect }) => (
+                    <button
+                      type="button"
+                      key={effect}
+                      className={`p-2 rounded-md flex items-center gap-2 ${
+                        activeEffect === effect
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-700 enabled:hover:bg-gray-600"
+                      } disabled:opacity-70 disabled:cursor-not-allowed`}
+                      onClick={() => applyTransformation(effect)}
+                      disabled={processing}
+                    >
+                      <Wand size={18} />
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       <div className="mt-6 flex justify-end gap-3">
         {isChanged && (
           <button

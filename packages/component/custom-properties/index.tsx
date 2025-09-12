@@ -15,7 +15,7 @@ const CustomProperties = ({ control, error }: any) => {
     <div>
       <div className="flex flex-col gap-3">
         <Controller
-          name="customProperties"
+          name="custom_properties"
           control={control}
           //field PENTING untuk menyimpan nilai final di form (update ke form)
           render={({ field }) => {

@@ -9,7 +9,10 @@ type ImagePlaceHolderProps = {
   onRemove?: (index: number) => void;
   defaultImage?: string | null;
   index?: any;
+  setSelectedImage: (e: string) => void;
   setOpenImageModal: (openImageModal: boolean) => void;
+  images: any;
+  pictureUploadingLoader: boolean;
 };
 
 const ImagePlaceHolder = ({
@@ -20,6 +23,9 @@ const ImagePlaceHolder = ({
   defaultImage = null,
   index = null,
   setOpenImageModal,
+  setSelectedImage,
+  images,
+  pictureUploadingLoader,
 }: ImagePlaceHolderProps) => {
   const [imagePreview, setImagePreview] = useState<string | null>(defaultImage);
 
@@ -48,15 +54,21 @@ const ImagePlaceHolder = ({
       {imagePreview ? (
         <>
           <button
+            disabled={pictureUploadingLoader}
             type="button"
             onClick={() => onRemove?.(index!)}
-            className="absolute top-3 right-3 p-2 rounded-sm bg-red-600 shadow-lg"
+            className="absolute top-3 right-3 p-2 rounded-sm bg-red-600 shadow-lg enabled:hover:bg-red-700 disabled:opacity-70 disabled:cursor-not-allowed"
           >
             <X size={16} />
           </button>
           <button
-            className="absolute top-3 right-[70px] p-2 rounded-sm bg-blue-500 shadow-lg"
-            onClick={() => setOpenImageModal(true)}
+            type="button"
+            disabled={pictureUploadingLoader}
+            className="absolute top-3 right-[70px] p-2 rounded-sm bg-blue-500 shadow-lg enabled:hover:bg-blue-600 disabled:opacity-70 disabled:cursor-not-allowed"
+            onClick={() => {
+              setOpenImageModal(true);
+              setSelectedImage(images[index].file_url);
+            }}
           >
             <WandSparkles />
           </button>
@@ -64,7 +76,7 @@ const ImagePlaceHolder = ({
       ) : (
         <label
           htmlFor={`image-upload-${index}`}
-          className="absolute top-3 right-3 p-2 rounded-sm bg-slate-700 shadow-lg cursor-pointer"
+          className="absolute top-3 right-3 p-2 rounded-sm bg-slate-700 shadow-lg cursor-pointer hover:bg-slate-800"
         >
           <Pencil size={16} />
         </label>

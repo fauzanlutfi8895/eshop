@@ -1,8 +1,34 @@
 import express, { Router } from "express";
-import { getCategories } from "../controllers/product.controller";
+import {
+  createDiscountCodes,
+  createProduct,
+  deleteDiscountCodes,
+  deleteProductImage,
+  getCategories,
+  getDiscountCodes,
+  getShopProduct,
+  uploadProductImage,
+} from "../controllers/product.controller";
+import isAuthenticated from "@packages/middleware/isAuthenticated";
 
 const router: Router = express.Router();
 
-router.get("/get-categories", getCategories)
+router.get("/get-categories", getCategories);
+
+router.post("/create-discount-code", isAuthenticated, createDiscountCodes);
+router.get("/get-discount-code", isAuthenticated, getDiscountCodes);
+router.delete(
+  "/delete-discount-code/:id",
+  isAuthenticated,
+  deleteDiscountCodes
+);
+
+//ImageKit
+router.post("/upload-product-image", isAuthenticated, uploadProductImage);
+router.delete("/delete-product-image", isAuthenticated, deleteProductImage);
+
+//product
+router.post("/create-product", isAuthenticated, createProduct);
+router.get("/get-shop-products", isAuthenticated, getShopProduct);
 
 export default router;

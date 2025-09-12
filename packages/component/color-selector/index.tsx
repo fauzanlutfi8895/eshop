@@ -35,10 +35,11 @@ const ColorSelector = ({ control, error }: any) => {
                   type="button"
                   key={color}
                   onClick={() =>
+                    //Menentukan isi nilai colors
                     field.onChange(
                       isSelected
-                        ? field.value.filter((c: string) => c !== color)
-                        : [...(field.value || []), color]
+                        ? field.value.filter((c: string) => c !== color) //field.value (yg sudah terpilih) lalu di iterasi masing masing (c), lalu dibandingkan dengan color (saat ini), hasil akhirnya array
+                        : [...(field.value || []), color] //jika tidak, tambahkan color ke array nya OnChange (value dari {colors}), jika field value nya kosong buat array kosong [], tambahkan warna baru saat ini
                     )
                   }
                   className={`w-7 h-7 p-2 rounded-md my-1 flex items-center justify-center border-2 transition ${
