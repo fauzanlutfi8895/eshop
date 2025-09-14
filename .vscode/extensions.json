@@ -3,5 +3,6 @@
     "nrwl.angular-console",
     "esbenp.prettier-vscode",
     "firsttris.vscode-jest-runner"
-  ]
+  ],
+  "unwantedRecommendations": ["wushuaibuaa.autocomplete-english-word"]
 }

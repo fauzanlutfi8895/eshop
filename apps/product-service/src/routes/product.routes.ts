@@ -3,10 +3,12 @@ import {
   createDiscountCodes,
   createProduct,
   deleteDiscountCodes,
+  deleteProduct,
   deleteProductImage,
   getCategories,
   getDiscountCodes,
   getShopProduct,
+  restoreProduct,
   uploadProductImage,
 } from "../controllers/product.controller";
 import isAuthenticated from "@packages/middleware/isAuthenticated";
@@ -30,5 +32,7 @@ router.delete("/delete-product-image", isAuthenticated, deleteProductImage);
 //product
 router.post("/create-product", isAuthenticated, createProduct);
 router.get("/get-shop-products", isAuthenticated, getShopProduct);
+router.delete("/delete-product/:productId", isAuthenticated, deleteProduct);
+router.put("/restore-product/:productId", isAuthenticated, restoreProduct);
 
 export default router;
