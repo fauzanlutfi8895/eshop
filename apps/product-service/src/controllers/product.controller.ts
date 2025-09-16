@@ -5,6 +5,7 @@ import {
 } from "@packages/error-handler";
 import { imagekit } from "@packages/libs/imageKit";
 import prisma from "@packages/libs/prisma";
+import { Prisma } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 
 // Get product categories
@@ -196,6 +197,7 @@ export const createProduct = async (
       sizes = [],
       discountCodes = [],
       stock,
+      totalSales,
       sale_price,
       regular_price,
       subCategory,
@@ -256,11 +258,15 @@ export const createProduct = async (
         colors: Array.isArray(colors) ? colors : [],
         sizes: Array.isArray(sizes) ? sizes : [],
 
+        starting_date: null,
+        ending_date: null,
+
         discountCodes: Array.isArray(discountCodes)
           ? discountCodes.map((codeId: string) => codeId)
           : [],
 
         stock: stock ? parseInt(stock) : 0,
+        totalSales: totalSales ? parseInt(totalSales) : 0,
         sale_price: sale_price ? parseFloat(sale_price) : 0,
         regular_price: regular_price ? parseFloat(regular_price) : 0,
 
@@ -330,31 +336,31 @@ export const deleteProduct = async (
   next: NextFunction
 ) => {
   try {
-    const {productId} = req.params;
+    const { productId } = req.params;
     const sellerId = req.seller?.shop?.id;
 
     const product = await prisma.product.findUnique({
       where: {
-        id: productId
+        id: productId,
       },
       select: {
-        id: true, 
+        id: true,
         shopId: true,
-        isDeleted: true
-      }
-    })
+        isDeleted: true,
+      },
+    });
 
-    if(!product){
-      return next(new ValidationError("Product not found"))
+    if (!product) {
+      return next(new ValidationError("Product not found"));
     }
 
     //validation for user Shop only
-    if(product.shopId !== sellerId){
-      return next(new ValidationError("Unauthorized action"))
+    if (product.shopId !== sellerId) {
+      return next(new ValidationError("Unauthorized action"));
     }
 
-    if(product.isDeleted){
-      return next(new ValidationError("Product is already deleted"))
+    if (product.isDeleted) {
+      return next(new ValidationError("Product is already deleted"));
     }
 
     const deletedProduct = await prisma.product.update({
@@ -363,17 +369,17 @@ export const deleteProduct = async (
       },
       data: {
         isDeleted: true,
-        deletedAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
-      }
-    })
+        deletedAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
+    });
 
     return res.status(200).json({
-      message: "Product is scheduled for deletion in 24 hours. You can restore it within this time before deleted time",
-      deletedAt: deletedProduct.deletedAt 
-    })
-
+      message:
+        "Product is scheduled for deletion in 24 hours. You can restore it within this time before deleted time",
+      deletedAt: deletedProduct.deletedAt,
+    });
   } catch (error) {
-    return next(error)
+    return next(error);
   }
 };
 
@@ -384,53 +390,120 @@ export const restoreProduct = async (
   next: NextFunction
 ) => {
   try {
-    const {productId} = req.params;
+    const { productId } = req.params;
     const sellerId = req.seller?.shop?.id;
 
     const product = await prisma.product.findUnique({
       where: {
-        id: productId
+        id: productId,
       },
       select: {
-        id: true, 
+        id: true,
         shopId: true,
-        isDeleted: true
-      }
-    })
+        isDeleted: true,
+      },
+    });
 
-    if(!product){
-      return next(new ValidationError("Product not found"))
+    if (!product) {
+      return next(new ValidationError("Product not found"));
     }
 
     //validation for user Shop only
-    if(product.shopId !== sellerId){
-      return next(new ValidationError("Unauthorized action"))
+    if (product.shopId !== sellerId) {
+      return next(new ValidationError("Unauthorized action"));
     }
 
-    if(!product.isDeleted){
+    if (!product.isDeleted) {
       return res.status(400).json({
-        message: "Product is not in deleted state"
-      })
+        message: "Product is not in deleted state",
+      });
     }
 
     await prisma.product.update({
       where: {
-        id: productId
+        id: productId,
       },
       data: {
         isDeleted: false,
-        deletedAt: null
+        deletedAt: null,
       },
-    })
+    });
 
     return res.status(200).json({
       message: "Product successfully restored!",
-    })
-
+    });
   } catch (error) {
     return res.status(500).json({
       message: "Error restoring product",
-      error
-    })
+      error,
+    });
+  }
+};
+
+//Get All Product
+export const getAllProducts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const skip = (page - 1) * limit;
+    const type = req.query.type;
+
+    const baseFilter = {
+      OR: [
+        {
+          starting_date: null,
+        },
+        {
+          ending_date: null,
+        },
+      ],
+    };
+
+    const orderBy: Prisma.ProductOrderByWithRelationInput =
+      type === "latest"
+        ? { createdAt: "desc" as Prisma.SortOrder }
+        : { totalSales: "desc" as Prisma.SortOrder };
+
+    const [products, total, top10products] = await Promise.all([
+      prisma.product.findMany({
+        skip,
+        take: limit,
+        include: {
+          images: true,
+          Shop: true,
+        },
+        where: baseFilter,
+        orderBy: {
+          totalSales: "desc",
+        },
+      }),
+
+      prisma.product.count({
+        where: baseFilter,
+      }),
+
+      prisma.product.findMany({
+        take: 10,
+        where: baseFilter,
+        orderBy,
+      }),
+    ]);
+
+    console.log(products);
+
+    res.status(200).json({
+      products,
+      top10By: type === "latest" ? "latest" : "topSales",
+      top10products,
+      total,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+    });
+  } catch (error) {
+    next(error);
   }
 };

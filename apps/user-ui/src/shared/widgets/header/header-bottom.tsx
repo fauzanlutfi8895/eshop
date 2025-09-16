@@ -79,7 +79,7 @@ const HeaderBottom = () => {
         <div>
           {isSticky && (
             <>
-              <div className="flex items-center gap-8">
+              <div className="flex items-center justify-center gap-8">
                 {!isLoading && user ? (
                   <>
                     <Link
@@ -111,20 +111,21 @@ const HeaderBottom = () => {
                     </Link>
                   </>
                 )}
-              </div>
-              <div className="gap-5 flex">
-                <Link href={"/whislist"} className="relative">
-                  <HeartIcon />
-                  <div className="w-6 h-6 bg-red-500 border-2 border-white rounded-full absolute top-[-10px] right-[-10px] flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">0</span>
-                  </div>
-                </Link>
-                <Link href={"/card"} className="relative">
-                  <ShoppingCart />
-                  <div className="w-6 h-6 bg-red-500 border-2 border-white rounded-full absolute top-[-10px] right-[-10px] flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">0</span>
-                  </div>
-                </Link>
+
+                <div className="gap-5 flex">
+                  <Link href={"/whislist"} className="relative">
+                    <HeartIcon />
+                    <div className="w-6 h-6 bg-red-500 border-2 border-white rounded-full absolute top-[-10px] right-[-10px] flex items-center justify-center">
+                      <span className="text-white text-sm font-medium">0</span>
+                    </div>
+                  </Link>
+                  <Link href={"/card"} className="relative">
+                    <ShoppingCart />
+                    <div className="w-6 h-6 bg-red-500 border-2 border-white rounded-full absolute top-[-10px] right-[-10px] flex items-center justify-center">
+                      <span className="text-white text-sm font-medium">0</span>
+                    </div>
+                  </Link>
+                </div>
               </div>
             </>
           )}

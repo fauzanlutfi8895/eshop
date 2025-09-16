@@ -30,11 +30,11 @@ const fetchProduct = async () => {
 
 const deleteProduct = async (productId: string) => {
   await axiosInstance.delete(`/product/api/delete-product/${productId}`);
-}
+};
 
 const restoreProduct = async (productId: string) => {
   await axiosInstance.put(`/product/api/restore-product/${productId}`);
-}
+};
 
 const Page = () => {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -53,18 +53,18 @@ const Page = () => {
   const deleteMutation = useMutation({
     mutationFn: deleteProduct, //tidak perlu parameter, otomatis ngambil (passing) dari method mutate nya
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["shop-products"]}),
-      setShowDeleteModal(false)
-    }
-  })
+      queryClient.invalidateQueries({ queryKey: ["shop-products"] }),
+        setShowDeleteModal(false);
+    },
+  });
 
   const restoreMutation = useMutation({
     mutationFn: restoreProduct, //tidak perlu parameter, otomatis ngambil (passing) dari method mutate nya
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["shop-products"]}),
-      setShowDeleteModal(false)
-    }
-  })
+      queryClient.invalidateQueries({ queryKey: ["shop-products"] }),
+        setShowDeleteModal(false);
+    },
+  });
 
   const columns = useMemo(
     () => [
@@ -73,8 +73,11 @@ const Page = () => {
         header: "Image",
         cell: ({ row }: any) => (
           <Image
-            src={row.original.images[0].file_url}
-            alt={row.original.images[0].file_url}
+            src={
+              row.original?.images[0]?.file_url ||
+              "https://ik.imagekit.io/uxake262l/product/placeholder_product.png?updatedAt=1757921527526"
+            }
+            alt={row.original?.images[0]?.file_url || ""}
             width={200}
             height={200}
             className="w-12 h-12 rounded-md object-cover"
@@ -175,7 +178,7 @@ const Page = () => {
   const openDeleteModal = (product: any) => {
     setSelectProduct(product);
     setShowDeleteModal(true);
-  }
+  };
   return (
     <div className="w-full min-h-screen p-8">
       {/* Header */}
