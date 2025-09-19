@@ -6,8 +6,10 @@ const LOCATION_STORAGE_KEY = "user_location";
 const LOCATION_EXPIRE_DAYS = 20;
 
 const getStoredLocation = () => {
-  const storedData = localStorage.getItem(LOCATION_STORAGE_KEY);
-
+  const storedData =
+    typeof window !== "undefined"
+      ? localStorage.getItem(LOCATION_STORAGE_KEY)
+      : null;
   if (!storedData) return null;
 
   const parsedData = JSON.parse(storedData);
@@ -18,7 +20,6 @@ const getStoredLocation = () => {
 
   return isExpired ? null : parsedData;
 };
-
 const useLocationTracking = () => {
   const [location, setLocation] = useState<{
     country: string;
@@ -27,13 +28,13 @@ const useLocationTracking = () => {
 
   useEffect(() => {
     if (location) return;
-
-    fetch("https://ip-api.com/json/")
+  
+    fetch("https://free.freeipapi.com/api/json")
       .then((res) => res.json())
       .then((data) => {
         const newLocation = {
-          country: data?.country,
-          city: data?.city,
+          country: data?.countryName,
+          city: data?.cityName,
           timestamp: Date.now(),
         };
 

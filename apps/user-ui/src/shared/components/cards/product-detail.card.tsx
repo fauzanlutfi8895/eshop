@@ -25,7 +25,7 @@ const ProductDetailCard = ({
   const location = useLocationTracking();
   const deviceInfo = useDeviceTracking();
 
-  //UseStore zustand cart & whislist
+  //UseStore zustand cart & wishlist
   const addToCart = useStore((state: any) => state.addToCart);
   const addToWishlist = useStore((state: any) => state.addToWishlist);
   const removeFromWishlist = useStore((state: any) => state.removeFromWishlist);

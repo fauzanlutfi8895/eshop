@@ -63,7 +63,7 @@ const Header = () => {
           )}
         </div>
         <div className="gap-5 flex">
-          <Link href={"/whislist"} className="relative">
+          <Link href={"/wishlist"} className="relative">
             <HeartIcon />
             <div className="w-6 h-6 bg-red-500 border-2 border-white rounded-full absolute top-[-10px] right-[-10px] flex items-center justify-center">
               <span className="text-white text-sm font-medium">

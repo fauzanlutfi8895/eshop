@@ -77,7 +77,7 @@ export const useStore = create<Store>()(
       addToWishlist: (product, user, location, deviceInfo) => {
         set((state) => {
           if (state.wishlist.find((item) => item.id === product.id))
-            return state;
+            return state; //jika sudah ada kembalikan ke sini, bawah tidak lanjut
           return { wishlist: [...state.wishlist, product] };
         });
       },
@@ -89,7 +89,7 @@ export const useStore = create<Store>()(
         set((state) => ({
           wishlist: state.wishlist?.filter((item) => item.id !== id),
         }));
-      }
+      },
     }),
     {
       name: "store-storage",
