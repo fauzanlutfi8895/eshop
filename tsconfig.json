@@ -23,6 +23,9 @@
     },
     {
       "path": "./apps/product-service"
+    },
+    {
+      "path": "./apps/kafka-service"
     }
   ]
 }

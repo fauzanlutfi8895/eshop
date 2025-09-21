@@ -37,6 +37,20 @@ model User {
   shopReview shopReview[]
 }
 
+model userAnalytcs {
+  id          String   @id @map("_id") @default(auto()) @db.ObjectId
+  userId      String   @unique
+  actions     Json     @default("[]")
+  lastVisited DateTime
+  lastTrained DateTime?
+  country     String?
+  city        String?
+  device      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+
 model shopReview {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   userId    String   @db.ObjectId
@@ -140,3 +154,17 @@ model Product {
   shopId                String        @db.ObjectId
   Shop                  Shop          @relation(fields: [shopId], references: [id])
 }
+
+model productAnalytics {
+  id           String   @id @map("_id") @default(auto()) @db.ObjectId
+  productId    String   @db.ObjectId @unique
+  shopId       String   @db.ObjectId
+  views        Int      @default(0)
+  cartAdds     Int      @default(0)
+  wishListAdds Int      @default(0)
+  purchases    Int      @default(0)
+  lastViewedAt DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
