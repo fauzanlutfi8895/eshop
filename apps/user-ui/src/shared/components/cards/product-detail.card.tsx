@@ -8,6 +8,7 @@ import { useStore } from "apps/user-ui/src/store";
 import useLocationTracking from "apps/user-ui/src/hooks/useLocationTracking";
 import useDeviceTracking from "apps/user-ui/src/hooks/useDeviceTracking";
 import useUser from "apps/user-ui/src/hooks/useUser";
+import { PRODUCT_IMAGE_PLACEHOLDER } from "../../constant";
 
 const ProductDetailCard = ({
   data,
@@ -49,8 +50,8 @@ const ProductDetailCard = ({
         <div className="w-full flex flex-col md:flex-row">
           <div className="w-full md:w-1/2 h-full">
             <Image
-              src={data?.images?.[activeImage]?.file_url}
-              alt={data?.images?.[activeImage]?.file_url}
+              src={data?.images?.[activeImage]?.file_url || PRODUCT_IMAGE_PLACEHOLDER}
+              alt={data?.images?.[activeImage]?.file_url || PRODUCT_IMAGE_PLACEHOLDER}
               width={400}
               height={400}
               className="w-full rounded-lg object-contain"

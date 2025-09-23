@@ -37,6 +37,7 @@
     "react-dom": "19.0.0",
     "react-hook-form": "^7.62.0",
     "react-hot-toast": "^2.6.0",
+    "react-medium-image-zoom": "^5.4.0",
     "react-quill-new": "^3.6.0",
     "stripe": "^18.5.0",
     "styled-components": "^6.1.19",

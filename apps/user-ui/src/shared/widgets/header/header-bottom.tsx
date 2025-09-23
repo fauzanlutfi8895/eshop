@@ -35,18 +35,18 @@ const HeaderBottom = () => {
   return (
     <div
       className={`w-full transition-all duration-300 ${
-        isSticky ? "fixed top-0 left-0 bg-white shadow-lg" : "relative"
+        isSticky ? "fixed top-0 left-0 bg-white shadow-lg z-[50]" : "relative"
       }`}
     >
       <div
         className={`w-[80%] relative m-auto flex items-center justify-between ${
-          isSticky ? "pt-3" : "py-0"
+          isSticky ? "pt-3 " : "py-0"
         }`}
       >
         {/* All Dropdown */}
         <div
           className={`w-[260px] ${
-            isSticky && "-mb-2"
+            isSticky && "my-2"
           } cursor-pointer flex items-center justify-between px-5 h-[50px] bg-blue-500`}
           onClick={() => setShow(!show)}
         >
@@ -119,13 +119,17 @@ const HeaderBottom = () => {
                   <Link href={"/wishlist"} className="relative">
                     <HeartIcon />
                     <div className="w-6 h-6 bg-red-500 border-2 border-white rounded-full absolute top-[-10px] right-[-10px] flex items-center justify-center">
-                      <span className="text-white text-sm font-medium">{wishlist?.length}</span>
+                      <span className="text-white text-sm font-medium">
+                        {wishlist?.length}
+                      </span>
                     </div>
                   </Link>
                   <Link href={"/cart"} className="relative">
                     <ShoppingCart />
                     <div className="w-6 h-6 bg-red-500 border-2 border-white rounded-full absolute top-[-10px] right-[-10px] flex items-center justify-center">
-                      <span className="text-white text-sm font-medium">{cart?.length}</span>
+                      <span className="text-white text-sm font-medium">
+                        {cart?.length}
+                      </span>
                     </div>
                   </Link>
                 </div>

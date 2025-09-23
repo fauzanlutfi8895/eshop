@@ -7,6 +7,7 @@ import { useStore } from "apps/user-ui/src/store";
 import useUser from "apps/user-ui/src/hooks/useUser";
 import useLocationTracking from "apps/user-ui/src/hooks/useLocationTracking";
 import useDeviceTracking from "apps/user-ui/src/hooks/useDeviceTracking";
+import { PRODUCT_IMAGE_PLACEHOLDER } from "../../constant";
 
 const ProductCard = ({
   product,
@@ -80,17 +81,15 @@ const ProductCard = ({
         </div>
       )}
 
-      <Link href={`/product/${product?.slug}`} />
-      <img
-        src={
-          product?.images[0]?.file_url ||
-          "https://ik.imagekit.io/uxake262l/product/placeholder_product.png?updatedAt=1757921527526"
-        }
-        alt={product?.title}
-        width={300}
-        height={300}
-        className="w-full h-[200px] object-cover rounded-t-md"
-      />
+      <Link href={`/product/${product?.slug}`}>
+        <img
+          src={product?.images[0]?.file_url || PRODUCT_IMAGE_PLACEHOLDER}
+          alt={product?.title}
+          width={300}
+          height={300}
+          className="w-full h-[200px] object-cover rounded-t-md"
+        />
+      </Link>
       <Link
         href={`/shop/${product?.Shop?.id}`}
         className="block text-blue-500 text-sm font-medium my-2 px-2"
@@ -155,7 +154,10 @@ const ProductCard = ({
           <ShoppingBag
             className="cursor-pointer text-[#4b5563] hover:scale-110 transition"
             size={22}
-            onClick={() => !isInCart && addToCart({...product, quantity: 1}, user, location, deviceInfo)}
+            onClick={() =>
+              !isInCart &&
+              addToCart({ ...product, quantity: 1 }, user, location, deviceInfo)
+            }
           />
         </div>
       </div>

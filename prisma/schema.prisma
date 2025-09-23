@@ -35,21 +35,21 @@ model User {
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
   shopReview shopReview[]
+  Order      Order[]
 }
 
 model userAnalytcs {
-  id          String   @id @map("_id") @default(auto()) @db.ObjectId
-  userId      String   @unique
-  actions     Json     @default("[]")
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String    @unique
+  actions     Json      @default("[]")
   lastVisited DateTime
   lastTrained DateTime?
   country     String?
   city        String?
   device      String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
-
 
 model shopReview {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -61,6 +61,14 @@ model shopReview {
   updatedAt DateTime @updatedAt
   shopId    String   @db.ObjectId
   shop      Shop?    @relation(fields: [shopId], references: [id])
+}
+
+model Followers {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  shopId    String   @db.ObjectId
+  Shop      Shop     @relation(fields: [shopId], references: [id])
+  userId    String   @db.ObjectId
+  createdAt DateTime @default(now())
 }
 
 model Shop {
@@ -81,6 +89,8 @@ model Shop {
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   Product       Product[]
+  Followers     Followers[]
+  Order         Order[]
 }
 
 model Seller {
@@ -153,18 +163,44 @@ model Product {
   updatedAt             DateTime      @updatedAt
   shopId                String        @db.ObjectId
   Shop                  Shop          @relation(fields: [shopId], references: [id])
+  OrderItem             OrderItem[]
 }
 
 model productAnalytics {
-  id           String   @id @map("_id") @default(auto()) @db.ObjectId
-  productId    String   @db.ObjectId @unique
-  shopId       String   @db.ObjectId
-  views        Int      @default(0)
-  cartAdds     Int      @default(0)
-  wishListAdds Int      @default(0)
-  purchases    Int      @default(0)
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  productId    String    @unique @db.ObjectId
+  shopId       String    @db.ObjectId
+  views        Int       @default(0)
+  cartAdds     Int       @default(0)
+  wishListAdds Int       @default(0)
+  purchases    Int       @default(0)
   lastViewedAt DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
+model Order {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String   @db.ObjectId
+  user         User     @relation(fields: [userId], references: [id])
+  shopId       String   @db.ObjectId
+  shop         Shop     @relation(fields: [shopId], references: [id])
+  payment_info String?
+  status       String   @default("Pending") // Pending, Paid, Shipped, Completed, Cancelled
+  totalPrice   Float    @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  items OrderItem[] // relasi ke produk yang ada di order
+}
+
+model OrderItem {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String  @db.ObjectId
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String  @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int     @default(1)
+  price     Float
+  subtotal  Float // quantity * price
+}

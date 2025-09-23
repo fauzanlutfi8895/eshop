@@ -12,8 +12,10 @@ let refreshSubscribers: (() => void)[] = []; //stored all failed request, wait f
 
 //Handle logout and prevent infinite loops 
 const handleLogout = () => {
-  if (window.location.pathname !== "/login") {
-    window.location.href = "/login";
+  if (typeof window !== "undefined") {
+    if (window.location.pathname !== "/login") {
+      window.location.href = "/login";
+    }
   }
 };
 
@@ -51,7 +53,7 @@ axiosInstance.interceptors.response.use(
       isRefreshing = true;
       try {
         await axios.post(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/api/refresh-token-user`,
+          `${process.env.NEXT_PUBLIC_SERVER_URI}/api/refresh-token`,
           {},
           { withCredentials: true }
         );

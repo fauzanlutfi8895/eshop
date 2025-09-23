@@ -3,6 +3,7 @@
 import useDeviceTracking from "apps/user-ui/src/hooks/useDeviceTracking";
 import useLocationTracking from "apps/user-ui/src/hooks/useLocationTracking";
 import useUser from "apps/user-ui/src/hooks/useUser";
+import { PRODUCT_IMAGE_PLACEHOLDER } from "apps/user-ui/src/shared/constant";
 import { useStore } from "apps/user-ui/src/store";
 import { error } from "console";
 import { Loader2 } from "lucide-react";
@@ -88,7 +89,9 @@ const CartPage = () => {
                   <tr key={item.id} className="border-b border-b-[#0000000e]">
                     <td className="flex items-center gap-4 p-4">
                       <Image
-                        src={item.images[0]?.file_url}
+                        src={
+                          item.images[0]?.file_url || PRODUCT_IMAGE_PLACEHOLDER
+                        }
                         alt={item.title}
                         width={80}
                         height={80}
@@ -114,7 +117,9 @@ const CartPage = () => {
                               </span>
                             )}
                             {item?.selectedOptions?.size && (
-                              <span className="ml-2">Size: {}</span>
+                              <span className="ml-2">
+                                Size: {item.selectedOptions.size}
+                              </span>
                             )}
                           </div>
                         )}
