@@ -6,6 +6,7 @@ import SectionTitle from "../shared/components/section/section-title";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../utils/axiosInstance";
 import ProductCard from "../shared/components/cards/product-card";
+import ShopCard from "../shared/components/cards/shop-card";
 
 const Page = () => {
   const {
@@ -26,7 +27,7 @@ const Page = () => {
 
   console.log(products);
 
-  const { data: latestProducts } = useQuery({
+  const { data: latestProducts, isLoading: latestProductsLoading } = useQuery({
     queryKey: ["latest-products"],
     queryFn: async () => {
       const res = await axiosInstance.get(
@@ -36,6 +37,26 @@ const Page = () => {
     },
     staleTime: 1000 * 60 * 2,
     refetchOnWindowFocus: false,
+  });
+
+  const { data: shops, isLoading: shopLoading } = useQuery({
+    queryKey: ["shops"],
+    queryFn: async () => {
+      const res = await axiosInstance.get("/product/api/top-shops");
+      return res.data.shops;
+    },
+    staleTime: 1000 * 60 * 2,
+  });
+
+  const { data: offers, isLoading: offersLoading } = useQuery({
+    queryKey: ["offers"],
+    queryFn: async () => {
+      const res = await axiosInstance.get(
+        "/product/api/get-all-events?page=1&limit=10"
+      );
+      return res.data.events;
+    },
+    staleTime: 1000 * 60 * 2,
   });
 
   return (
@@ -61,6 +82,67 @@ const Page = () => {
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
+        )}
+
+        {/* No Product */}
+        {products?.length === 0 && (
+          <p className="text-center">No Products available yet!</p>
+        )}
+
+        {/* Latest Product */}
+        <div className="my-8 block">
+          <SectionTitle title="Latest Product" />
+        </div>
+        {/* Shimmer */}
+        {latestProductsLoading && (
+          <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 2xl:grid-cols-5 gap-5">
+            {Array.from({ length: 10 }).map((_, index) => (
+              <div
+                key={index}
+                className="h-[250px] bg-gray-300 animate-pulse rounded-xl"
+              ></div>
+            ))}
+          </div>
+        )}
+        {!latestProductsLoading && (
+          <div className="m-auto grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 2xl:grid-cols-5 gap-5">
+            {latestProducts?.map((product: any) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
+        {latestProducts?.length === 0 && (
+          <p className="text-center">No Products available yet!</p>
+        )}
+
+        {/* Top Shops */}
+        <div className="my-8 block">
+          <SectionTitle title="Top Shops" />
+        </div>
+        {!shopLoading && (
+          <div className="m-auto grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 2xl:grid-cols-5 gap-5">
+            {shops?.map((shop: any) => (
+              <ShopCard key={shop.id} shop={shop} />
+            ))}
+          </div>
+        )}
+        {shops?.length === 0 && (
+          <p className="text-center">No Shops available yet!</p>
+        )}
+
+        {/* Top Offers */}
+        <div className="my-8 block">
+          <SectionTitle title="Top Offers" />
+        </div>
+        {!offersLoading && (
+          <div className="m-auto grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 2xl:grid-cols-5 gap-5">
+            {offers?.map((product: any) => (
+              <ProductCard key={product.id} product={product} isEvent={true} />
+            ))}
+          </div>
+        )}
+        {offers?.length === 0 && (
+          <p className="text-center">No Offers available yet!</p>
         )}
       </div>
     </div>
