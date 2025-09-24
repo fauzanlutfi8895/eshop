@@ -55,7 +55,7 @@ const Page = () => {
       params.set("sizes", selectedSizes.join(","));
     }
     params.set("page", page.toString());
-    router.replace(`/products?${decodeURIComponent(params.toString())}`); //decodeURIComp supaya "spasi" tidak terencode menjadi %
+    router.replace(`/offers?${decodeURIComponent(params.toString())}`); //decodeURIComp supaya "spasi" tidak terencode menjadi %
   };
 
   const fetchFilteredProduct = async () => {
@@ -78,7 +78,7 @@ const Page = () => {
       query.set("limit", "12");
 
       const res = await axiosInstance.get(
-        `/product/api/get-filtered-products?${query.toString()}`
+        `/product/api/get-filtered-offers?${query.toString()}`
       );
       setProducts(res.data.products);
       setTotalPages(res.data.pagination.totalPages);
@@ -291,7 +291,7 @@ const Page = () => {
             ) : products.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5">
                 {products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard key={product.id} product={product} isEvent={true}/>
                 ))}
               </div>
             ) : (

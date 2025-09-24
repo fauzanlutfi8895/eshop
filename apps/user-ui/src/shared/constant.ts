@@ -1,3 +1,5 @@
 // konstanta global untuk image placeholder
 export const PRODUCT_IMAGE_PLACEHOLDER = "https://ik.imagekit.io/uxake262l/product/Foto%20Dedeek.jpg?updatedAt=1758643947874";
+export const SHOP_IMAGE_PLACEHOLDER = "https://ik.imagekit.io/uxake262l/product/Placeholder%20Product.png?updatedAt=1758515603354";
+export const AVATAR_IMAGE_PLACEHOLDER = "https://ik.imagekit.io/uxake262l/product/Icon%20Avatar.png?updatedAt=1758722092627"
 
