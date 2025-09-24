@@ -62,7 +62,7 @@ const HeaderBottom = () => {
           <div
             className={`absolute left-0 ${
               isSticky ? "top-[70px]" : "top-[50px]"
-            } w-[260px] h-[400px] bg-[#f5f5f5]`}
+            } w-[260px] h-[400px] bg-[#f5f5f5] z-[50]`}
           ></div>
         )}
 
