@@ -79,10 +79,10 @@ const HeaderBottom = () => {
           ))}
         </div>
 
-        <div>
+        <div className="flex items-center justify-center gap-10">
           {isSticky && (
             <>
-              <div className="flex items-center justify-center gap-8">
+              <div className="flex items-center justify-center gap-2">
                 {!isLoading && user ? (
                   <>
                     <Link
@@ -114,25 +114,24 @@ const HeaderBottom = () => {
                     </Link>
                   </>
                 )}
-
-                <div className="gap-5 flex">
-                  <Link href={"/wishlist"} className="relative">
-                    <HeartIcon />
-                    <div className="w-6 h-6 bg-red-500 border-2 border-white rounded-full absolute top-[-10px] right-[-10px] flex items-center justify-center">
-                      <span className="text-white text-sm font-medium">
-                        {wishlist?.length}
-                      </span>
-                    </div>
-                  </Link>
-                  <Link href={"/cart"} className="relative">
-                    <ShoppingCart />
-                    <div className="w-6 h-6 bg-red-500 border-2 border-white rounded-full absolute top-[-10px] right-[-10px] flex items-center justify-center">
-                      <span className="text-white text-sm font-medium">
-                        {cart?.length}
-                      </span>
-                    </div>
-                  </Link>
-                </div>
+              </div>
+              <div className="gap-5 flex">
+                <Link href={"/wishlist"} className="relative">
+                  <HeartIcon />
+                  <div className="w-6 h-6 bg-red-500 border-2 border-white rounded-full absolute top-[-10px] right-[-10px] flex items-center justify-center">
+                    <span className="text-white text-sm font-medium">
+                      {wishlist?.length}
+                    </span>
+                  </div>
+                </Link>
+                <Link href={"/cart"} className="relative">
+                  <ShoppingCart />
+                  <div className="w-6 h-6 bg-red-500 border-2 border-white rounded-full absolute top-[-10px] right-[-10px] flex items-center justify-center">
+                    <span className="text-white text-sm font-medium">
+                      {cart?.length}
+                    </span>
+                  </div>
+                </Link>
               </div>
             </>
           )}

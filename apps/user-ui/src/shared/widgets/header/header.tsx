@@ -6,6 +6,8 @@ import { HeartIcon, Search, ShoppingCart, User } from "lucide-react";
 import HeaderBottom from "./header-bottom";
 import useUser from "apps/user-ui/src/hooks/useUser";
 import { useStore } from "apps/user-ui/src/store";
+import Image from "next/image";
+import { LOGO_IMAGE_PLACEHOLDER } from "../../constant";
 
 const Header = () => {
   const { user, isLoading } = useUser();
@@ -17,7 +19,16 @@ const Header = () => {
       <div className="w-[80%] py-5 m-auto flex items-center justify-between">
         <div>
           <Link href={"/"}></Link>
-          <span className="text-3xl font-[500]">Eshop</span>
+          <div
+            style={{ width: "150px", height: "50px", position: "relative" }}
+          >
+            <Image
+              src={LOGO_IMAGE_PLACEHOLDER}
+              fill
+              alt="logo"
+              style={{ objectFit: "cover" }}
+            />
+          </div>
         </div>
         <div className="w-[50%] relative">
           <input
@@ -29,7 +40,7 @@ const Header = () => {
             <Search color="white" />
           </div>
         </div>
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-2">
           {!isLoading && user ? (
             <>
               <Link

@@ -782,7 +782,7 @@ export const getFilteredShops = async (
         take: parsedLimit,
         include: {
           seller: true,
-          Followers: true,
+          followers: true,
           Product: true,
         },
       }),
@@ -864,11 +864,11 @@ export const topShops = async (
     const topShopsData = await prisma.order.groupBy({
       by: ["shopId"],
       _sum: {
-        totalPrice: true,
+        total: true,
       },
       orderBy: {
         _sum: {
-          totalPrice: "desc",
+          total: "desc",
         },
       },
       take: 10,
@@ -889,7 +889,7 @@ export const topShops = async (
         coverBanner: true,
         address: true,
         rating: true,
-        Followers: true,
+        followers: true,
         category: true,
       },
     });
@@ -899,7 +899,7 @@ export const topShops = async (
       const salesData = topShopsData.find((s) => s.shopId === shop.id);
       return {
         ...shop,
-        totalSales: salesData?._sum.totalPrice ?? 0,
+        totalSales: salesData?._sum.total ?? 0,
       };
     });
 

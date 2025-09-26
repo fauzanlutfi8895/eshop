@@ -17,10 +17,10 @@ export async function generateMetadata({
   const { slug } = await params;
   const product = await fetchProductDetails(slug);
   return {
-    title: `${product?.title} | Eshop Marketplace`,
+    title: `${product?.title} | UniLoop`,
     keywords: [
       ...(product?.tags || []),
-      "eshop",
+      "UniLoop",
       "marketplace",
       product?.title,
       "belanja online",

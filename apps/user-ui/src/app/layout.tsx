@@ -15,8 +15,8 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: "Eshop",
-  description: "Eshop",
+  title: "UniLoop",
+  description: "UniLoop",
 };
 
 export default function RootLayout({

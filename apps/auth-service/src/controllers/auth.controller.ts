@@ -530,3 +530,17 @@ export const getSeller = async (
     next(error);
   }
 };
+
+//Logout User
+export const logOutUser = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  res.clearCookie("access_token");
+  res.clearCookie("refresh_token");
+
+  res.status(201).json({
+    success: true,
+  });
+};

@@ -6,6 +6,7 @@ import {
   getUser,
   loginSeller,
   loginUser,
+  logOutUser,
   refreshToken,
   registerSeller,
   resetPassword,
@@ -20,6 +21,7 @@ import { isSeller, isUser } from "@packages/middleware/authorizeRole";
 
 const router: Router = Express.Router();
 
+//User
 router.post("/user-registration", userRegistration);
 router.post("/verify-user", verifyUser);
 router.post("/login", loginUser);
@@ -27,6 +29,7 @@ router.get("/logged-in-user", isAuthenticated, isUser, getUser);
 router.post("/forgot-password-user", userForgotPassword);
 router.post("/reset-password-user", resetPassword);
 router.post("/verify-forgot-password-user", verifyUserForgotPassword);
+router.get("/logout-user", logOutUser);
 
 //Seller
 router.post("/seller-registration", registerSeller);
