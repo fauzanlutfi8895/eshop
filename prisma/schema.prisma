@@ -50,6 +50,7 @@ model Notification {
   receiverId    String
   redirect_link String?
   title         String
+  message       String
 }
 
 model User {
@@ -77,7 +78,7 @@ model userAnalytcs {
   lastVisited     DateTime
   actions         Json?
   recommendations Json?
-  lastTrained     DateTime @default(now())
+  lastTrained     DateTime? @default(now())
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -253,7 +254,7 @@ model Order {
   total             Float       @default(0)
   shippingAddressId String?
   couponCode        String?
-  discountAmount    String?
+  discountAmount    Int?
   status            String
   deliveryStatus    String      @default("Ordered") // Pending, Paid, Shipped, Completed, Cancelled
   items             OrderItem[] @relation("OrderItemsRelation") // relasi ke produk yang ada di order

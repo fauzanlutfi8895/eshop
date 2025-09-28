@@ -2,6 +2,7 @@ import Header from "../shared/widgets/header";
 import "./global.css";
 import { Poppins, Roboto } from "next/font/google";
 import Provider from "./provider";
+import { Toaster } from "react-hot-toast";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -27,6 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.variable} ${poppins.variable} bg-[#ececec]`}>
+        <Toaster position="top-right" reverseOrder={false} />
         <Provider>
           <Header />
           {children}
