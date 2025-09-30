@@ -22,6 +22,7 @@ import axiosInstance from "apps/seller-ui/src/utils/axiosInstance";
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import DeleteConfirmationModal from "apps/seller-ui/src/shared/component/modals/delete.confirmation.modal";
+import Breadcrumbs from "apps/seller-ui/src/shared/component/breadcrumbs";
 
 const fetchProduct = async () => {
   const res = await axiosInstance.get("/product/api/get-shop-products");
@@ -192,13 +193,7 @@ const Page = () => {
         </Link>
       </div>
       {/* Breadcrumbs */}
-      <div className="flex items-center mb-4">
-        <Link href={"/dashboard"} className="text-blue-400 cursor-pointer">
-          Dashboard
-        </Link>
-        <ChevronRight size={18} className="text-gray-200" />
-        <span className="text-white">All Products</span>
-      </div>
+      <Breadcrumbs title="All Products" />
 
       {/* Search Bar */}
       <div className="mb-4 flex items-center bg-gray-900 p-2 rounded-md flex-1">

@@ -1,5 +1,6 @@
 "use client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Breadcrumbs from "apps/seller-ui/src/shared/component/breadcrumbs";
 import DeleteDiscountCodeModal from "apps/seller-ui/src/shared/component/modals/delete.discount-codes";
 import axiosInstance from "apps/seller-ui/src/utils/axiosInstance";
 import { AxiosError } from "axios";
@@ -88,13 +89,7 @@ const Page = () => {
         </button>
       </div>
       {/* Breadcrumbs */}
-      <div className="flex items-center">
-        <Link href={"/dashboard"} className="text-[#80Deea] cursor-pointer">
-          Dashboard
-        </Link>
-        <ChevronRight size={20} className="opacity-[.8] text-white" />
-        <span className="text-[#80Deea] cursor-pointer">Discount Codes</span>
-      </div>
+      <Breadcrumbs title="Discount Codes" />
 
       {/* Fetch Table */}
       <div className="mt-8 bg-gray-900 p-6 rounded-lg shadow-lg">

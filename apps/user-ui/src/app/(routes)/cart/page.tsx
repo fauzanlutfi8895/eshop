@@ -31,22 +31,6 @@ const CartPage = () => {
   const [selectAddressId, setSelectAddressId] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const createPaymentSession = async () => {
-    setLoading(true);
-    try {
-      const res = await axiosInstance.post(
-        "/order/api/create-payment-session",
-        { cart, selectAddressId, coupon: {} } //coupon diberikan objek kosong supaya bisa ditambahi dan penyimpanan sementara
-      );
-      const sessionId = res.data.sessionId;
-      router.push(`/checkout?sessionId=${sessionId}`);
-    } catch (error) {
-      toast.error("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const decreaseQuantity = (id: string) => {
     useStore.setState((state: any) => ({
       cart: state.cart.map((item: any) =>
@@ -91,6 +75,27 @@ const CartPage = () => {
       }
     }
   }, [addresses, selectAddressId]);
+
+  const createPaymentSession = async () => {
+    if (!selectAddressId) {
+      toast.error("Please select a shipping address first.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await axiosInstance.post(
+        "/order/api/create-payment-session",
+        { cart, selectedAddressId: selectAddressId, coupon: {} } //coupon diberikan objek kosong supaya bisa ditambahi dan penyimpanan sementara
+      );
+      const sessionId = res.data.sessionId;
+      router.push(`/checkout?sessionId=${sessionId}`);
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="w-full bg-white">
@@ -297,7 +302,7 @@ const CartPage = () => {
                 </div>
                 <button
                   onClick={createPaymentSession}
-                  disabled={loading}
+                  disabled={loading || !selectAddressId}
                   className="w-full flex items-center justify-center gap-2 cursor-pointer mt-4 py-3 bg-[#010f1c] text-white hover:bg-[#0989ff] transition-all rounded-lg"
                 >
                   {loading && <Loader2 className="animate-spin w-5 h-5" />}

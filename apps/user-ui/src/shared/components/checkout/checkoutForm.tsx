@@ -52,7 +52,8 @@ const CheckOutForm = ({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const total = cartItems.reduce(
-    (sum, item) => sum + item.sale_price * item.quantity
+    (sum, item) => sum + item.sale_price * item.quantity,
+    0
   );
 
   return (
