@@ -22,7 +22,6 @@ const Page = () => {
       return res.data.products;
     },
     staleTime: 1000 * 60 * 2,
-    refetchOnWindowFocus: false,
   });
 
   console.log(products);
@@ -36,7 +35,6 @@ const Page = () => {
       return res.data.products;
     },
     staleTime: 1000 * 60 * 2,
-    refetchOnWindowFocus: false,
   });
 
   const { data: shops, isLoading: shopLoading } = useQuery({
