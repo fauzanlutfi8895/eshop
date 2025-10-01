@@ -30,6 +30,8 @@ const CartPage = () => {
   const [couponCode, setCouponCode] = useState("");
   const [selectAddressId, setSelectAddressId] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [storedCouponCode, setStoredCouponCode] = useState("");
 
   const decreaseQuantity = (id: string) => {
     useStore.setState((state: any) => ({
@@ -86,7 +88,16 @@ const CartPage = () => {
     try {
       const res = await axiosInstance.post(
         "/order/api/create-payment-session",
-        { cart, selectedAddressId: selectAddressId, coupon: {} } //coupon diberikan objek kosong supaya bisa ditambahi dan penyimpanan sementara
+        {
+          cart,
+          selectedAddressId: selectAddressId,
+          coupon: {
+            code: storedCouponCode,
+            discountAmount,
+            discountPercent,
+            discountProductId,
+          },
+        } //coupon diberikan objek kosong supaya bisa ditambahi dan penyimpanan sementara
       );
       const sessionId = res.data.sessionId;
       router.push(`/checkout?sessionId=${sessionId}`);
@@ -94,6 +105,40 @@ const CartPage = () => {
       toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const couponCodeApplyHandler = async () => {
+    setError("");
+
+    if (!couponCode.trim()) {
+      setError("Coupen code is required!");
+      return;
+    }
+
+    try {
+      const res = await axiosInstance.put("/order/api/verify-coupon", {
+        couponCode: couponCode.trim(),
+        cart,
+      });
+
+      if (res.data.valid) {
+        setStoredCouponCode(couponCode.trim());
+        setDiscountAmount(parseFloat(res.data.discountAmount));
+        setDiscountPercent(res.data.discount);
+        setDiscountProductId(res.data.discountProductId);
+        setCouponCode("");
+      } else {
+        setDiscountAmount(0);
+        setDiscountPercent(0);
+        setDiscountProductId("");
+        setError(res.data.message || "Coupon not valid for any items in cart");
+      }
+    } catch (error: any) {
+      setDiscountAmount(0);
+      setDiscountPercent(0);
+      setDiscountProductId("");
+      setError(error?.response?.data?.message);
     }
   };
 
@@ -249,16 +294,12 @@ const CartPage = () => {
                   />
                   <button
                     className="bg-blue-500 cursor-pointer text-white px-4 rounded-r-md hover:bg-blue-600 transition-all"
-                    // onClick={() => couponCodeApply()}
+                    onClick={() => couponCodeApplyHandler()}
                   >
                     Apply
                   </button>
-                  {/* {error && (
-                    <p className="text-red-500 text-sm pt-2">
-                      {error}
-                    </p>
-                  )} */}
                 </div>
+                {error && <p className="text-red-500 text-sm pt-2">{error}</p>}
                 <hr className="my-4 text-slate-200" />
                 <div className="mb-4">
                   <h4 className="mb-[7px] font-medium text-[15px]">
