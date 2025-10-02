@@ -79,6 +79,7 @@ const HeaderBottom = () => {
           ))}
         </div>
 
+        {/* User */}
         <div className="flex items-center justify-center gap-10">
           {isSticky && (
             <>

@@ -544,3 +544,65 @@ export const logOutUser = async (
     success: true,
   });
 };
+
+export const updatePassword = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.user?.id;
+
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return next(new ValidationError("All fields is required"));
+    }
+
+    if (newPassword !== confirmPassword) {
+      return next(new ValidationError("New Password do not match"));
+    }
+
+    if (currentPassword === newPassword) {
+      return next(
+        new ValidationError("New password cannot match with current password")
+      );
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user || !user.password) {
+      return next(new AuthError("User not found or password not set"));
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(
+      currentPassword,
+      user.password!
+    );
+
+    if (!isPasswordCorrect) {
+      return next(new AuthError("Current password is incorrect"));
+    }
+
+    const hashPassword = await bcrypt.hash(newPassword, 12);
+
+    await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        password: hashPassword,
+      },
+    });
+
+    res.status(200).json({
+      message: "Password update successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};

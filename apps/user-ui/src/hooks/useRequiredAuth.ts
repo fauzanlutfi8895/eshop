@@ -11,6 +11,8 @@ const useRequireAuth = () => {
       router.replace("/login");
     }
   }, [user, isLoading]);
+
+  return { user, isLoading };
 };
 
 export default useRequireAuth;

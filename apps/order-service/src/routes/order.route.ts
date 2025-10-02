@@ -5,6 +5,7 @@ import {
   createPaymentSession,
   getOrderDetails,
   getSellerOrders,
+  getUserOrders,
   updateDeliveryStatus,
   verifyCouponCode,
   verifyingPaymentSession,
@@ -34,5 +35,6 @@ router.put(
   updateDeliveryStatus
 );
 router.put("/verify-coupon", isAuthenticated, verifyCouponCode);
+router.get("/get-user-orders", isAuthenticated, getUserOrders)
 
 export default router;

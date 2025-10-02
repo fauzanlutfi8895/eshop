@@ -15,7 +15,7 @@ const Signup = () => {
   const [timer, setTimer] = useState(60);
   const [canResend, setCanResend] = useState(true);
   const [otp, setOtp] = useState(["", "", "", ""]);
-  const [activeStep, setActiveStep] = useState(3);
+  const [activeStep, setActiveStep] = useState(1);
   const [showOtp, setShowOtp] = useState(false);
   const [sellerData, setSellerData] = useState<FormData | null>(null);
   const [sellerId, setSellerId] = useState("");

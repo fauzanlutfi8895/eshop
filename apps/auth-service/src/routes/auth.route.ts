@@ -10,6 +10,7 @@ import {
   refreshToken,
   registerSeller,
   resetPassword,
+  updatePassword,
   userForgotPassword,
   userRegistration,
   verifySeller,
@@ -30,6 +31,7 @@ router.post("/forgot-password-user", userForgotPassword);
 router.post("/reset-password-user", resetPassword);
 router.post("/verify-forgot-password-user", verifyUserForgotPassword);
 router.get("/logout-user", logOutUser);
+router.post("/change-password", isAuthenticated, updatePassword);
 
 //Seller
 router.post("/seller-registration", registerSeller);

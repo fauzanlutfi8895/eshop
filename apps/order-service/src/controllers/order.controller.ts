@@ -670,3 +670,31 @@ export const verifyCouponCode = async (
     next(error);
   }
 };
+
+export const getUserOrders = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const orders = await prisma.order.findMany({
+      where: {
+        userId: req.user.id,
+      },
+      include: {
+        items: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      orders
+    })
+  } catch (error) {
+    console.log("Failed to fetch the user orders :", error)
+    next(error);
+  }
+};
