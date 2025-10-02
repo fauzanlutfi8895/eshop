@@ -15,7 +15,6 @@ import {
   Plus,
   BarChart,
   Star,
-  ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
 import axiosInstance from "apps/seller-ui/src/utils/axiosInstance";
@@ -23,6 +22,7 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import DeleteConfirmationModal from "apps/seller-ui/src/shared/component/modals/delete.confirmation.modal";
 import Breadcrumbs from "apps/seller-ui/src/shared/component/breadcrumbs";
+import toast from "react-hot-toast";
 
 const fetchProduct = async () => {
   const res = await axiosInstance.get("/product/api/get-shop-products");
@@ -57,6 +57,9 @@ const Page = () => {
       queryClient.invalidateQueries({ queryKey: ["shop-products"] }),
         setShowDeleteModal(false);
     },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message); //hanya terpanggil sekali karena proses loading ke error, berbeda di dalam jsx
+    }
   });
 
   const restoreMutation = useMutation({

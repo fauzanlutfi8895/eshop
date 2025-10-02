@@ -11,7 +11,8 @@ import Breadcrumbs from "apps/seller-ui/src/shared/component/breadcrumbs";
 import axiosInstance from "apps/seller-ui/src/utils/axiosInstance";
 import { Eye, Search } from "lucide-react";
 import Link from "next/link";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 
 const fetchOrders = async () => {
   const res = await axiosInstance.get("/order/api/get-seller-orders"); //pakai await berati res sudah langsung berisi respon
@@ -21,11 +22,25 @@ const fetchOrders = async () => {
 const OrderTables = () => {
   const [globalFilter, setGlobalFilter] = useState("");
 
-  const { data: orders = [], isLoading } = useQuery({
+  const {
+    data: orders = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["seller-orders"],
     queryFn: fetchOrders, //mengembalikan fungsi promise, bukan promise langung dengan axios Instance
     staleTime: 1000 * 60 * 5,
   });
+
+  useEffect(() => {
+  if (error) {
+    toast.error(
+      (error as any)?.response?.data?.message ||
+      (error as Error).message ||
+      "Failed to fetch orders"
+    );
+  }
+}, [error]);
 
   //useMemo untuk data yg berubah (memoization)
   const columns = useMemo(

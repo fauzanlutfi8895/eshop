@@ -514,6 +514,84 @@ export const loginSeller = async (
   }
 };
 
+export const loginAdmin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return next(new ValidationError("Email and password are required"));
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      return next(new AuthError("User doesn't exist"));
+    }
+
+    const isMatch = bcrypt.compare(password, user?.password!);
+    if (!isMatch) {
+      return next(new AuthError("Invalid email or password"));
+    }
+
+    const isAdmin = user.role === "admin";
+
+    // if (!isAdmin) {
+    //   sendLog({
+    //     type: "error",
+    //     message: `Admin login failed for ${email} - not an admin`,
+    //     source: "auth-service",
+    //   });
+    //   return next(new AuthError("Invalid access!"));
+    // }
+
+    // sendLog({
+    //   type: "success",
+    //   message: `Admin login successfully: ${email}`,
+    //   source: "auth-service",
+    // });
+
+    res.clearCookie("seller-access-token");
+    res.clearCookie("seller-refresh-token");
+
+    //generate access and refresh
+    const accessToken = jwt.sign(
+      { id: user.id, role: "admin" },
+      process.env.ACCESS_TOKEN_SECRET as string,
+      {
+        expiresIn: "15m",
+      }
+    );
+
+    const refreshToken = jwt.sign(
+      { id: user.id, role: "admin" },
+      process.env.REFRESH_TOKEN_SECRET as string,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    setCookie(res, "access_token", accessToken);
+    setCookie(res, "refresh_token", refreshToken);
+
+    res.status(200).json({
+      message: "Login successfully",
+      user: {
+        id: user.id,
+        email: user.id,
+        name: user.name,
+      },
+    });
+  } catch (error) {}
+};
+
 //get logged in seller
 export const getSeller = async (
   req: any,
