@@ -2,8 +2,10 @@ import Express, { Router } from "express";
 import {
   createShop,
   createStripeConnectLink,
+  getAdmin,
   getSeller,
   getUser,
+  loginAdmin,
   loginSeller,
   loginUser,
   logOutUser,
@@ -40,6 +42,10 @@ router.post("/create-shop", createShop);
 router.post("/create-stripe-link", createStripeConnectLink);
 router.post("/login-seller", loginSeller);
 router.get("/logged-in-seller", isAuthenticated, isSeller, getSeller);
+
+//admin
+router.post("/login-admin", loginAdmin);
+router.get("/logged-in-admin", isAuthenticated, getAdmin);
 
 //Both
 router.post("/refresh-token", refreshToken);

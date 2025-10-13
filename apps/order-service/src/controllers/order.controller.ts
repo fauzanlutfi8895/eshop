@@ -232,6 +232,8 @@ export const createOrder = async (
       const { cart, totalAmount, shippingAddressId, coupon } =
         JSON.parse(sessionData);
 
+      console.log("🎟️ Coupon data received:", coupon);
+
       const user = await prisma.user.findUnique({
         where: {
           id: userId,
@@ -470,7 +472,9 @@ export const getSellerOrders = async (
       success: true,
       orders,
     });
-  } catch (error) {}
+  } catch (error) {
+    next(error)
+  }
 };
 
 //get order details
@@ -634,7 +638,7 @@ export const verifyCouponCode = async (
 
     //Find matching product that includes this discount code
     const matchingProduct = cart.find((item: any) =>
-      item.discount_codes?.some((d: any) => d === discount.id)
+      item.discountCodes?.some((d: any) => d === discount.id)
     );
 
     if (!matchingProduct) {
@@ -662,7 +666,7 @@ export const verifyCouponCode = async (
       valid: true,
       discount: discount.discountValue,
       discountAmount: discountAmount.toFixed(2),
-      discountProdouctId: matchingProduct.id,
+      discountProductId: matchingProduct.id,
       discountType: discount.discountType,
       message: "Discount applied to 1 eligible product",
     });
@@ -691,10 +695,30 @@ export const getUserOrders = async (
 
     res.status(200).json({
       success: true,
-      orders
-    })
+      orders,
+    });
   } catch (error) {
-    console.log("Failed to fetch the user orders :", error)
+    console.log("Failed to fetch the user orders :", error);
     next(error);
   }
 };
+
+// Get Admin Orders
+export const getAdminOrders = async (req: any, res: Response, next: NextFunction) => {
+  try {
+    const orders = await prisma.order.findMany({
+      include: {
+        user: true,
+        shop: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    res.status(200).json({
+      success: true,
+      orders
+    })
+  } catch (error) {}
+};
+

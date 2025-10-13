@@ -51,6 +51,10 @@ model Notification {
   redirect_link String?
   title         String
   message       String
+  status        String  @default("Unread")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model User {
@@ -70,8 +74,8 @@ model User {
 }
 
 model userAnalytcs {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId          String   @unique
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String    @unique
   country         String?
   city            String?
   device          String?

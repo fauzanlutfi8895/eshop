@@ -9,6 +9,7 @@ type Product = {
   image: string;
   quantity?: number;
   shopId: string;
+  discount_codes?: string[];
 };
 
 type Store = {
@@ -60,7 +61,7 @@ export const useStore = create<Store>()(
             };
           }
 
-          return { cart: [...state.cart, { ...product, quantity: product?.quantity }] };
+          return { cart: [...state.cart, { ...product, quantity: product?.quantity, discount_codes: product.discount_codes || [] }] };
         });
 
         //send kafka event

@@ -128,6 +128,11 @@ const CartPage = () => {
         setDiscountPercent(res.data.discount);
         setDiscountProductId(res.data.discountProductId);
         setCouponCode("");
+        // 🔍 Tambahkan log di sini
+        console.log(
+          "🛒 Cart before applying coupon:",
+          res.data.discountProductId
+        );
       } else {
         setDiscountAmount(0);
         setDiscountPercent(0);

@@ -160,6 +160,7 @@ export const refreshToken = async (
     const refreshToken =
       req.cookies["refresh_token"] ||
       req.cookies["seller-refresh-token"] ||
+      req.cookies["refresh_token_admin"] ||
       req.headers.authorization?.split(" ")[1];
 
     if (!refreshToken)
@@ -176,6 +177,12 @@ export const refreshToken = async (
 
     let account;
     if (decoded.role === "user") {
+      account = await prisma.user.findUnique({
+        where: {
+          id: decoded.id,
+        },
+      });
+    } else if (decoded.role === "admin") {
       account = await prisma.user.findUnique({
         where: {
           id: decoded.id,
@@ -207,8 +214,10 @@ export const refreshToken = async (
 
     if (decoded.role === "user") {
       setCookie(res, "access_token", newAccessToken);
-    } else if (decoded.role === "seller") {
+    } else if (decoded.role === "admin") {
       setCookie(res, "seller-access-token", newAccessToken);
+    } else if (decoded.role === "seller") {
+      setCookie(res, "access_token_admin", newAccessToken);
     }
 
     return res.status(201).json({
@@ -536,7 +545,7 @@ export const loginAdmin = async (
       return next(new AuthError("User doesn't exist"));
     }
 
-    const isMatch = bcrypt.compare(password, user?.password!);
+    const isMatch = await bcrypt.compare(password, user?.password!);
     if (!isMatch) {
       return next(new AuthError("Invalid email or password"));
     }
@@ -578,18 +587,32 @@ export const loginAdmin = async (
       }
     );
 
-    setCookie(res, "access_token", accessToken);
-    setCookie(res, "refresh_token", refreshToken);
+    setCookie(res, "access_token_admin", accessToken);
+    setCookie(res, "refresh_token_admin", refreshToken);
 
     res.status(200).json({
       message: "Login successfully",
-      user: {
+      admin: {
         id: user.id,
-        email: user.id,
+        email: user.email,
         name: user.name,
       },
     });
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAdmin = async (req: any, res: Response, next: NextFunction) => {
+  try {
+    const admin = req.admin;
+    res.status(201).json({
+      success: true,
+      admin,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 //get logged in seller

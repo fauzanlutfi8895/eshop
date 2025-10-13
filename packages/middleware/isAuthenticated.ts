@@ -1,4 +1,4 @@
-import prisma from "@packages/libs/prisma";
+import prisma from "../../packages/libs/prisma";
 import { Response, NextFunction } from "express";
 import jwt, { TokenExpiredError, JsonWebTokenError } from "jsonwebtoken";
 
@@ -7,6 +7,7 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
     const token =
       req.cookies["access_token"] ||
       req.cookies["seller-access-token"] ||
+      req.cookies["access_token_admin"] ||
       req.headers.authorization?.split(" ")[1];
 
     if (!token) {
@@ -16,15 +17,19 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
     }
 
     // verify token
-    let decoded: { id: string; role: "user" | "seller" };
+    let decoded: { id: string; role: "user" | "seller" | "admin" };
     try {
       decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as any;
     } catch (err) {
       if (err instanceof TokenExpiredError) {
-        return res.status(401).json({ message: "Unauthorized! Token expired." });
+        return res
+          .status(401)
+          .json({ message: "Unauthorized! Token expired." });
       }
       if (err instanceof JsonWebTokenError) {
-        return res.status(401).json({ message: "Unauthorized! Invalid token." });
+        return res
+          .status(401)
+          .json({ message: "Unauthorized! Invalid token." });
       }
       throw err; // biar error lain tidak disamaratakan
     }
@@ -42,15 +47,21 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
         include: { shop: true },
       });
       req.seller = account;
+    } else if (decoded.role === "admin") {
+      account = await prisma.user.findUnique({
+        where: { id: decoded.id },
+      });
+      req.admin = account;
     }
 
     if (!account) {
-      return res.status(401).json({ message: "Unauthorized! Account not found." });
+      return res.status(401).json({
+        message: "Unauthorized! Account not found.",
+      });
     }
 
     req.role = decoded.role;
     return next();
-
   } catch (error: any) {
     console.error("Auth middleware error:", error); // penting buat trace
     return res.status(500).json({

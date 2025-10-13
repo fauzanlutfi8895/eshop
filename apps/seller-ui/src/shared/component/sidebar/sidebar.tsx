@@ -7,7 +7,7 @@ import React, { useEffect } from "react";
 import Box from "../box";
 import { Sidebar } from "./sidebar.style";
 import Link from "next/link";
-import Logo from "apps/seller-ui/src/asset/svg/logo";
+import Image from "next/image";
 import SidebarItem from "./sidebar.item";
 import {
   BellPlus,
@@ -24,6 +24,7 @@ import {
   Wallet2Icon,
 } from "lucide-react";
 import SidebarMenu from "./sidebar.menu";
+import { LOGO_IMAGE_PLACEHOLDER } from "../../constant";
 
 const SidebarBarWrapper = () => {
   const { activeSidebar, setActiveSidebar } = UseSidebar();
@@ -54,7 +55,16 @@ const SidebarBarWrapper = () => {
       <Sidebar.Header>
         <Box>
           <Link href={"/"} className="flex justify-center text-center gap-2">
-            <Logo />
+            <div
+              style={{ width: "50px", height: "50px", position: "relative" }}
+            >
+              <Image
+                src={LOGO_IMAGE_PLACEHOLDER}
+                fill
+                alt="logo"
+                style={{ objectFit: "cover" }}
+              />
+            </div>
             <Box>
               <h3 className="text-xl font-medium text-[#ecedee]">
                 {seller?.shop?.name?.split(" ").slice(0, 2).join(" ")}
@@ -193,13 +203,11 @@ const SidebarBarWrapper = () => {
               />
             </SidebarMenu>
             <SidebarItem
-                isActive={activeSidebar === "/logout"}
-                title="Logout"
-                href="/logout"
-                icon={
-                  <LogOut size={22} color={getIconColor("/logout")} />
-                }
-              />
+              isActive={activeSidebar === "/logout"}
+              title="Logout"
+              href="/logout"
+              icon={<LogOut size={22} color={getIconColor("/logout")} />}
+            />
           </div>
         </Sidebar.Body>
       </div>

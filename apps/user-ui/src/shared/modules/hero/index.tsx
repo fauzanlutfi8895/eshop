@@ -32,7 +32,7 @@ const Hero = () => {
           </button>
         </div>
         <div className="md:w-1/2 flex justify-center">
-          <Image src={"https://ik.imagekit.io/uxake262l/product/Dedeek.png?updatedAt=1757871147953"} alt="" width={450} height={450} />
+          <Image src={"https://ik.imagekit.io/uxake262l/product/Watch_small.png?updatedAt=1759561655986"} alt="" width={450} height={450} />
         </div>
       </div>
     </div>

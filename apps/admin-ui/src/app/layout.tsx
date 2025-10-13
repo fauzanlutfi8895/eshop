@@ -1,6 +1,7 @@
 import "./global.css";
 import { Poppins } from "next/font/google";
 import Providers from "./provider";
+import { Toaster } from "react-hot-toast";
 
 export const metadata = {
   title: "Uniloop - Admin",
@@ -14,7 +15,7 @@ const poppins = Poppins({
 });
 
 export default function RootLayout({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) {
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body
         className={`min-h-screen bg-slate-900 font-sans antialiased ${poppins.variable}`}
       >
+        <Toaster position="top-right" reverseOrder={false} />
         <Providers>{children}</Providers>
       </body>
     </html>

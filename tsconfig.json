@@ -42,5 +42,11 @@
     {
       "path": "./apps/admin-ui"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@packages/*": ["packages/*"]
+    }
+  }
 }

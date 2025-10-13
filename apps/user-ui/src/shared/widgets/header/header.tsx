@@ -18,17 +18,18 @@ const Header = () => {
     <div className="w-full bg-white">
       <div className="w-[80%] py-5 m-auto flex items-center justify-between">
         <div>
-          <Link href={"/"}></Link>
-          <div
-            style={{ width: "150px", height: "50px", position: "relative" }}
-          >
-            <Image
-              src={LOGO_IMAGE_PLACEHOLDER}
-              fill
-              alt="logo"
-              style={{ objectFit: "cover" }}
-            />
-          </div>
+          <Link href={"/"} className="cursor-pointer">
+            <div
+              style={{ width: "150px", height: "50px", position: "relative" }}
+            >
+              <Image
+                src={LOGO_IMAGE_PLACEHOLDER}
+                fill
+                alt="logo"
+                style={{ objectFit: "cover" }}
+              />
+            </div>
+          </Link>
         </div>
         <div className="w-[50%] relative">
           <input
