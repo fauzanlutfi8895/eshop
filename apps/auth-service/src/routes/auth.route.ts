@@ -8,6 +8,7 @@ import {
   loginAdmin,
   loginSeller,
   loginUser,
+  logOutAdmin,
   logOutUser,
   refreshToken,
   registerSeller,
@@ -46,6 +47,7 @@ router.get("/logged-in-seller", isAuthenticated, isSeller, getSeller);
 //admin
 router.post("/login-admin", loginAdmin);
 router.get("/logged-in-admin", isAuthenticated, getAdmin);
+router.get("/logout-admin", logOutAdmin);
 
 //Both
 router.post("/refresh-token", refreshToken);

@@ -1,37 +1,80 @@
 "use client";
 
-import React from "react";
+import dynamic from "next/dynamic";
+import React, { useEffect, useState } from "react";
 
-// Contoh data penjualan
-const salesData = [
-  { month: "Jan", count: 31 },
-  { month: "Feb", count: 40 },
-  { month: "Mar", count: 28 },
-  { month: "Apr", count: 51 },
-  { month: "May", count: 42 },
-  { month: "Jun", count: 109 },
-  { month: "Jul", count: 100 },
-];
+// ⛔ Penting: load ApexChart hanya di client
+const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const SalesChart = () => {
+  const [chartOptions, setChartOptions] = useState<any>(null);
+  const [chartSeries, setChartSeries] = useState<any>(null);
+
+  useEffect(() => {
+    // Data simulasi revenue
+    const salesData = [31, 40, 28, 51, 42, 109, 100];
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
+
+    // set state di client, bukan di luar render (menghindari circular refs)
+    setChartOptions({
+      chart: {
+        type: "area",
+        toolbar: { show: false },
+        zoom: { enabled: false },
+      },
+      stroke: {
+        curve: "smooth",
+        width: 3,
+      },
+      dataLabels: { enabled: false },
+      xaxis: {
+        categories: months,
+        labels: { style: { colors: "#94a3b8" } },
+      },
+      yaxis: {
+        labels: { style: { colors: "#94a3b8" } },
+      },
+      grid: {
+        borderColor: "#1e293b",
+        strokeDashArray: 4,
+      },
+      tooltip: {
+        theme: "dark",
+      },
+      colors: ["#3b82f6"], // warna biru halus
+      fill: {
+        type: "gradient",
+        gradient: {
+          shadeIntensity: 1,
+          opacityFrom: 0.4,
+          opacityTo: 0.1,
+          stops: [0, 90, 100],
+        },
+      },
+    });
+
+    setChartSeries([
+      {
+        name: "Revenue",
+        data: salesData,
+      },
+    ]);
+  }, []);
+
+  // hindari render sebelum data siap
+  if (!chartOptions || !chartSeries) {
+    return <p className="text-slate-400 text-sm">Loading chart...</p>;
+  }
+
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full rounded shadow-xl overflow-hidden border border-slate-700 bg-slate-900">
-        <thead className="text-sm text-white bg-slate-800">
-          <tr>
-            <th className="p-3 text-left">Month</th>
-            <th className="p-3 text-left">Sales</th>
-          </tr>
-        </thead>
-        <tbody className="text-white">
-          {salesData.map((item) => (
-            <tr key={item.month} className="border-t border-slate-600 hover:bg-slate-800 transition">
-              <td className="p-3">{item.month}</td>
-              <td className="p-3">{item.count}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="w-full h-[320px]">
+      <ApexChart
+        options={chartOptions}
+        series={chartSeries}
+        type="area"
+        height="100%"
+        width="100%"
+      />
     </div>
   );
 };

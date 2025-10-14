@@ -615,6 +615,20 @@ export const getAdmin = async (req: any, res: Response, next: NextFunction) => {
   }
 };
 
+//Logout Admin
+export const logOutAdmin = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  res.clearCookie("access_token_admin");
+  res.clearCookie("refresh_token_admin");
+
+  res.status(201).json({
+    success: true,
+  });
+};
+
 //get logged in seller
 export const getSeller = async (
   req: any,

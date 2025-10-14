@@ -2,7 +2,7 @@
 
 import useAdmin from "apps/admin-ui/src/hooks/useAdmin";
 import UseSideBar from "apps/admin-ui/src/hooks/useSideBar";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import Box from "../box";
 import { Sidebar } from "./sidebar.style";
@@ -25,15 +25,26 @@ import {
   Wallet2Icon,
 } from "lucide-react";
 import SidebarMenu from "./sidebar.menu";
+import axiosInstance from "apps/admin-ui/src/utils/axiosInstance";
 
 const SidebarWrapper = () => {
   const { activeSideBar, setActiveSideBar } = UseSideBar();
   const pathName = usePathname();
   const { admin } = useAdmin();
+  const router = useRouter();
 
   useEffect(() => {
-    setActiveSideBar(pathName)
+    setActiveSideBar(pathName);
   }, [pathName, setActiveSideBar]);
+
+  const logOutHandler = async () => {
+    try {
+      await axiosInstance.get("/api/logout-admin");
+      router.push("/")
+    } catch (error) {
+      console.error("Logout error: ", error);
+    }
+  };
 
   const getIconColor = (route: string) =>
     activeSideBar === route ? "#0085ff" : "#969696";
@@ -197,8 +208,8 @@ const SidebarWrapper = () => {
               <SidebarItem
                 title="Logout"
                 isActive={activeSideBar === "/logout"}
-                href="/logout"
                 icon={<LogOut size={20} color={getIconColor("/logout")} />}
+                onClick={logOutHandler}
               />
             </SidebarMenu>
           </div>
