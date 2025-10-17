@@ -8,7 +8,12 @@ import { useStore } from "apps/user-ui/src/store";
 import useLocationTracking from "apps/user-ui/src/hooks/useLocationTracking";
 import useDeviceTracking from "apps/user-ui/src/hooks/useDeviceTracking";
 import useUser from "apps/user-ui/src/hooks/useUser";
-import { PRODUCT_IMAGE_PLACEHOLDER } from "../../constant";
+import {
+  PRODUCT_IMAGE_PLACEHOLDER,
+  SHOP_IMAGE_PLACEHOLDER,
+} from "../../constant";
+import axiosInstance from "apps/user-ui/src/utils/axiosInstance";
+import { isProtected } from "apps/user-ui/src/utils/protected";
 
 const ProductDetailCard = ({
   data,
@@ -21,6 +26,7 @@ const ProductDetailCard = ({
   const [isSelected, setIsSelected] = useState(data?.colors?.[0] || "");
   const [isSizeSelected, setIsSizeSelected] = useState(data?.sizes?.[0] || "");
   const [quantity, setQuantity] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { user } = useUser();
   const location = useLocationTracking();
@@ -38,148 +44,149 @@ const ProductDetailCard = ({
   const estimatedDelivery = new Date();
   estimatedDelivery.setDate(estimatedDelivery.getDate() + 5);
 
+  const handleChat = async () => {
+    if (isLoading) return;
+    setIsLoading(true);
+
+    try {
+      const res = await axiosInstance.post(
+        "/chatting/api/create-user-conversationGroup",
+        { sellerId: data?.Shop?.sellerId },
+        isProtected
+      );
+      router.push(`/inbox?conversationId=${res.data.conversation.id}`);
+    } catch (error) {
+      console.log("Something error with chat feature: ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div
-      className="fixed flex items-center justify-center top-0 left-0 h-screen w-full bg-[#0000001d] z-50"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
       onClick={() => setOpen(false)}
     >
       <div
-        className="w-[70%] md:[70%] md:mt-14 2xl:mt-0 h-max overflow-scroll min-h-[70vh] bg-white shadow-md rounded-lg"
+        className="w-[90%] md:w-[70%] h-auto max-h-[90vh] bg-white shadow-2xl rounded-2xl overflow-y-auto transition-all transform scale-100 hover:scale-[1.01]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="w-full flex flex-col md:flex-row">
-          <div className="w-full md:w-1/2 h-full">
-            <Image
-              src={data?.images?.[activeImage]?.file_url || PRODUCT_IMAGE_PLACEHOLDER}
-              alt={data?.images?.[activeImage]?.file_url || PRODUCT_IMAGE_PLACEHOLDER}
-              width={400}
-              height={400}
-              className="w-full rounded-lg object-contain"
-            />
+        <div className="flex flex-col md:flex-row gap-6 p-6">
+          {/* LEFT: Product Image & Thumbnails */}
+          <div className="w-full md:w-1/2 flex flex-col items-center">
+            <div className="w-full aspect-square bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden">
+              <Image
+                src={
+                  data?.images?.[activeImage]?.file_url ||
+                  PRODUCT_IMAGE_PLACEHOLDER
+                }
+                alt={data?.title || "Product"}
+                width={500}
+                height={500}
+                className="object-contain w-full h-full"
+              />
+            </div>
+
             {/* Thumbnails */}
-            <div className="flex gap-2 mt-4">
+            <div className="flex flex-wrap justify-center gap-2 mt-4">
               {data?.images?.map((img: any, index: number) => (
-                <div
+                <button
                   key={index}
-                  className={`cursor-pointer border rounded-md ${
+                  className={`w-16 h-16 rounded-md overflow-hidden border-2 transition ${
                     activeImage === index
-                      ? "border-gray-500"
-                      : "border-transparent"
+                      ? "border-blue-500"
+                      : "border-transparent hover:border-gray-300"
                   }`}
                   onClick={() => setActiveImage(index)}
                 >
                   <Image
                     src={img?.file_url}
                     alt={`Thumbnail ${index}`}
-                    width={80}
-                    height={80}
-                    className="rounded-md"
+                    width={64}
+                    height={64}
+                    className="object-cover w-full h-full"
                   />
-                </div>
+                </button>
               ))}
             </div>
           </div>
-          {/* Seller Info Right Top */}
-          <div className="w-full md:w-1/2 md:pl-8 mt-6 md:mt-0">
-            <div className="border-b relative pb-3 border-gray-200">
-              <div className="flex items-start justify-between gap-4">
-                {/* Left: Shop Info */}
-                <div className="flex items-start gap-3 flex-1 min-w-0">
-                  {/* Shop Logo */}
-                  <Image
-                    src={data?.Shop?.avatar}
-                    alt="Shop Logo"
-                    width={60}
-                    height={60}
-                    className="rounded-full w-[60px] h-[60px] object-cover"
-                  />
-                  <div className="min-w-0">
-                    <Link
-                      href={`/shop/${data?.Shop?.id}`}
-                      className="text-lg font-medium truncate"
-                    >
-                      {data?.Shop?.name}
-                    </Link>
-                    {/* Shop Ratings */}
-                    <span className="block mt-1">
-                      <Ratings rating={data?.Shop?.ratings} />
-                    </span>
-                    {/* Shop Location */}
-                    <p className="text-gray-600 mt-1 flex items-center break-words">
-                      <MapPin size={20} className="shrink-0 mr-1" />
-                      <span className="break-words">
-                        {data?.Shop?.address || "Location Not Available"}
-                      </span>
-                    </p>
-                  </div>
-                </div>
 
-                {/* Chat with Seller Button */}
-                <div className="flex flex-col items-end gap-2">
-                  <button
-                    className="cursor-pointer"
-                    onClick={() => setOpen(false)}
+          {/* RIGHT: Product Info */}
+          <div className="w-full md:w-1/2 flex flex-col justify-between">
+            {/* Header (Shop Info + Close Button) */}
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex items-center gap-3">
+                <Image
+                  src={data?.Shop?.avatar || SHOP_IMAGE_PLACEHOLDER}
+                  alt="Shop Logo"
+                  width={50}
+                  height={50}
+                  className="rounded-full object-cover"
+                />
+                <div>
+                  <Link
+                    href={`/shop/${data?.Shop?.id}`}
+                    className="text-lg font-semibold hover:text-blue-600 transition"
                   >
-                    <X size={25} />
-                  </button>
-                  <div className="pr-3">
-                    <button
-                      className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium hover:scale-105 transition rounded-md whitespace-nowrap "
-                      onClick={() =>
-                        router.push(`/inbox?shopId=${data?.Shop?.id}`)
-                      }
-                    >
-                      💬 Chat with Seller
-                    </button>
+                    {data?.Shop?.name}
+                  </Link>
+                  <div className="flex items-center gap-1 text-sm text-gray-500">
+                    <MapPin size={16} />{" "}
+                    <span>{data?.Shop?.address || "No Address"}</span>
                   </div>
+                  <Ratings rating={data?.Shop?.ratings} />
                 </div>
               </div>
+
+              <button
+                className="text-gray-600 hover:text-gray-900 transition"
+                onClick={() => setOpen(false)}
+              >
+                <X size={28} />
+              </button>
             </div>
-            {/* Isi Deskripsi */}
-            <h3 className="text-xl font-semibold mt-3">{data?.title}</h3>
-            <p className="mt-2 text-gray-700 whitespace-pre-wrap w-full">
+
+            {/* Product Title */}
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              {data?.title}
+            </h2>
+            <p className="text-gray-700 mb-4 whitespace-pre-wrap">
               {data?.short_description}
             </p>
-            {/* Brand */}
-            {data?.brand && (
-              <p className="mt-2">
-                <strong>Brand:</strong> {data?.brand}
-              </p>
-            )}
-            {/* Color Option */}
-            <div className="flex flex-col md:flex-row items-start gap-5 mt-4">
-              {data?.colors?.length > 0 && (
-                <div>
-                  <strong>Color:</strong>
-                  <div className="flex gap-2 mt-1">
-                    {data?.colors?.map((color: string, index: number) => (
-                      <button
-                        key={index}
-                        className={`w-8 h-8 cursor-pointer rounded-full border-2 transition ${
-                          isSelected === color
-                            ? "border-gray-400 scale-110 shadow-md"
-                            : "border-transparent"
-                        }`}
-                        onClick={() => setIsSelected(color)}
-                        style={{ backgroundColor: color }}
-                      />
-                    ))}
-                  </div>
+
+            {/* Color Options */}
+            {data?.colors?.length > 0 && (
+              <div className="mb-4">
+                <strong className="block mb-1">Color:</strong>
+                <div className="flex gap-2">
+                  {data?.colors.map((color: string, i: number) => (
+                    <button
+                      key={i}
+                      style={{ backgroundColor: color }}
+                      className={`w-8 h-8 rounded-full border-2 transition ${
+                        isSelected === color
+                          ? "border-gray-500 scale-110 shadow-md"
+                          : "border-gray-200 hover:border-gray-400"
+                      }`}
+                      onClick={() => setIsSelected(color)}
+                    />
+                  ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+
             {/* Size Options */}
             {data?.sizes?.length > 0 && (
-              <div>
-                <strong>Sizes:</strong>
-                <div className="flex gap-2 mt-1">
-                  {data?.sizes?.map((size: string, index: number) => (
+              <div className="mb-4">
+                <strong className="block mb-1">Size:</strong>
+                <div className="flex gap-2 flex-wrap">
+                  {data?.sizes.map((size: string, i: number) => (
                     <button
-                      key={index}
-                      className={`px-4 py-1 cursor-pointer rounded-md ${
+                      key={i}
+                      className={`px-4 py-1 rounded-md border text-sm transition ${
                         isSizeSelected === size
-                          ? "bg-gray-800 text-white"
-                          : "bg-gray-300 text-black"
+                          ? "bg-gray-800 text-white border-gray-800"
+                          : "bg-gray-100 text-gray-800 hover:bg-gray-200"
                       }`}
                       onClick={() => setIsSizeSelected(size)}
                     >
@@ -190,47 +197,49 @@ const ProductDetailCard = ({
               </div>
             )}
 
-            {/* Price Section */}
-            <div className="mt-5 flex items-center gap-4">
-              <h3 className="text-2xl font-semibold text-gray-900">
+            {/* Price */}
+            <div className="flex items-baseline gap-3 mb-4">
+              <span className="text-3xl font-semibold text-blue-700">
                 ${data?.sale_price}
-              </h3>
+              </span>
               {data?.regular_price && (
-                <h3 className="text-lg text-red-600 line-through">
+                <span className="text-lg line-through text-gray-400">
                   ${data?.regular_price}
-                </h3>
+                </span>
               )}
             </div>
 
-            {/* Stock */}
-            <div className="mt-5 flex items-center gap-5">
-              <div className="flex items-center rounded-md">
+            {/* Quantity + Add to Cart */}
+            <div className="flex items-center gap-4 mb-4">
+              <div className="flex items-center bg-gray-100 rounded-lg overflow-hidden">
                 <button
-                  className="px-3 py-1 cursor-pointer bg-gray-300 hover:bg-gray-400"
-                  onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+                  className="px-3 py-2 text-lg hover:bg-gray-200"
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                 >
-                  -
+                  −
                 </button>
-                <span className="px-4 bg-gray-100 py-1">{quantity}</span>
+                <span className="px-4 text-lg">{quantity}</span>
                 <button
-                  className="px-3 py-1 cursor-pointer bg-gray-300 hover:bg-gray-400"
-                  onClick={() => setQuantity((prev) => prev + 1)}
+                  className="px-3 py-2 text-lg hover:bg-gray-200"
+                  onClick={() => setQuantity((q) => q + 1)}
                 >
                   +
                 </button>
               </div>
-              {/* Cart */}
+
               <button
-                className={`flex items-center gap-2 px-4 py-2 bg-[#ff5722] hover:bg-[#e64a19] text-white font-medium rounded-lg transition ${
-                  isInCart ? "cursor-not-allowed" : "cursor-pointer"
-                } `}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold transition ${
+                  isInCart
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-orange-500 hover:bg-orange-600 text-white"
+                }`}
                 disabled={isInCart}
                 onClick={() =>
                   !isInCart &&
                   addToCart(
                     {
                       ...data,
-                      quantity: 1,
+                      quantity,
                       selectedOptions: {
                         color: isSelected,
                         size: isSizeSelected,
@@ -244,9 +253,9 @@ const ProductDetailCard = ({
               >
                 <ShoppingCartIcon size={18} /> Add to Cart
               </button>
-              {/* Heart */}
+
               <button
-                className="opacity-[.7] cursor-pointer"
+                className="p-2 hover:scale-110 transition"
                 onClick={() =>
                   isWishlisted
                     ? removeFromWishlist(data.id, user, location, deviceInfo)
@@ -259,24 +268,40 @@ const ProductDetailCard = ({
                 }
               >
                 <Heart
-                  size={30}
+                  size={28}
                   fill={isWishlisted ? "red" : "transparent"}
-                  color={isWishlisted ? "transparent" : "black"}
+                  stroke={isWishlisted ? "red" : "black"}
                 />
               </button>
             </div>
-            {/* Stock */}
-            <div className="mt-3">
-              {data?.stock > 0 ? (
-                <span className="text-green-600 font-semibold">In Stock</span>
-              ) : (
-                <span className="text-red-600 font-semibold">Out of stock</span>
-              )}
+
+            {/* Stock & Delivery */}
+            <div className="text-sm text-gray-600 space-y-1">
+              <div>
+                Stock:{" "}
+                <span
+                  className={`font-semibold ${
+                    data?.stock > 0 ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  {data?.stock > 0 ? "In Stock" : "Out of Stock"}
+                </span>
+              </div>
+              <div>
+                Estimated Delivery:{" "}
+                <strong>{estimatedDelivery.toDateString()}</strong>
+              </div>
             </div>
-            {/*  */}
-            <div className="mt-3 text-gray-600 text-sm">
-              Estimated Delivery:{" "}
-              <strong>{estimatedDelivery.toDateString()}</strong>
+
+            {/* Chat Button */}
+            <div className="mt-6 flex justify-end">
+              <button
+                className="flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition"
+                onClick={() => handleChat()}
+                disabled={isLoading}
+              >
+                💬 Chat with Seller
+              </button>
             </div>
           </div>
         </div>

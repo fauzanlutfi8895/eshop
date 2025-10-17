@@ -67,6 +67,21 @@ const ProductCard = ({
     return;
   }, [isEvent, product?.ending_date]);
 
+  useEffect(() => {
+    if (open) {
+      // ketika modal terbuka
+      document.body.style.overflow = "hidden";
+    } else {
+      // ketika modal tertutup
+      document.body.style.overflow = "";
+    }
+
+    // bersihkan efek ketika komponen unmount
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   return (
     <div className="w-full min-h-[350px] h-max bg-white rounded-lg relative">
       {isEvent && (
