@@ -8,24 +8,14 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import { Search, Eye } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import axiosInstance from "apps/seller-ui/src/utils/axiosInstance";
 import Link from "next/link";
 import Breadcrumbs from "apps/seller-ui/src/shared/component/breadcrumbs";
-
-const fetchOrder = async () => {
-  const res = await axiosInstance("/order/api/get-seller-orders");
-  return res.data.orders;
-};
+import useSellerOrders from "apps/seller-ui/src/hook/useSellerOrders";
 
 const sellerPayments = () => {
   const [globalFilter, setGlobalFilter] = useState("");
 
-  const { data: orders = [], isLoading } = useQuery({
-    queryKey: ["seller-orders"],
-    queryFn: fetchOrder,
-    staleTime: 1000 * 60 * 5,
-  });
+  const { orders, isPending: isLoading } = useSellerOrders();
 
   const columns = useMemo(() => [
     {

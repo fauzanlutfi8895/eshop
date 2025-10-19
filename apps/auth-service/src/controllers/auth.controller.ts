@@ -215,9 +215,9 @@ export const refreshToken = async (
     if (decoded.role === "user") {
       setCookie(res, "access_token", newAccessToken);
     } else if (decoded.role === "admin") {
-      setCookie(res, "seller-access-token", newAccessToken);
+      setCookie(res, "access-token-admin", newAccessToken);
     } else if (decoded.role === "seller") {
-      setCookie(res, "access_token_admin", newAccessToken);
+      setCookie(res, "seller-access-token", newAccessToken);
     }
 
     return res.status(201).json({
@@ -487,13 +487,13 @@ export const loginSeller = async (
 
     if (!seller) return next(new ValidationError("Invalid email or password!"));
 
-    const isMatch = bcrypt.compare(password, seller.password!);
+    const isMatch = await bcrypt.compare(password, seller.password!);
 
     if (!isMatch)
       return next(new ValidationError("Invalid email or password!"));
 
-    res.clearCookie("access-token");
-    res.clearCookie("refresh-token");
+    res.clearCookie("access_token");
+    res.clearCookie("refresh_token");
 
     const accessToken = jwt.sign(
       { id: seller.id, role: "seller" },
@@ -716,6 +716,23 @@ export const updatePassword = async (
 
     res.status(200).json({
       message: "Password update successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const logOutSeller = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    res.clearCookie("seller-access-token");
+    res.clearCookie("seller-refresh-token");
+
+    res.status(201).json({
+      success: true,
     });
   } catch (error) {
     next(error);

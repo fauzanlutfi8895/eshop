@@ -15,7 +15,10 @@ app.use(
     credentials: true,
   })
 );
-app.use(express.json());
+// Limit body size to 5mb (accounts for base64 encoding overhead)
+// Base64 encoding increases size by ~33%, so 3MB image = ~4MB base64
+app.use(express.json({ limit: "5mb" }));
+app.use(express.urlencoded({ limit: "5mb", extended: true }));
 app.use(cookieParser());
 app.get("/", (req, res) => {
   res.send({ message: "Hallo Api User Service Menyala" });

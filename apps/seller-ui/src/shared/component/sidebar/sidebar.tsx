@@ -25,13 +25,16 @@ import {
 } from "lucide-react";
 import SidebarMenu from "./sidebar.menu";
 import { LOGO_IMAGE_PLACEHOLDER } from "../../constant";
+import axiosInstance from "apps/seller-ui/src/utils/axiosInstance";
+import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 const SidebarBarWrapper = () => {
   const { activeSidebar, setActiveSidebar } = UseSidebar();
   const pathname = usePathname();
   const { seller } = useSeller();
-
-  console.log(seller);
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     setActiveSidebar(pathname);
@@ -205,7 +208,12 @@ const SidebarBarWrapper = () => {
             <SidebarItem
               isActive={activeSidebar === "/logout"}
               title="Logout"
-              href="/logout"
+              onClick={() => {
+                axiosInstance.get("/api/logout-seller");
+                localStorage.removeItem("REACT_QUERY_OFFLINE_CACHE");
+                queryClient.clear();
+                router.push("/login");
+              }}
               icon={<LogOut size={22} color={getIconColor("/logout")} />}
             />
           </div>

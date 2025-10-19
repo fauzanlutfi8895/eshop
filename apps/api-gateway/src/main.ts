@@ -16,15 +16,20 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000","http://localhost:3001","http://localhost:3002"],
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:3002",
+    ],
     allowedHeaders: ["Authorization", "Content-Type"],
     credentials: true,
   })
 );
 
 app.use(morgan("dev"));
-app.use(express.json({ limit: "100mb" }));
-app.use(express.urlencoded({ limit: "100mb", extended: true }));
+// Limit body size to 10mb for general requests (enough for base64 encoded images)
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(cookieParser());
 app.set("trust proxy", 1);
 
@@ -53,6 +58,7 @@ app.use("/chatting", proxy("http://localhost:6007"));
 app.use("/admin", proxy("http://localhost:6006"));
 app.use("/order", proxy("http://localhost:6005"));
 app.use("/user", proxy("http://localhost:6004"));
+app.use("/seller", proxy("http://localhost:6003"));
 app.use("/product", proxy("http://localhost:6002"));
 app.use("/", proxy("http://localhost:6001"));
 

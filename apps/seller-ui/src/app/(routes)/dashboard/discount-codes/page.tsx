@@ -1,11 +1,9 @@
 "use client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Breadcrumbs from "apps/seller-ui/src/shared/component/breadcrumbs";
 import DeleteDiscountCodeModal from "apps/seller-ui/src/shared/component/modals/delete.discount-codes";
-import axiosInstance from "apps/seller-ui/src/utils/axiosInstance";
+import useDiscountCodes from "apps/seller-ui/src/hook/useDiscountCodes";
 import { AxiosError } from "axios";
-import { ChevronRight, Plus, Trash, X } from "lucide-react";
-import Link from "next/link";
+import { Plus, Trash, X } from "lucide-react";
 import Input from "packages/component/input";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -16,15 +14,15 @@ const Page = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedDiscount, setSelectedDiscount] = useState<any>(false);
 
-  const queryClient = useQueryClient();
-
-  const { data: discountCodes = [], isLoading } = useQuery({
-    queryKey: ["shop-discounts"],
-    queryFn: async () => {
-      const res = await axiosInstance.get("/product/api/get-discount-code");
-      return res?.data?.discount_codes || [];
-    },
-  });
+  // Use custom hook for discount codes
+  const {
+    discountCodes,
+    isLoading,
+    createDiscountCode,
+    deleteDiscountCode,
+    isCreating,
+    createError,
+  } = useDiscountCodes();
 
   const {
     register,
@@ -35,38 +33,20 @@ const Page = () => {
   } = useForm({
     defaultValues: {
       public_name: "",
-      discountType: "percentage",
+      discountType: "percentage" as "percentage" | "flat",
       discountValue: "",
       discountCode: "",
     },
   });
 
-  const createDiscountCodeMutation = useMutation({
-    mutationFn: async (data) => {
-      await axiosInstance.post("/product/api/create-discount-code", data);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["shop-discounts"],
-      });
-      reset();
-      setShowModal(false);
-    },
-  });
-
-  const DeleteDiscountCodeMutation = useMutation({
-    mutationFn: async (discountId) => {
-      await axiosInstance.delete(`product/api/delete-discount-code/${discountId}`)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["shop-discounts"]});
-      setShowDeleteModal(false);
-    }
-  })
-
   const handleDeleteClick = async (discount: any) => {
-    setSelectedDiscount(discount)
+    setSelectedDiscount(discount);
     setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    deleteDiscountCode(selectedDiscount?.id);
+    setShowDeleteModal(false);
   };
 
   const onSubmit = (data: any) => {
@@ -74,7 +54,18 @@ const Page = () => {
       toast.error("You can only create up to 8 discount codes.");
       return;
     }
-    createDiscountCodeMutation.mutate(data)
+    createDiscountCode(data, {
+      onSuccess: () => {
+        reset();
+        setShowModal(false);
+        toast.success("Discount code created successfully!");
+      },
+      onError: (error: any) => {
+        toast.error(
+          error?.response?.data?.message || "Failed to create discount code"
+        );
+      },
+    });
   };
 
   return (
@@ -219,21 +210,19 @@ const Page = () => {
               </div>
               <button
                 type="submit"
-                disabled={createDiscountCodeMutation.isPending}
-                className="mt-4 w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-md text-white font-semibold flex items-center justify-center gap-2"
+                disabled={isCreating}
+                className="mt-4 w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-md text-white font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Plus size={18} />
-                {createDiscountCodeMutation?.isPending
-                  ? "Creating..."
-                  : "Create Code"}
+                {isCreating ? "Creating..." : "Create Code"}
               </button>
-              {createDiscountCodeMutation.isError && (
+              {createError && (
                 <p className="text-red-500 text-sm mt-2">
                   {(
-                    createDiscountCodeMutation.error as AxiosError<{
+                    createError as AxiosError<{
                       message: string;
                     }>
-                  )?.response?.data?.message || "Something went error"}
+                  )?.response?.data?.message || "Something went wrong"}
                 </p>
               )}
             </form>
@@ -241,12 +230,15 @@ const Page = () => {
         </div>
       )}
 
-      {/* Create Delete Modal */}
+      {/* Delete Modal */}
       {showDeleteModal && selectedDiscount && (
-        <DeleteDiscountCodeModal discount={selectedDiscount} onClose={() => setShowDeleteModal(false)} onConfirm={() => DeleteDiscountCodeMutation.mutate(selectedDiscount?.id)}/>
+        <DeleteDiscountCodeModal
+          discount={selectedDiscount}
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={handleConfirmDelete}
+        />
       )}
     </div>
-    
   );
 };
 

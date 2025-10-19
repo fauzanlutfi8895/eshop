@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import ImagePlaceHolder from "apps/seller-ui/src/shared/component/image-placeholder";
 import { enhancements } from "apps/seller-ui/src/utils/AI.enhancement";
 import axiosInstance from "apps/seller-ui/src/utils/axiosInstance";
+import useDiscountCodes from "apps/seller-ui/src/hook/useDiscountCodes";
 import { ChevronRight, Wand, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -14,7 +15,7 @@ import RichTextEditor from "packages/component/rich-text-editor";
 import SizeSelector from "packages/component/size-selector";
 import React, { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 interface UploadedImage {
   fileId: string;
@@ -32,7 +33,7 @@ const Page = () => {
   } = useForm();
 
   const [openImageModal, setOpenImageModal] = useState(false);
-  const [isChanged, setIsChanged] = useState(true);
+  const [isChanged] = useState(true);
   const [activeEffect, setActiveEffect] = useState<string | null>(null);
   const [images, setImages] = useState<(UploadedImage | null)[]>([null]);
   const [selectedImage, setSelectedImage] = useState("");
@@ -56,13 +57,8 @@ const Page = () => {
     retry: 2,
   });
 
-  const { data: discountCodes = [], isLoading: discountLoading } = useQuery({
-    queryKey: ["shop-discounts"],
-    queryFn: async () => {
-      const res = await axiosInstance.get("/product/api/get-discount-code");
-      return res?.data?.discount_codes || [];
-    },
-  });
+  // Use custom hook for discount codes
+  const { discountCodes, isLoading: discountLoading } = useDiscountCodes();
 
   const categoriesData = data?.categories || [];
   const subCategoriesData = data?.subCategories || {};

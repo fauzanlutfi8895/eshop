@@ -113,29 +113,31 @@ model Followers {
 }
 
 model Shop {
-  id            String       @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  bio           String?
-  category      String
-  avatar        String?
-  coverBanner   String?
-  address       String
-  opening_hours String?
-  website       String?
-  socialLink    Json[]
-  rating        Float        @default(0)
-  review        shopReview[]
-  followers     Followers[]
-  seller        Seller       @relation(fields: [sellerId], references: [id])
-  sellerId      String       @unique @db.ObjectId
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  Product       Product[]
-  isDeleted     Boolean      @default(false)
-  deletedAt     DateTime?
-  imagesId      String?      @db.ObjectId
-  Order         Order[]
-  Image         Image[]
+  id                String            @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  bio               String?
+  category          String
+  avatar            String?
+  coverBanner       String?
+  coverBannerFileId String?
+  address           String
+  opening_hours     String?
+  website           String?
+  socialLink        Json[]
+  rating            Float             @default(0)
+  review            shopReview[]
+  followers         Followers[]
+  seller            Seller            @relation(fields: [sellerId], references: [id])
+  sellerId          String            @unique @db.ObjectId
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  Product           Product[]
+  isDeleted         Boolean           @default(false)
+  deletedAt         DateTime?
+  imagesId          String?           @db.ObjectId
+  Order             Order[]
+  Image             Image[]
+  BannerUploadLog   BannerUploadLog[]
 }
 
 model ShopAnalytics {
@@ -162,17 +164,18 @@ model UniqueShopVisitors {
 }
 
 model Seller {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  email        String   @unique
-  phone_number String
-  country      String
-  password     String
-  stripeId     String?
-  shop         Shop?
-  following    String[]
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  email           String            @unique
+  phone_number    String
+  country         String
+  password        String
+  stripeId        String?
+  shop            Shop?
+  following       String[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  BannerUploadLog BannerUploadLog[]
 }
 
 model site_config {
@@ -312,4 +315,18 @@ model message {
   createdAt      DateTime @default(now())
 
   @@unique([conversationId, senderId, content, createdAt])
+}
+
+model BannerUploadLog {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  sellerId   String   @db.ObjectId
+  seller     Seller   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  shopId     String   @db.ObjectId
+  shop       Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  fileId     String
+  fileUrl    String
+  uploadedAt DateTime @default(now())
+
+  @@index([sellerId, uploadedAt])
+  @@index([shopId, uploadedAt])
 }

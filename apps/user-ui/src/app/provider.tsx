@@ -13,6 +13,8 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
           queries: {
             refetchOnWindowFocus: false,
             staleTime: 1000 * 60 * 5,
+            retry: false, // Disable retries globally
+            refetchOnMount: false, // Don't refetch on component mount if data exists
           },
         },
       })
@@ -29,9 +31,9 @@ const ProvidersWithWebSocket = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { user, isLoading } = useUser();
+  const { user } = useUser();
 
-  if (isLoading) return null;
+  // Don't block rendering on initial load
   return (
     <>
       {user && <WebSocketProvider user={user}>{children}</WebSocketProvider>}
