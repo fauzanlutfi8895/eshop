@@ -30,10 +30,21 @@ export async function startConsumer() {
       if (!message.value) return;
 
       try {
-        const parsed: BufferedMessage = JSON.parse(message.value.toString());
+        const parsed = JSON.parse(message.value.toString());
+
+        // 🚧 Filter hanya pesan yang valid
+        if (
+          !parsed.conversationId ||
+          !parsed.senderId ||
+          !parsed.senderType ||
+          !parsed.content
+        ) {
+          console.warn("Invalid message format:", parsed);
+          return;
+        }
+
         buffer.push(parsed);
 
-        // If this is the first message in an empty array then start the timer
         if (buffer.length === 1 && !flushTimer) {
           flushTimer = setTimeout(flushBufferToDb, BATCH_INTERVAL_MS);
         }

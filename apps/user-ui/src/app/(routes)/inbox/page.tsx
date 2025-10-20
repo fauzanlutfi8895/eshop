@@ -9,6 +9,7 @@ import { isProtected } from "apps/user-ui/src/utils/protected";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
+import { useChatSync } from "apps/user-ui/src/hooks/useChatSync";
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -25,7 +26,9 @@ const Page = () => {
   const [page, setPage] = useState(1);
   const [hasFetchedOnce, setHasFetchedOnce] = useState(false);
   const conversationId = searchParams.get("conversationId");
-  const { ws, unreadCounts } = useWebSocket();
+  const { ws, unreadCounts } = useWebSocket() || {};
+
+  useChatSync(conversationId as string | undefined);
 
   const { data: conversations, isLoading } = useQuery({
     queryKey: ["conversations"],
@@ -52,7 +55,7 @@ const Page = () => {
       return res.data.messages.reverse();
     },
     enabled: !!conversationId,
-    staleTime: 2 * 60 * 1000,
+    staleTime: Infinity,
   });
 
   const loadMoreMessages = async () => {
@@ -118,10 +121,11 @@ const Page = () => {
     if (!message.trim() || !selectedChat) return;
 
     const payload = {
+      type: "MESSAGE", 
       fromUserId: user?.id,
       toUserId: selectedChat?.seller?.id,
       conversationId: selectedChat?.conversationId,
-      messageBody: message,
+      content: message,
       senderType: "user",
     };
 
@@ -132,7 +136,7 @@ const Page = () => {
       (old: any = []) => [
         ...old,
         {
-          content: payload.messageBody,
+          content: payload.content,
           senderType: "user",
           seen: false,
           createdAt: new Date().toISOString(),
@@ -142,8 +146,8 @@ const Page = () => {
 
     setChats((prevChats) =>
       prevChats.map((chat) =>
-        chat.conversationId
-          ? { ...chat, lastMessage: payload.messageBody }
+        chat.conversationId === selectedChat.conversationId
+          ? { ...chat, lastMessage: payload.content }
           : chat
       )
     );
@@ -265,7 +269,7 @@ const Page = () => {
                             : "bg-white text-gray-800"
                         } px-4 py-2 rounded-lg shadow-sm w-fit`}
                       >
-                        {msg.text || msg.content}
+                        {msg.content}
                       </div>
                       <div
                         className={`text-[11px] text-gray-400 mt-1 flex items-center gap-1 ${

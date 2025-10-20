@@ -217,7 +217,7 @@ export const getSellerConversations = async (
         // Online status from Redis
         let isOnline = false;
         if (userParticipant?.userId) {
-          const redisKey = `online:user_${userParticipant.userId}`;
+          const redisKey = `online:user:${userParticipant.userId}`;
           const redisResult = await redis.get(redisKey);
           isOnline = !!redisResult;
         }
@@ -304,6 +304,7 @@ export const fetchMessages = async (
       });
 
       const redisKey = `online:seller:${sellerParticipant?.sellerId}`;
+      console.log("Redis key:", redisKey);
       const redisResult = await redis.get(redisKey);
       isOnline = !!redisResult;
     }
@@ -386,7 +387,8 @@ export const fetchSellerMessages = async (
         },
       });
 
-      const redisKey = `online:user_${userParticipant.userId}`;
+      const redisKey = `online:user:${userParticipant.userId}`;
+      console.log("Redis key seller:", redisKey);
       const redisResult = await redis.get(redisKey);
       isOnline = !!redisResult;
     }
@@ -414,4 +416,3 @@ export const fetchSellerMessages = async (
     return next(error);
   }
 };
-

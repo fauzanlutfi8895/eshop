@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import { WebSocketProvider } from "../context/web-socket-context";
+import useSeller from "../hook/useSeller";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,15 +22,30 @@ const persister = createAsyncStoragePersister({
 });
 
 const Provider = ({ children }: { children: React.ReactNode }) => {
-  
   return (
     <PersistQueryClientProvider
       client={queryClient}
       persistOptions={{ persister }}
     >
-      {children}
+      <ProvidersWithWebSocket>{children}</ProvidersWithWebSocket>
     </PersistQueryClientProvider>
   );
+};
+
+const ProvidersWithWebSocket = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const { seller } = useSeller();
+
+  useEffect(() => {
+    console.log("👀 Checking seller:", seller?.id);
+    if (!seller?.id) return;
+    console.log("🔌 Initializing WebSocket connection...");
+  }, []);
+
+  return <WebSocketProvider seller={seller}>{children}</WebSocketProvider>;
 };
 
 export default Provider;
