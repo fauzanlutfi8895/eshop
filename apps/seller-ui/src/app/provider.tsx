@@ -6,6 +6,7 @@ import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { WebSocketProvider } from "../context/web-socket-context";
 import useSeller from "../hook/useSeller";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,6 +28,7 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
       client={queryClient}
       persistOptions={{ persister }}
     >
+      <ReactQueryDevtools initialIsOpen={false} />
       <ProvidersWithWebSocket>{children}</ProvidersWithWebSocket>
     </PersistQueryClientProvider>
   );

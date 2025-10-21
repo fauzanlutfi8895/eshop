@@ -2,10 +2,12 @@ import redis from "@packages/libs/redis";
 import { Server as HttPServer } from "http";
 import { kafka } from "@packages/utils/kafka";
 import { WebSocketServer, WebSocket } from "ws";
+import { randomUUID } from "crypto";
 
 const producer = kafka.producer();
 const connectedUsers: Map<string, WebSocket> = new Map();
 const unseenCounts: Map<string, number> = new Map();
+const messageId = randomUUID();
 
 interface IncomingMessage {
   type?: "MESSAGE" | "MARK_AS_SEEN" | "PING";
@@ -77,7 +79,8 @@ export async function createWebSocketServer(server: HttPServer) {
         }
 
         // 🧩 Step 4 — Validate message content
-        const { fromUserId, toUserId, content, conversationId, senderType } = data;
+        const { fromUserId, toUserId, content, conversationId, senderType } =
+          data;
         if (!fromUserId || !toUserId || !conversationId || !content) {
           console.warn("⚠️ Incomplete message payload:", data);
           return;
@@ -87,6 +90,7 @@ export async function createWebSocketServer(server: HttPServer) {
 
         // 📨 Step 5 — Construct message
         const messagePayload = {
+          id: messageId,
           conversationId,
           senderId: fromUserId,
           senderType,
@@ -96,7 +100,7 @@ export async function createWebSocketServer(server: HttPServer) {
 
         const messageEvent = JSON.stringify({
           type: "NEW_MESSAGE",
-          payload: messagePayload,
+          payload: { ...messagePayload, tempId: data.tempId || null },
         });
 
         const receiverKey =
@@ -130,13 +134,14 @@ export async function createWebSocketServer(server: HttPServer) {
 
         // ✅ Step 8 — Send ACK to sender
         const senderSocket = connectedUsers.get(senderKey);
-        if (senderSocket && senderSocket.readyState === WebSocket.OPEN) {
+        if (senderSocket?.readyState === WebSocket.OPEN) {
           senderSocket.send(
             JSON.stringify({
               type: "MESSAGE_ACK",
               payload: {
                 conversationId,
-                tempId: data.tempId || null,
+                tempId: data.tempId,
+                id: messageId,
                 timestamp: now,
               },
             })

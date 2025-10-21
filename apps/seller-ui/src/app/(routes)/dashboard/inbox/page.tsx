@@ -179,22 +179,13 @@ const SellerInboxPage = () => {
         queryClient.setQueryData(
           ["messages", payload.conversationId],
           (old: any = []) => {
-            // Cegah duplikat berdasarkan id, tempId, atau kombinasi konten + waktu
-            const exists = old.some(
-              (msg: any) =>
-                msg.id === payload.id ||
-                msg.tempId === payload.tempId ||
-                (msg.content === payload.content &&
-                  msg.createdAt === payload.createdAt)
-            );
-
-            if (exists) return old; // Jangan tambahkan kalau sudah ada
-
+            const existing = old.find((msg: any) => msg.tempId === payload.tempId);
+            if (existing) return old;
             return [...old, payload];
           }
         );
-
-        //Update last message di daftar
+      
+        // Update last message
         queryClient.setQueryData(["conversations"], (old: any = []) =>
           old.map((chat: any) =>
             chat.conversationId === payload.conversationId
@@ -202,7 +193,12 @@ const SellerInboxPage = () => {
               : chat
           )
         );
+      
+        if (payload.conversationId === conversationId) {
+          scrollToBottom();
+        }
       }
+      
 
       if (type === "UNSEEN_COUNT_UPDATE") {
         queryClient.setQueryData(["conversations"], (old: any = []) =>
@@ -357,7 +353,7 @@ const SellerInboxPage = () => {
                 )}
                 {messages.map((msg: any, idx: number) => (
                   <div
-                    key={msg.tempId || idx}
+                    key={idx}
                     className={`flex flex-col ${
                       msg.senderType === "seller"
                         ? "items-end ml-auto"
