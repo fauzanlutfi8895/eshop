@@ -6,8 +6,8 @@ import {
   getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import useSellerOrders from "apps/seller-ui/src/hook/useSellerOrders";
-import Breadcrumbs from "apps/seller-ui/src/shared/component/breadcrumbs";
+import useSellerOrders from "@/hook/useSellerOrders";
+import Breadcrumbs from "@/shared/component/breadcrumbs";
 import { Eye, Search } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useMemo, useState } from "react";

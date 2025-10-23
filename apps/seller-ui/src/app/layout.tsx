@@ -1,6 +1,6 @@
 import { Toaster } from "react-hot-toast";
 import "./global.css";
-import Provider from "./provider";
+import Provider from "@/app/provider";
 import { Poppins } from "next/font/google";
 
 const poppins = Poppins({

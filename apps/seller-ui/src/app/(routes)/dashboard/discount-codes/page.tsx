@@ -1,10 +1,10 @@
 "use client";
-import Breadcrumbs from "apps/seller-ui/src/shared/component/breadcrumbs";
-import DeleteDiscountCodeModal from "apps/seller-ui/src/shared/component/modals/delete.discount-codes";
-import useDiscountCodes from "apps/seller-ui/src/hook/useDiscountCodes";
+import Breadcrumbs from "@/shared/component/breadcrumbs";
+import DeleteDiscountCodeModal from "@/shared/component/modals/delete.discount-codes";
+import useDiscountCodes from "@/hook/useDiscountCodes";
 import { AxiosError } from "axios";
 import { Plus, Trash, X } from "lucide-react";
-import Input from "packages/component/input";
+import Input from "@packages/component/input";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";

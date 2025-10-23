@@ -2,15 +2,16 @@ import redis from "@packages/libs/redis";
 import { Server as HttPServer } from "http";
 import { kafka } from "@packages/utils/kafka";
 import { WebSocketServer, WebSocket } from "ws";
-import { randomUUID } from "crypto";
+import {
+  clearUnseenCount,
+} from "@packages/libs/redis/message.redis";
 
 const producer = kafka.producer();
 const connectedUsers: Map<string, WebSocket> = new Map();
-const unseenCounts: Map<string, number> = new Map();
-const messageId = randomUUID();
 
+// Awal pesan menerima handshake dulu, baru ini
 interface IncomingMessage {
-  type?: "MESSAGE" | "MARK_AS_SEEN" | "PING";
+  type: "MESSAGE" | "MARK_AS_SEEN" | "PONG";
   fromUserId: string;
   toUserId: string;
   content: string;
@@ -18,6 +19,32 @@ interface IncomingMessage {
   senderType: "user" | "seller";
   tempId?: string; // untuk tracking frontend sementara
 }
+
+const HEARTBEAT_INTERVAL = 25000; // 25 detik
+const PONG_TIMEOUT = 30000; // 30 detik
+
+const startHeartbeat = (ws: WebSocket, redisKey: string) => {
+  let lastPong = Date.now();
+
+  const interval = setInterval(async () => {
+    if (ws.readyState === WebSocket.OPEN) {
+      // send, ws hanya bisa menerima format string
+      ws.send(JSON.stringify({ type: "PING" })); //dalam format json {"type":"PING"} -> property ada ""
+    }
+
+    // kalau > 30 detik tidak dapat PONG, anggap koneksi mati
+    if (Date.now() - lastPong > PONG_TIMEOUT) {
+      console.warn("⚠️ No PONG, reconnecting...");
+      clearInterval(interval);
+      ws.close(); // akan memicu onclose
+      await redis.del(redisKey);
+    }
+  }, HEARTBEAT_INTERVAL);
+
+  return (pongTime: number) => {
+    lastPong = pongTime;
+  };
+};
 
 export async function createWebSocketServer(server: HttPServer) {
   const wss = new WebSocketServer({ server });
@@ -29,29 +56,35 @@ export async function createWebSocketServer(server: HttPServer) {
     console.log("🔌 New WebSocket connection");
 
     let registeredUserId: string | null = null;
+    let redisKey: string | null = null;
+    let updateLastPong: ((pongTime: number) => void) | null = null;
 
+    // menerima dari client (Menerima paling awal)
     ws.on("message", async (rawMessage) => {
       const messageStr = rawMessage.toString();
-      console.log("📩 Received:", messageStr);
+      console.log("📩 Received (Isi pesan):", messageStr);
 
       try {
-        // 🧾 Step 1 — Handle registration handshake
+        // 🧾 Step 1 — Handle registration handshake && status online redis
+        // Menerima pesan format string saja (seller_123)
         if (!registeredUserId && !messageStr.startsWith("{")) {
           registeredUserId = messageStr.trim();
           connectedUsers.set(registeredUserId, ws);
           console.log(`✅ Registered WebSocket for: ${registeredUserId}`);
 
           const isSeller = registeredUserId.startsWith("seller_");
-          const redisKey = isSeller
+          redisKey = isSeller
             ? `online:seller:${registeredUserId.replace("seller_", "")}`
             : `online:user:${registeredUserId.replace("user_", "")}`;
 
-          await redis.set(redisKey, "1");
-          await redis.expire(redisKey, 300);
+          await redis.set(redisKey, "1", "EX", 30);
+
+          updateLastPong = startHeartbeat(ws, redisKey);
+
           return;
         }
 
-        // 🧾 Step 2 — Parse JSON payload
+        // 🧾 Step 2 — Parse JSON payload, sudah bukan handshake lagi (sudah pasti JSON tapi stringfy)
         let data: IncomingMessage;
         try {
           data = JSON.parse(messageStr);
@@ -61,24 +94,52 @@ export async function createWebSocketServer(server: HttPServer) {
         }
 
         // 🧠 Step 3 — Handle basic event types
-        if (data.type === "PING") {
-          ws.send(JSON.stringify({ type: "PONG" }));
+        if (data.type === "PONG" && redisKey && updateLastPong) {
+          updateLastPong(Date.now());
+          // update Redis TTL 30 detik
+          await redis.set(redisKey, "1", "EX", 30);
           return;
         }
 
+        // Menghapus jumlah count ketika (select chat)
         if (data.type === "MARK_AS_SEEN" && registeredUserId) {
-          const seenKey = `${registeredUserId}_${data.conversationId}`;
-          unseenCounts.set(seenKey, 0);
-          console.log(`👁️ Marked as seen: ${seenKey}`);
+          await clearUnseenCount(data.senderType, data.conversationId);
+
+          console.log(
+            `👁️ Marked as seen: ${data.senderType}_${data.conversationId}`
+          );
+
+          // Lanjut ke bawah, karena hanya keluar dari blok switch bukan fungsi.
+          // Kirim ke client untuk ubah status seen dan jumlah count saat ini
+          // Menerima dari user, kirim ke seller dan sebaliknya
+          const reciverType = data.senderType === "user" ? "seller" : "user";
+          const receiverSocket = connectedUsers.get(
+            `${reciverType}_${data.conversationId}`
+          ); // dalam bentuk ws milik di receiver nya
+
+          // Kirim ke lawan bicara seharusnya
+          if (receiverSocket && receiverSocket.readyState === WebSocket.OPEN) {
+            receiverSocket.send(
+              JSON.stringify({
+                type: "UNSEEN_COUNT_UPDATE",
+                payload: { conversationId: data.conversationId, count: 0 },
+              })
+            );
+            console.log(
+              `👁️ Sent unseen update to online receiver: ${reciverType}_${data.toUserId}`
+            );
+          } 
+
           return;
         }
 
+        // Validasi jika selain type yg ada
         if (data.type !== "MESSAGE") {
           console.warn("⚠️ Unknown message type:", data.type);
           return;
         }
 
-        // 🧩 Step 4 — Validate message content
+        // 🧩 Step 4 — Validate message content || ambil data.type "MESSAGE"
         const { fromUserId, toUserId, content, conversationId, senderType } =
           data;
         if (!fromUserId || !toUserId || !conversationId || !content) {
@@ -88,16 +149,15 @@ export async function createWebSocketServer(server: HttPServer) {
 
         const now = new Date().toISOString();
 
-        // 📨 Step 5 — Construct message
+        // 📨 Step 5 — Construct message || Menerima dari client
         const messagePayload = {
-          id: messageId,
           conversationId,
           senderId: fromUserId,
           senderType,
           content,
           createdAt: now,
         };
-
+        // Untuk dikirim ke client
         const messageEvent = JSON.stringify({
           type: "NEW_MESSAGE",
           payload: { ...messagePayload, tempId: data.tempId || null },
@@ -111,28 +171,17 @@ export async function createWebSocketServer(server: HttPServer) {
         console.log("➡️ Sender:", senderKey, "| Receiver:", receiverKey);
         console.log("👥 Connected:", Array.from(connectedUsers.keys()));
 
-        // 📊 Step 6 — Update unseen counter
-        const unseenKey = `${receiverKey}_${conversationId}`;
-        const prevCount = unseenCounts.get(unseenKey) || 0;
-        unseenCounts.set(unseenKey, prevCount + 1);
-
-        // 📬 Step 7 — Deliver to receiver (if online)
+        // 📬 Step 6 — Deliver to receiver (if online) and update unseen_count
         const receiverSocket = connectedUsers.get(receiverKey);
         if (receiverSocket && receiverSocket.readyState === WebSocket.OPEN) {
           receiverSocket.send(messageEvent);
-          receiverSocket.send(
-            JSON.stringify({
-              type: "UNSEEN_COUNT_UPDATE",
-              payload: { conversationId, count: prevCount + 1 },
-            })
-          );
-          console.log(`📤 Delivered message to ${receiverKey}`);
+          console.log(`📤 Delivered message to ${senderType}`);
         } else {
           connectedUsers.delete(receiverKey); // hapus socket lama/offline
           console.log(`🕓 ${receiverKey} offline — queued.`);
         }
 
-        // ✅ Step 8 — Send ACK to sender
+        // ✅ Step 7 — Send ACK to sender
         const senderSocket = connectedUsers.get(senderKey);
         if (senderSocket?.readyState === WebSocket.OPEN) {
           senderSocket.send(
@@ -141,7 +190,6 @@ export async function createWebSocketServer(server: HttPServer) {
               payload: {
                 conversationId,
                 tempId: data.tempId,
-                id: messageId,
                 timestamp: now,
               },
             })
@@ -161,14 +209,8 @@ export async function createWebSocketServer(server: HttPServer) {
     });
 
     ws.on("close", async () => {
-      if (!registeredUserId) return;
+      if (!registeredUserId || !redisKey) return;
       connectedUsers.delete(registeredUserId);
-
-      const isSeller = registeredUserId.startsWith("seller_");
-      const redisKey = isSeller
-        ? `online:seller:${registeredUserId.replace("seller_", "")}`
-        : `online:user:${registeredUserId.replace("user_", "")}`;
-
       await redis.del(redisKey);
       console.log(`🔌 Disconnected: ${registeredUserId}`);
     });

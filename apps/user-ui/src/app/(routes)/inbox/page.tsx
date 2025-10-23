@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState, FormEvent } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -13,135 +13,116 @@ import axiosInstance from "apps/user-ui/src/utils/axiosInstance";
 import { isProtected } from "apps/user-ui/src/utils/protected";
 import { AVATAR_IMAGE_PLACEHOLDER } from "apps/user-ui/src/shared/constant";
 
-/* ---------------------- Types ---------------------- */
-interface Message {
-  id?: string;
-  tempId?: string;
-  conversationId: string;
-  senderType: "user" | "seller";
-  content: string;
-  createdAt: string;
-  seen?: boolean;
-  acked?: boolean;
-}
-
-interface Chat {
-  conversationId: string;
-  lastMessage?: string;
-  unreadCount?: number;
-  seller: {
-    id: string;
-    name: string;
-    avatar?: string;
-    isOnline?: boolean;
-  };
-}
-
 /* ---------------------- Main Component ---------------------- */
 const ChatPage = () => {
+  const { user, isLoading: userLoading } = useRequireAuth();
+  const { ws, isOnline } = useWebSocket() || {};
+  const queryClient = useQueryClient();
   const router = useRouter();
   const searchParams = useSearchParams();
   const conversationId = searchParams.get("conversationId");
 
-  const queryClient = useQueryClient();
-  const { ws } = useWebSocket() || {};
-  const { user, isLoading: userLoading } = useRequireAuth();
-
-  const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+  const [selectedChat, setSelectedChat] = useState<any | null>(null);
   const [message, setMessage] = useState("");
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
-  const [hasFetchedOnce, setHasFetchedOnce] = useState(false);
 
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
   const scrollAnchorRef = useRef<HTMLDivElement | null>(null);
 
   /* ---------------------- Hooks ---------------------- */
-  useChatSync(conversationId || undefined);
+  useChatSync((conversationId as string) || undefined);
 
   /* ---------------------- Queries ---------------------- */
-  const { data: conversations = [], isLoading: conversationsLoading } =
-    useQuery({
-      queryKey: ["conversations"],
-      queryFn: async () => {
-        const res = await axiosInstance.get(
-          "/chatting/api/get-user-conversations",
-          isProtected
-        );
-        return res.data.conversations as Chat[];
-      },
-    });
+  // Info isOnline dan last message disini tapi jadinya
+  const {
+    data: chats = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["conversations"],
+    queryFn: async () => {
+      const res = await axiosInstance.get(
+        "/chatting/api/get-user-conversations",
+        isProtected
+      );
+      return res.data.conversations;
+    },
+  });
 
   const { data: messages = [] } = useQuery({
     queryKey: ["messages", conversationId],
     queryFn: async () => {
-      if (!conversationId || hasFetchedOnce) return [];
+      if (!conversationId) return [];
       const res = await axiosInstance.get(
         `/chatting/api/get-messages/${conversationId}?page=1`,
         isProtected
       );
       setPage(1);
       setHasMore(res.data.hasMore);
-      setHasFetchedOnce(true);
-      return res.data.messages.reverse() as Message[];
+      return res.data.messages.reverse();
     },
     enabled: !!conversationId,
     staleTime: Infinity,
   });
 
   /* ---------------------- Handlers ---------------------- */
-  const handleSelectChat = (chat: Chat) => {
-    setHasFetchedOnce(false);
+  const handleSelectChat = (chat: any) => {
+    setSelectedChat(chat);
     router.push(`?conversationId=${chat.conversationId}`);
 
-    queryClient.setQueryData(["conversations"], (old: Chat[] = []) =>
-      old.map((c) =>
-        c.conversationId === chat.conversationId ? { ...c, unreadCount: 0 } : c
-      )
-    );
-
+    // Tandai sebagai "sudah dilihat"
     ws?.send(
       JSON.stringify({
         type: "MARK_AS_SEEN",
         conversationId: chat.conversationId,
+        senderType: "user",
+        toUserId: chat.seller.id,
       })
+    );
+
+    queryClient.setQueryData(["conversations"], (old: any = []) =>
+      old.map((c: any) =>
+        c.conversationId === chat.conversationId ? { ...c, unreadCount: 0 } : c
+      )
+    );
+
+    // Update list pesan (status seen)
+    queryClient.setQueryData(
+      ["messages", chat.conversationId],
+      (old: any = []) => old.map((msg: any) =>
+        msg.senderType === "user" ? { ...msg, status: "seen" } : msg
+      )
     );
   };
 
   /* ---------------------- Handle Send Message ---------------------- */
-  const handleSendMessage = (e: FormEvent) => {
+  const handleSendMessage = (e: any) => {
     e.preventDefault();
     if (!message.trim() || !selectedChat) return;
 
-    const tempId = crypto.randomUUID();
-    const payload: Message = {
-      tempId,
+    const payload = {
+      tempId: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      type: "MESSAGE",
+      fromUserId: user?.id,
+      toUserId: selectedChat.seller.id,
       conversationId: selectedChat.conversationId,
-      senderType: "user",
       content: message,
-      createdAt: new Date().toISOString(),
-      acked: false, // belum diack oleh server
+      senderType: "user",
     };
 
     // Kirim ke server via WebSocket
-    ws?.send(
-      JSON.stringify({
-        type: "MESSAGE",
-        ...payload,
-        fromUserId: user?.id,
-        toUserId: selectedChat.seller.id,
-      })
-    );
+    ws?.send(JSON.stringify(payload));
 
-    // Tambahkan pesan ke cache sementara (status sending)
+    // Tambahkan pesan ke cache sementara (status sending) || Optimistic UI update
     queryClient.setQueryData(
       ["messages", selectedChat.conversationId],
-      (old: Message[] = []) => [...old, { ...payload, status: "sending" }]
+      (old: any = []) => [...old, { ...payload, status: "sending" }]
     );
 
     // Update list percakapan (lastMessage)
-    queryClient.setQueryData(["conversations"], (old: Chat[] = []) =>
-      old.map((chat) =>
+    queryClient.setQueryData(["conversations"], (old: any = []) =>
+      old.map((chat: any) =>
         chat.conversationId === selectedChat.conversationId
           ? { ...chat, lastMessage: payload.content }
           : chat
@@ -152,7 +133,7 @@ const ChatPage = () => {
     scrollToBottom();
   };
 
-  const loadMoreMessages = async () => {
+  const loadMoreMessages = useCallback(async () => {
     if (!conversationId) return;
     const nextPage = page + 1;
     const res = await axiosInstance.get(
@@ -160,14 +141,14 @@ const ChatPage = () => {
       isProtected
     );
 
-    queryClient.setQueryData(
-      ["messages", conversationId],
-      (old: Message[] = []) => [...res.data.messages.reverse(), ...old]
-    );
+    queryClient.setQueryData(["messages", conversationId], (old: any = []) => [
+      ...res.data.messages.reverse(),
+      ...old,
+    ]);
 
     setPage(nextPage);
     setHasMore(res.data.hasMore);
-  };
+  }, [page, conversationId, queryClient]);
 
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
@@ -175,71 +156,9 @@ const ChatPage = () => {
     });
   };
 
-  /* ---------------------- Effects ---------------------- */
   useEffect(() => {
-    if (conversationId && conversations.length > 0) {
-      const chat =
-        conversations.find((c) => c.conversationId === conversationId) || null;
-      setSelectedChat(chat);
-    }
-  }, [conversationId, conversations]);
-
-  /** -------------------------------------------
-   * 🧭 Handle Event WebSocket (Real-time Updates)
-   * ------------------------------------------- */
-  useEffect(() => {
-    if (!ws) return;
-
-    const handleMessage = (event: MessageEvent) => {
-      const data = JSON.parse(event.data);
-      const { type, payload } = data;
-
-      if (type === "NEW_MESSAGE") {
-        queryClient.setQueryData(
-          ["messages", payload.conversationId],
-          (old: any = []) => {
-            return [...old, payload];
-          }
-        );
-
-        // Update last message
-        queryClient.setQueryData(["conversations"], (old: any = []) =>
-          old.map((chat: any) =>
-            chat.conversationId === payload.conversationId
-              ? { ...chat, lastMessage: payload.content }
-              : chat
-          )
-        );
-
-        if (payload.conversationId === conversationId) {
-          scrollToBottom();
-        }
-      }
-
-      if (type === "UNSEEN_COUNT_UPDATE") {
-        queryClient.setQueryData(["conversations"], (old: any = []) =>
-          old.map((chat: any) =>
-            chat.conversationId === payload.conversationId
-              ? { ...chat, unreadCount: payload.count }
-              : chat
-          )
-        );
-      }
-
-      if (type === "MESSAGE_ACK") {
-        queryClient.setQueryData(
-          ["messages", payload.conversationId],
-          (old: any = []) =>
-            old.map((msg: any) =>
-              msg.tempId === payload.tempId ? { ...msg, acked: true } : msg
-            )
-        );
-      }
-    };
-
-    ws.addEventListener("message", handleMessage);
-    return () => ws.removeEventListener("message", handleMessage);
-  }, [ws, queryClient]);
+    if (messages.length) scrollToBottom();
+  }, [messages]);
 
   /* ---------------------- UI ---------------------- */
   return (
@@ -252,12 +171,12 @@ const ChatPage = () => {
               Messages
             </div>
             <div className="divide-y">
-              {conversationsLoading ? (
+              {isLoading ? (
                 <p className="p-4 text-sm text-gray-500">Loading ...</p>
-              ) : conversations.length === 0 ? (
+              ) : chats.length === 0 ? (
                 <p className="p-4 text-sm text-gray-500">No Conversation</p>
               ) : (
-                conversations.map((chat) => {
+                chats.map((chat: any) => {
                   const isActive =
                     selectedChat?.conversationId === chat.conversationId;
                   return (
@@ -281,8 +200,10 @@ const ChatPage = () => {
                             <span className="text-sm font-semibold text-gray-800">
                               {chat.seller.name}
                             </span>
-                            {chat.seller.isOnline && (
-                              <span className="w-2 h-2 rounded-full bg-green-500" />
+                            {chat.unreadCount > 0 && (
+                              <span className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                                <p className="text-xs">{chat.unreadCount}</p>
+                              </span>
                             )}
                           </div>
                           <p className="text-xs text-gray-500 truncate max-w-[170px]">
@@ -315,7 +236,7 @@ const ChatPage = () => {
                       {selectedChat.seller.name}
                     </h2>
                     <p className="text-xs text-gray-500">
-                      {selectedChat.seller.isOnline ? "Online" : "Offline"}
+                      {isOnline ? "Online" : "Offline"}
                     </p>
                   </div>
                 </div>
@@ -336,9 +257,9 @@ const ChatPage = () => {
                     </div>
                   )}
 
-                  {messages.map((msg, index) => (
+                  {messages.map((msg: any, index: number) => (
                     <div
-                      key={msg.id || msg.tempId || index}
+                      key={index}
                       className={`flex flex-col ${
                         msg.senderType === "user"
                           ? "items-end ml-auto"
@@ -355,10 +276,16 @@ const ChatPage = () => {
                         {msg.content}
                       </div>
                       <span className="text-[11px] text-gray-400 mt-1">
-                        {new Date(msg.createdAt).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
+                        {msg.createdAt &&
+                          new Date(msg.createdAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        {msg.status === "sending" && (
+                          <span className="text-[10px] text-gray-500">
+                            Sending
+                          </span>
+                        )}
                       </span>
                     </div>
                   ))}

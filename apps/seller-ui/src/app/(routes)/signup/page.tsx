@@ -6,9 +6,9 @@ import Link from "next/link";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios, { AxiosError } from "axios";
-import { countries } from "apps/seller-ui/src/utils/countries";
-import CreateShop from "../../../shared/module/auth/create-shop";
-import StripeLogo from "apps/seller-ui/src/asset/svg/stripe-logo";
+import { countries } from "@/utils/countries";
+import CreateShop from "@/shared/module/auth/create-shop";
+import StripeLogo from "@/asset/svg/stripe-logo";
 
 const Signup = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);

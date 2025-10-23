@@ -1,19 +1,19 @@
 "use client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useWebSocket } from "apps/seller-ui/src/context/web-socket-context";
-import useSeller from "apps/seller-ui/src/hook/useSeller";
-import ChatInput from "apps/seller-ui/src/shared/component/chats/chatinput";
-import { AVATAR_IMAGE_PLACEHOLDER } from "apps/seller-ui/src/shared/constant";
-import axiosInstance from "apps/seller-ui/src/utils/axiosInstance";
-import { isProtected } from "apps/seller-ui/src/utils/protected";
+import { useWebSocket } from "@/context/web-socket-context";
+import useSeller from "@/hook/useSeller";
+import ChatInput from "@/shared/component/chats/chatinput";
+import { AVATAR_IMAGE_PLACEHOLDER } from "@/shared/constant";
+import axiosInstance from "@/utils/axiosInstance";
+import { isProtected } from "@/utils/protected";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { useChatSync } from "apps/seller-ui/src/hook/useChatSync";
+import { useChatSync } from "@/hook/useChatSync";
 
 const SellerInboxPage = () => {
   const { seller } = useSeller();
-  const { ws } = useWebSocket() || {};
+  const { ws, isOnline } = useWebSocket() || {};
   const router = useRouter();
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
@@ -28,7 +28,7 @@ const SellerInboxPage = () => {
   const scrollAnchorRef = useRef<HTMLDivElement | null>(null);
 
   // ✅ Real-time sync dari hook khusus
-  useChatSync(conversationId as string | undefined);
+  useChatSync((conversationId as string) || undefined);
 
   /** -------------------------------------------
    * 🧭 Ambil daftar percakapan
@@ -44,7 +44,7 @@ const SellerInboxPage = () => {
         "/chatting/api/get-seller-conversations",
         isProtected
       );
-      return res.data.conversation || res.data.conversations;
+      return res.data.conversation;
     },
   });
 
@@ -99,6 +99,8 @@ const SellerInboxPage = () => {
       JSON.stringify({
         type: "MARK_AS_SEEN",
         conversationId: chat.conversationId,
+        senderType: "seller",
+        toUserId: chat.user.id,
       })
     );
 
@@ -118,39 +120,22 @@ const SellerInboxPage = () => {
     if (!message.trim() || !selectedChat) return;
 
     const payload = {
+      tempId: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, // tempId untuk ACK
       type: "MESSAGE",
       fromUserId: seller?.id,
       toUserId: selectedChat?.user?.id,
       conversationId: selectedChat?.conversationId,
-      content: message.trim(),
+      content: message,
       senderType: "seller",
-      tempId: Date.now(), // tempId untuk ACK
     };
 
+    //Menggunakan instance nya websocket context, langsung ke server
     ws?.send(JSON.stringify(payload));
 
     // Optimistic UI update
     queryClient.setQueryData(
       ["messages", selectedChat.conversationId],
-      (old: any = []) => {
-        const exists = old.some(
-          (msg: any) =>
-            msg.tempId === payload.tempId ||
-            (msg.content === payload.content &&
-              msg.createdAt === new Date().toISOString())
-        );
-        if (exists) return old; // hindari duplikasi
-
-        return [
-          ...old,
-          {
-            content: payload.content,
-            senderType: "seller",
-            seen: false,
-            createdAt: new Date().toISOString(),
-          },
-        ];
-      }
+      (old: any = []) => [...old, { ...payload, status: "sending" }]
     );
 
     queryClient.setQueryData(["conversations"], (old: any = []) =>
@@ -164,66 +149,6 @@ const SellerInboxPage = () => {
     setMessage("");
     scrollToBottom();
   };
-
-  /** -------------------------------------------
-   * 🧭 Handle Event WebSocket (satu pintu)
-   * ------------------------------------------- */
-  useEffect(() => {
-    if (!ws) return;
-
-    const handleMessage = (event: MessageEvent) => {
-      const data = JSON.parse(event.data);
-      const { type, payload } = data;
-
-      if (type === "NEW_MESSAGE") {
-        queryClient.setQueryData(
-          ["messages", payload.conversationId],
-          (old: any = []) => {
-            const existing = old.find((msg: any) => msg.tempId === payload.tempId);
-            if (existing) return old;
-            return [...old, payload];
-          }
-        );
-      
-        // Update last message
-        queryClient.setQueryData(["conversations"], (old: any = []) =>
-          old.map((chat: any) =>
-            chat.conversationId === payload.conversationId
-              ? { ...chat, lastMessage: payload.content }
-              : chat
-          )
-        );
-      
-        if (payload.conversationId === conversationId) {
-          scrollToBottom();
-        }
-      }
-      
-
-      if (type === "UNSEEN_COUNT_UPDATE") {
-        queryClient.setQueryData(["conversations"], (old: any = []) =>
-          old.map((chat: any) =>
-            chat.conversationId === payload.conversationId
-              ? { ...chat, unreadCount: payload.count }
-              : chat
-          )
-        );
-      }
-
-      if (type === "MESSAGE_ACK") {
-        queryClient.setQueryData(
-          ["messages", payload.conversationId],
-          (old: any = []) =>
-            old.map((msg: any) =>
-              msg.tempId === payload.tempId ? { ...msg, acked: true } : msg
-            )
-        );
-      }
-    };
-
-    ws.addEventListener("message", handleMessage);
-    return () => ws.removeEventListener("message", handleMessage);
-  }, [ws, queryClient]);
 
   /** -------------------------------------------
    * 📜 Scroll ke bawah saat pesan berubah
@@ -242,6 +167,8 @@ const SellerInboxPage = () => {
    * 💬 Render UI
    * ------------------------------------------- */
   const getLastMessage = (chat: any) => chat?.lastMessage || "";
+  // const getUnreadCount = async (chat: any) => await getUnseenCount("seller", chat.conversationId);
+  const getLastMessageAt = (chat: any) => new Date(chat?.lastMessageAt) || "";
 
   return (
     <div className="w-full min-h-screen p-8">
@@ -289,18 +216,23 @@ const SellerInboxPage = () => {
                         <span className="text-sm font-semibold text-gray-800">
                           {chat.user?.name}
                         </span>
-                        {chat.user?.isOnline ? (
-                          <span className="text-xs text-green-600 flex items-center gap-1">
-                            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                            Online
+                        {chat.unreadCount > 0 && (
+                          <span className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                            <p className="text-xs">{chat.unreadCount}</p>
                           </span>
-                        ) : (
-                          <span className="text-xs text-gray-500">Offline</span>
                         )}
                       </div>
-                      <p className="text-xs text-gray-500 truncate max-w-[170px]">
-                        {getLastMessage(chat)}
-                      </p>
+                      <div className="flex justify-between items-center">
+                        <p className="text-xs text-gray-500 truncate max-w-[170px]">
+                          {getLastMessage(chat)}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {getLastMessageAt(chat).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </p>
+                      </div>
                     </div>
                   </button>
                 );
@@ -331,7 +263,7 @@ const SellerInboxPage = () => {
                     {selectedChat.user?.name}
                   </h2>
                   <p className="text-xs text-gray-500">
-                    {selectedChat.user?.isOnline ? "Online" : "Offline"}
+                    {isOnline ? "Online" : "Offline"}
                   </p>
                 </div>
               </div>
@@ -370,10 +302,13 @@ const SellerInboxPage = () => {
                       {msg.content}
                     </div>
                     <div className="text-[11px] text-gray-400 mt-1">
-                      {new Date(msg.createdAt).toLocaleTimeString([], {
+                      {msg.createdAt && new Date(msg.createdAt).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
+                      {msg.status === "sending" && (
+                        <span className="text-xs text-gray-500">Sending</span>
+                      )}
                     </div>
                   </div>
                 ))}

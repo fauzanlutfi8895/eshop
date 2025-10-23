@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import useSellerOrders from "./useSellerOrders";
+import useSellerOrders from "@/hook/useSellerOrders";
 
 export interface RevenueData {
   month: string;

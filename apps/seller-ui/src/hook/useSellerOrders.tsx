@@ -1,8 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import axiosInstance from "../utils/axiosInstance";
-import { isProtected } from "../utils/protected";
+import axiosInstance from "@/utils/axiosInstance";
+import { isProtected } from "@/utils/protected";
 
 export interface OrderItem {
   id: string;

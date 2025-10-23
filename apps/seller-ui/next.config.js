@@ -1,8 +1,8 @@
 //@ts-check
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { composePlugins, withNx } = require('@nx/next');
-
+const { composePlugins, withNx } = require("@nx/next");
+const path = require("path");
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
@@ -12,10 +12,16 @@ const nextConfig = {
   // See: https://nx.dev/recipes/next/next-config-setup
   nx: {},
   images: {
-    remotePatterns: [
-      {hostname: "ik.imagekit.io"}
-    ]
-  }
+    remotePatterns: [{ hostname: "ik.imagekit.io" }],
+  },
+
+  webpack: (config) => {
+    config.resolve.alias["@packages"] = path.resolve(
+      __dirname,
+      "../../packages"
+    );
+    return config;
+  },
 };
 
 const plugins = [
@@ -24,4 +30,3 @@ const plugins = [
 ];
 
 module.exports = composePlugins(...plugins)(nextConfig);
-

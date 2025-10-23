@@ -1,7 +1,7 @@
 "use client";
 
-import useSeller from "apps/seller-ui/src/hook/useSeller";
-import UseSidebar from "apps/seller-ui/src/hook/useSidebar";
+import useSeller from "@/hook/useSeller";
+import UseSidebar from "@/hook/useSidebar";
 import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
 import Box from "../box";
@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import SidebarMenu from "./sidebar.menu";
 import { LOGO_IMAGE_PLACEHOLDER } from "../../constant";
-import axiosInstance from "apps/seller-ui/src/utils/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 

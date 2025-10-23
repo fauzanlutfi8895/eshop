@@ -1,9 +1,9 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import axiosInstance from "../utils/axiosInstance";
-import { isProtected } from "../utils/protected";
-import { useAuthStore } from "../store/authStore";
+import axiosInstance from "@/utils/axiosInstance";
+import { isProtected } from "@/utils/protected";
+import { useAuthStore } from "@/store/authStore";
 import { useEffect } from "react";
 
 //fetch user data from API

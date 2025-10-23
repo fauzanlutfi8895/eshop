@@ -15,11 +15,11 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import GeographicalMap from "../../../shared/component/charts/geographicalMap";
-import useDashboardAnalytics from "../../../hook/useDashboardAnalytics";
+import GeographicalMap from "@/shared/component/charts/geographicalMap";
+import useDashboardAnalytics from "@/hook/useDashboardAnalytics";
 
 const SalesChart = dynamic(
-  () => import("../../../shared/component/charts/sale-chart"),
+  () => import("@/shared/component/charts/sale-chart"),
   { ssr: false }
 );
 

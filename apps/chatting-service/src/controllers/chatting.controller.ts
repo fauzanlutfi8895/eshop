@@ -127,14 +127,6 @@ export const getUserConversations = async (
           },
         });
 
-        // Check online status from Redis
-        let isOnline = false;
-        if (sellerParticipant?.sellerId) {
-          const redisKey = `online:seller:${sellerParticipant.sellerId}`;
-          const redisResult = await redis.get(redisKey);
-          isOnline = !!redisResult;
-        }
-
         const unreadCount = await getUnseenCount("user", group.id);
 
         return {
@@ -142,7 +134,6 @@ export const getUserConversations = async (
           seller: {
             id: seller?.id || null,
             name: seller?.shop?.name || "Unknown",
-            isOnline,
             avatar: seller?.shop?.avatar,
           },
           lastMessage:
@@ -214,14 +205,6 @@ export const getSellerConversations = async (
           },
         });
 
-        // Online status from Redis
-        let isOnline = false;
-        if (userParticipant?.userId) {
-          const redisKey = `online:user:${userParticipant.userId}`;
-          const redisResult = await redis.get(redisKey);
-          isOnline = !!redisResult;
-        }
-
         const unreadCount = await getUnseenCount("seller", group.id);
 
         return {
@@ -230,7 +213,6 @@ export const getSellerConversations = async (
             id: user?.id || null,
             name: user?.name || "Unknown",
             avatar: user?.avatar || null,
-            isOnline,
           },
           lastMessage:
             lastMessage?.content || "Say something to start a conversation",

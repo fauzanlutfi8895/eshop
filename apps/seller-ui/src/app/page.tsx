@@ -16,15 +16,15 @@ import {
   Camera,
 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
-import EditProfileModal from "../shared/component/modals/edit.profile.modal";
-import BannerChangeModal from "../shared/component/modals/banner.change.modal";
-import ProductsTab from "../shared/component/tabs/products.tab";
-import OffersTab from "../shared/component/tabs/offers.tab";
-import ReviewsTab from "../shared/component/tabs/reviews.tab";
-import useSeller from "../hook/useSeller";
-import { SHOP_IMAGE_PLACEHOLDER } from "../shared/constant";
-import useDiscountCodes from "../hook/useDiscountCodes";
-import axiosInstance from "../utils/axiosInstance";
+import EditProfileModal from "@/shared/component/modals/edit.profile.modal";
+import BannerChangeModal from "@/shared/component/modals/banner.change.modal";
+import ProductsTab from "@/shared/component/tabs/products.tab";
+import OffersTab from "@/shared/component/tabs/offers.tab";
+import ReviewsTab from "@/shared/component/tabs/reviews.tab";
+import useSeller from "@/hook/useSeller";
+import { SHOP_IMAGE_PLACEHOLDER } from "@/shared/constant";
+import useDiscountCodes from "@/hook/useDiscountCodes";
+import axiosInstance from "@/utils/axiosInstance";
 import toast from "react-hot-toast";
 
 type TabType = "products" | "offers" | "reviews";

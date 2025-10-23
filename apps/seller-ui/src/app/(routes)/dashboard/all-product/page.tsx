@@ -17,11 +17,11 @@ import {
   Star,
 } from "lucide-react";
 import Link from "next/link";
-import axiosInstance from "apps/seller-ui/src/utils/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import DeleteConfirmationModal from "apps/seller-ui/src/shared/component/modals/delete.confirmation.modal";
-import Breadcrumbs from "apps/seller-ui/src/shared/component/breadcrumbs";
+import DeleteConfirmationModal from "@/shared/component/modals/delete.confirmation.modal";
+import Breadcrumbs from "@/shared/component/breadcrumbs";
 import toast from "react-hot-toast";
 
 const fetchProduct = async () => {
@@ -39,8 +39,8 @@ const restoreProduct = async (productId: string) => {
 
 const Page = () => {
   const [globalFilter, setGlobalFilter] = useState("");
-  const [analyticsData, setAnalyticsData] = useState(null);
-  const [showAnalytcs, setShowAnalytcs] = useState(false);
+  // const [analyticsData, setAnalyticsData] = useState(null);
+  // const [showAnalytcs, setShowAnalytcs] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectProduct, setSelectProduct] = useState<any>();
   const queryClient = useQueryClient();

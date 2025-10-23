@@ -1,7 +1,7 @@
 "use client";
 
-import { PRODUCT_IMAGE_PLACEHOLDER } from "apps/seller-ui/src/shared/constant";
-import axiosInstance from "apps/seller-ui/src/utils/axiosInstance";
+import { PRODUCT_IMAGE_PLACEHOLDER } from "@/shared/constant";
+import axiosInstance from "@/utils/axiosInstance";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

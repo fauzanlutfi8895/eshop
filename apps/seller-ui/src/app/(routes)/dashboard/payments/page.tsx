@@ -9,8 +9,8 @@ import {
 } from "@tanstack/react-table";
 import { Search, Eye } from "lucide-react";
 import Link from "next/link";
-import Breadcrumbs from "apps/seller-ui/src/shared/component/breadcrumbs";
-import useSellerOrders from "apps/seller-ui/src/hook/useSellerOrders";
+import Breadcrumbs from "@/shared/component/breadcrumbs";
+import useSellerOrders from "@/hook/useSellerOrders";
 
 const sellerPayments = () => {
   const [globalFilter, setGlobalFilter] = useState("");

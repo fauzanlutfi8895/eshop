@@ -66,6 +66,7 @@ async function flushBufferToDb() {
   if (toInsert.length === 0) return;
 
   try {
+    // attachment dan satus sudah ada pada default Schema nya
     const prismaPayload = toInsert.map((msg) => ({
       conversationId: msg.conversationId,
       senderId: msg.senderId,

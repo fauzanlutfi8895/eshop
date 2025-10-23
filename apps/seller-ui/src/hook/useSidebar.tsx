@@ -1,7 +1,7 @@
 "use client";
 
 import { useAtom } from "jotai";
-import { activeSideBarItem } from "../config/constant";
+import { activeSideBarItem } from "@/config/constant";
 
 const UseSidebar = () => {
   const [activeSidebar, setActiveSidebar] = useAtom(activeSideBarItem);

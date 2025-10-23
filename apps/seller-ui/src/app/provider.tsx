@@ -4,8 +4,8 @@ import React, { useEffect } from "react";
 import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import { WebSocketProvider } from "../context/web-socket-context";
-import useSeller from "../hook/useSeller";
+import { WebSocketProvider } from "@/context/web-socket-context";
+import useSeller from "@/hook/useSeller";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({

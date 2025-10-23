@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "jsx": "preserve",
     "noEmit": true,
     "emitDeclarationOnly": false,
@@ -19,22 +20,18 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["src/*"],
+      "@packages/*": ["../../packages/*"]
     },
     "outDir": "dist",
-    "rootDir": "../../",
+    "rootDir": "../..",
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
   },
   "include": [
-    "../../apps/seller-ui/.next/types/**/*.ts",
-    "../../dist/apps/seller-ui/.next/types/**/*.ts",
-    "../../packages/**/*.tsx",
     "next-env.d.ts",
-    "src/**/*.js",
-    "src/**/*.jsx",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    ".next/types/**/*.ts"
+    "src/**/*",
+    ".next/types/**/*.ts",
+    "../../packages"
   ],
   "exclude": [
     "out-tsc",

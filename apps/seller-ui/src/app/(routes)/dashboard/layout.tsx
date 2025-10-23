@@ -1,4 +1,4 @@
-import SidebarBarWrapper from "../../../shared/component/sidebar/sidebar";
+import SidebarBarWrapper from "@/shared/component/sidebar/sidebar";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
