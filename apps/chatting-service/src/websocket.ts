@@ -4,6 +4,7 @@ import { kafka } from "@packages/utils/kafka";
 import { WebSocketServer, WebSocket } from "ws";
 import {
   clearUnseenCount,
+  getUnseenCount,
 } from "@packages/libs/redis/message.redis";
 
 const producer = kafka.producer();
@@ -122,7 +123,7 @@ export async function createWebSocketServer(server: HttPServer) {
             receiverSocket.send(
               JSON.stringify({
                 type: "UNSEEN_COUNT_UPDATE",
-                payload: { conversationId: data.conversationId, count: 0 },
+                payload: { conversationId: data.conversationId, count: 0, status: "seen" },
               })
             );
             console.log(
@@ -157,10 +158,11 @@ export async function createWebSocketServer(server: HttPServer) {
           content,
           createdAt: now,
         };
+        const unseenCount = await getUnseenCount(senderType, conversationId);
         // Untuk dikirim ke client
         const messageEvent = JSON.stringify({
           type: "NEW_MESSAGE",
-          payload: { ...messagePayload, tempId: data.tempId || null },
+          payload: { ...messagePayload, tempId: data.tempId || null, count: unseenCount },
         });
 
         const receiverKey =

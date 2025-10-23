@@ -42,7 +42,7 @@ export function useChatSync(conversationId?: string) {
         queryClient.setQueryData(["conversations"], (old: any = []) =>
           old.map((conv: any) =>
             conv.conversationId === conversationId
-              ? { ...conv, unreadCount: payload.count }
+              ? { ...conv, unreadCount: payload.count, lastMessageAt: payload.timestamp, status: payload.status }
               : conv
           )
         );
@@ -64,10 +64,8 @@ export function useChatSync(conversationId?: string) {
               ? {
                   ...conv,
                   lastMessage: message.content,
-                  unreadCount:
-                    conv.conversationId === conversationId
-                      ? 0
-                      : (conv.unreadCount || 0) + 1,
+                  lastMessageAt: message.createdAt,
+                  unreadCount: payload.count,
                 }
               : conv
           )

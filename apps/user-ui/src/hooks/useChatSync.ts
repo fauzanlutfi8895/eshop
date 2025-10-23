@@ -32,7 +32,7 @@ export function useChatSync(conversationId?: string) {
           ["messages", conversationId],
           (old: any = []) =>
             old.map((m: any) =>
-              m.senderType === "user" ? { ...m, status: "seen" } : m
+              m.senderType === "user" ? { ...m, status: payload.status } : m
             )
         );
 
@@ -40,7 +40,11 @@ export function useChatSync(conversationId?: string) {
         queryClient.setQueryData(["conversations"], (old: any = []) =>
           old.map((conv: any) =>
             conv.conversationId === conversationId
-              ? { ...conv, unreadCount: count }
+              ? {
+                  ...conv,
+                  unreadCount: count,
+                  lastMessageAt: payload.timestamp,
+                }
               : conv
           )
         );
@@ -62,10 +66,8 @@ export function useChatSync(conversationId?: string) {
               ? {
                   ...conv,
                   lastMessage: message.content,
-                  unreadCount:
-                    conv.conversationId === conversationId
-                      ? 0
-                      : (conv.unreadCount || 0) + 1,
+                  lastMessageAt: message.createdAt,
+                  unreadCount: payload.count,
                 }
               : conv
           )

@@ -141,7 +141,7 @@ const SellerInboxPage = () => {
     queryClient.setQueryData(["conversations"], (old: any = []) =>
       old.map((chat: any) =>
         chat.conversationId === selectedChat.conversationId
-          ? { ...chat, lastMessage: payload.content }
+          ? { ...chat, lastMessage: payload.content, lastMessageAt: new Date()}
           : chat
       )
     );

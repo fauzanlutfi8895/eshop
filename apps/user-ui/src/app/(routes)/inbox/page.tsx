@@ -90,9 +90,10 @@ const ChatPage = () => {
     // Update list pesan (status seen)
     queryClient.setQueryData(
       ["messages", chat.conversationId],
-      (old: any = []) => old.map((msg: any) =>
-        msg.senderType === "user" ? { ...msg, status: "seen" } : msg
-      )
+      (old: any = []) =>
+        old.map((msg: any) =>
+          msg.senderType === "user" ? { ...msg, status: "seen" } : msg
+        )
     );
   };
 
@@ -124,7 +125,7 @@ const ChatPage = () => {
     queryClient.setQueryData(["conversations"], (old: any = []) =>
       old.map((chat: any) =>
         chat.conversationId === selectedChat.conversationId
-          ? { ...chat, lastMessage: payload.content }
+          ? { ...chat, lastMessage: payload.content, lastMessageAt: new Date()}
           : chat
       )
     );
@@ -159,6 +160,9 @@ const ChatPage = () => {
   useEffect(() => {
     if (messages.length) scrollToBottom();
   }, [messages]);
+
+  const getLastMessage = (chat: any) => chat?.lastMessage || "";
+  const getLastMessageAt = (chat: any) => new Date(chat?.lastMessageAt) || "";
 
   /* ---------------------- UI ---------------------- */
   return (
@@ -206,9 +210,17 @@ const ChatPage = () => {
                               </span>
                             )}
                           </div>
-                          <p className="text-xs text-gray-500 truncate max-w-[170px]">
-                            {chat.lastMessage || ""}
-                          </p>
+                          <div className="flex justify-between items-center">
+                            <p className="text-xs text-gray-500 truncate max-w-[170px]">
+                              {getLastMessage(chat)}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {getLastMessageAt(chat).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </button>
