@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axiosInstance from "apps/user-ui/src/utils/axiosInstance";
-import { countries } from "apps/user-ui/src/utils/countries";
+import axiosInstance from "@/utils/axiosInstance";
+import { countries } from "@/utils/countries";
 import { MapPin, Plus, Trash, X } from "lucide-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";

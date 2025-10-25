@@ -1,4 +1,4 @@
-import axiosInstance from "apps/user-ui/src/utils/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 

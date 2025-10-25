@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { CheckCircle, Truck } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useStore } from "apps/user-ui/src/store";
+import { useStore } from "@/store";
 import confetti from "canvas-confetti";
 
 const PaymentSuccessPage = () => {

@@ -1,4 +1,4 @@
-import TitleBorder from "apps/user-ui/src/assets/svgs/title-border";
+import TitleBorder from "@/assets/svgs/title-border";
 import React from "react";
 
 const SectionTitle = ({ title }: { title: string }) => {

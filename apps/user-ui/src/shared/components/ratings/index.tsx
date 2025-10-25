@@ -1,6 +1,6 @@
-import StarFull from "apps/user-ui/src/assets/svgs/full-star";
-import StarHalf from "apps/user-ui/src/assets/svgs/half-star";
-import StarOutline from "apps/user-ui/src/assets/svgs/outline-star";
+import StarFull from "@/assets/svgs/full-star";
+import StarHalf from "@/assets/svgs/half-star";
+import StarOutline from "@/assets/svgs/outline-star";
 import { FC } from "react";
 
 type Props = {

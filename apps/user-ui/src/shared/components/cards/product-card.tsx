@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import Ratings from "../ratings";
 import { Eye, Heart, ShoppingBag } from "lucide-react";
 import ProductDetailCard from "./product-detail.card";
-import { useStore } from "apps/user-ui/src/store";
-import useUser from "apps/user-ui/src/hooks/useUser";
-import useLocationTracking from "apps/user-ui/src/hooks/useLocationTracking";
-import useDeviceTracking from "apps/user-ui/src/hooks/useDeviceTracking";
+import { useStore } from "@/store";
+import useUser from "@/hooks/useUser";
+import useLocationTracking from "@/hooks/useLocationTracking";
+import useDeviceTracking from "@/hooks/useDeviceTracking";
 import { PRODUCT_IMAGE_PLACEHOLDER } from "../../constant";
 
 const ProductCard = ({

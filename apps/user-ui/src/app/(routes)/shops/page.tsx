@@ -1,12 +1,12 @@
 "use client";
 
-import axiosInstance from "apps/user-ui/src/utils/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { categories } from "../../config/categories";
-import ShopCard from "apps/user-ui/src/shared/components/cards/shop-card";
-import { countries } from "apps/user-ui/src/utils/countries";
+import ShopCard from "@/shared/components/cards/shop-card";
+import { countries } from "@/utils/countries";
 
 const Page = () => {
   const router = useRouter();

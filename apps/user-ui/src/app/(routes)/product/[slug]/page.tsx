@@ -1,5 +1,5 @@
-import ProductDetails from "apps/user-ui/src/shared/modules/product/product-details";
-import axiosInstance from "apps/user-ui/src/utils/axiosInstance";
+import ProductDetails from "@/shared/modules/product/product-details";
+import axiosInstance from "@/utils/axiosInstance";
 import { Metadata } from "next";
 import React from "react";
 

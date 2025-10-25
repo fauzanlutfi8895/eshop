@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import GoogleButton from "apps/user-ui/src/shared/components/google-button";
+import GoogleButton from "@/shared/components/google-button";
 import axios, { AxiosError } from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";

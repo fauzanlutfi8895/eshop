@@ -2,11 +2,11 @@
 
 import { Appearance, loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import axiosInstance from "apps/user-ui/src/utils/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import { XCircle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import CheckOutForm from "apps/user-ui/src/shared/components/checkout/checkoutForm";
+import CheckOutForm from "@/shared/components/checkout/checkoutForm";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 

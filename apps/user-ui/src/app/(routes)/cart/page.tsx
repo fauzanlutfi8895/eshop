@@ -1,12 +1,12 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import useDeviceTracking from "apps/user-ui/src/hooks/useDeviceTracking";
-import useLocationTracking from "apps/user-ui/src/hooks/useLocationTracking";
-import useUser from "apps/user-ui/src/hooks/useUser";
-import { PRODUCT_IMAGE_PLACEHOLDER } from "apps/user-ui/src/shared/constant";
-import { useStore } from "apps/user-ui/src/store";
-import axiosInstance from "apps/user-ui/src/utils/axiosInstance";
+import useDeviceTracking from "@/hooks/useDeviceTracking";
+import useLocationTracking from "@/hooks/useLocationTracking";
+import useUser from "@/hooks/useUser";
+import { PRODUCT_IMAGE_PLACEHOLDER } from "@/shared/constant";
+import { useStore } from "@/store";
+import axiosInstance from "@/utils/axiosInstance";
 import { error } from "console";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";

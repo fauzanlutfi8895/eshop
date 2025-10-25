@@ -1,6 +1,6 @@
 "use server";
 
-import { kafka } from "packages/utils/kafka";
+import { kafka } from "@packages/utils/kafka";
 
 const producer = kafka.producer();
 

@@ -1,7 +1,7 @@
 "use client";
-import useDeviceTracking from "apps/user-ui/src/hooks/useDeviceTracking";
-import useLocationTracking from "apps/user-ui/src/hooks/useLocationTracking";
-import useUser from "apps/user-ui/src/hooks/useUser";
+import useDeviceTracking from "@/hooks/useDeviceTracking";
+import useLocationTracking from "@/hooks/useLocationTracking";
+import useUser from "@/hooks/useUser";
 import React, { useEffect, useState } from "react";
 import { PRODUCT_IMAGE_PLACEHOLDER } from "../../constant";
 
@@ -20,12 +20,14 @@ import {
 import Image from "next/image";
 import Ratings from "../../components/ratings";
 import Link from "next/link";
-import { useStore } from "apps/user-ui/src/store";
+import { useStore } from "@/store";
 import ProductCard from "../../components/cards/product-card";
-import axiosInstance from "apps/user-ui/src/utils/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
+import { useRouter } from "next/navigation";
+import { isProtected } from "@/utils/protected";
 
 const ProductDetails = ({ productDetails }: { productDetails: any }) => {
-  const { user, isLoading } = useUser();
+  const { user } = useUser();
   const location = useLocationTracking();
   const deviceInfo = useDeviceTracking();
 
@@ -45,6 +47,8 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   ]);
   const [recommendedProducts, setRecommendedProducts] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   //Cart & wishlist
   const addToCart = useStore((state: any) => state.addToCart);
@@ -89,15 +93,33 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
       const res = await axiosInstance.get(
         `product/api/get-filtered-products?${query.toString()}`
       );
-      setRecommendedProducts(res.data.products)
+      setRecommendedProducts(res.data.products);
     } catch (error) {
-      console.error("Failed to fetch filtered products",error);
+      console.error("Failed to fetch filtered products", error);
     }
   };
 
   useEffect(() => {
     fetchFilteredProducts();
   }, [priceRange]);
+
+  const handleChat = async () => {
+    if (isLoading) return;
+    setIsLoading(true);
+
+    try {
+      const res = await axiosInstance.post(
+        "/chatting/api/create-user-conversationGroup",
+        { sellerId: productDetails?.Shop?.sellerId },
+        isProtected
+      );
+      router.push(`/inbox?conversationId=${res.data.conversation.id}`);
+    } catch (error) {
+      console.log("Something error with chat feature: ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="w-full bg-[#f5f5f5] py-5">
@@ -356,6 +378,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 </div>
                 <Link
                   href={"#"}
+                  onClick={() => handleChat()}
                   className="text-blue-500 flex items-center gap-1"
                 >
                   <MessageSquareText size={18} />
@@ -433,4 +456,3 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 };
 
 export default ProductDetails;
-

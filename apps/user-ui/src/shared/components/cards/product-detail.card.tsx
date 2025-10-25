@@ -4,16 +4,16 @@ import React, { useState } from "react";
 import Ratings from "../ratings";
 import { Heart, MapPin, ShoppingCartIcon, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useStore } from "apps/user-ui/src/store";
-import useLocationTracking from "apps/user-ui/src/hooks/useLocationTracking";
-import useDeviceTracking from "apps/user-ui/src/hooks/useDeviceTracking";
-import useUser from "apps/user-ui/src/hooks/useUser";
+import { useStore } from "@/store";
+import useLocationTracking from "@/hooks/useLocationTracking";
+import useDeviceTracking from "@/hooks/useDeviceTracking";
+import useUser from "@/hooks/useUser";
 import {
   PRODUCT_IMAGE_PLACEHOLDER,
   SHOP_IMAGE_PLACEHOLDER,
 } from "../../constant";
-import axiosInstance from "apps/user-ui/src/utils/axiosInstance";
-import { isProtected } from "apps/user-ui/src/utils/protected";
+import axiosInstance from "@/utils/axiosInstance";
+import { isProtected } from "@/utils/protected";
 
 const ProductDetailCard = ({
   data,

@@ -1,8 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import ProductCard from "apps/user-ui/src/shared/components/cards/product-card";
-import axiosInstance from "apps/user-ui/src/utils/axiosInstance";
+import ProductCard from "@/shared/components/cards/product-card";
+import axiosInstance from "@/utils/axiosInstance";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";

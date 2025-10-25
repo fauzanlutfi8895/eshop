@@ -8,7 +8,7 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import { useQuery } from "@tanstack/react-query";
-import axiosInstance from "apps/user-ui/src/utils/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
