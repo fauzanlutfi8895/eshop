@@ -6,6 +6,12 @@ import {
   updateBanner,
   deleteBanner,
   updateProfile,
+  getSellerProducts,
+  isFollowingShop,
+  followShop,
+  unfollowShop,
+  getSellerEvents,
+  getSeller,
 } from "../controllers/seller.controller";
 
 const router: Router = express.Router();
@@ -22,5 +28,13 @@ router.delete("/delete-banner", isAuthenticated, deleteBanner);
 
 // Profile routes
 router.put("/update-profile", isAuthenticated, updateProfile);
+
+// Seller and Follower
+router.get("/get-seller/:id", getSeller);
+router.get("/get-seller-products/:shopId", isAuthenticated, getSellerProducts);
+router.get("/is-following/:shopId", isAuthenticated, isFollowingShop);
+router.post("/follow-shop", isAuthenticated, followShop);
+router.post("/unfollow-shop", isAuthenticated, unfollowShop);
+router.get("/get-seller-events/:shopId", isAuthenticated, getSellerEvents);
 
 export default router;

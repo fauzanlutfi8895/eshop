@@ -47,7 +47,6 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
   // fetching di server lebih SEO friendly
   const { slug } = await props.params;
   const productDetails = await fetchProductDetails(slug);
-  console.log("Product details in Page:", productDetails);
   return <ProductDetails productDetails={productDetails} />;
 };
 

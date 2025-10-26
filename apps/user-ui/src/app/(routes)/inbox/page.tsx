@@ -5,13 +5,13 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 
-import { useWebSocket } from "apps/user-ui/src/context/web-socket-context";
-import useRequireAuth from "apps/user-ui/src/hooks/useRequiredAuth";
-import { useChatSync } from "apps/user-ui/src/hooks/useChatSync";
-import ChatInput from "apps/user-ui/src/shared/components/chats/chatinput";
-import axiosInstance from "apps/user-ui/src/utils/axiosInstance";
-import { isProtected } from "apps/user-ui/src/utils/protected";
-import { AVATAR_IMAGE_PLACEHOLDER } from "apps/user-ui/src/shared/constant";
+import { useWebSocket } from "@/context/web-socket-context";
+import useRequireAuth from "@/hooks/useRequiredAuth";
+import { useChatSync } from "@/hooks/useChatSync";
+import ChatInput from "@/shared/components/chats/chatinput";
+import axiosInstance from "@/utils/axiosInstance";
+import { isProtected } from "@/utils/protected";
+import { AVATAR_IMAGE_PLACEHOLDER } from "@/shared/constant";
 
 /* ---------------------- Main Component ---------------------- */
 const ChatPage = () => {

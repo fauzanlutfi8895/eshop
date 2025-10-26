@@ -56,6 +56,17 @@ const SellerProfile = ({
     staleTime: 1000 * 60 * 5,
   });
 
+  const { data: events, isLoading: isEventsLoading } = useQuery({
+    queryKey: ["seller-events"],
+    queryFn: async () => {
+      const res = await axiosInstance.get(
+        `/seller/api/get-seller-events/${shop?.id}?page=1&limit=10`
+      );
+      return res.data.products ?? [];
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
   useEffect(() => {
     const fetchFollowers = async () => {
       if (!shop?.id) return;
@@ -71,46 +82,27 @@ const SellerProfile = ({
     fetchFollowers();
   }, [shop?.id]);
 
-  const { data: events, isLoading: isEventsLoading } = useQuery({
-    queryKey: ["seller-events"],
-    queryFn: async () => {
-      const res = await axiosInstance.get(
-        `/seller/api/get-seller-events/${shop?.id}?page=1&limit=10`
-      );
-      return res.data.products;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
-
   const toggleFollowMutation = useMutation({
     mutationFn: async () => {
-      try {
-        await axiosInstance.post(`/seller/api/unfollow-shop`, {
-          shopId: shop?.id,
-        });
-      } catch (error) {
-        await axiosInstance.post(`/seller/api/follow-shop`, {
-          shopId: shop?.id,
-        });
-      }
+      const endpoint = isFollowing
+        ? "/seller/api/unfollow-shop"
+        : "/seller/api/follow-shop";
+
+      const res = await axiosInstance.post(endpoint, { shopId: shop?.id });
+      return res.data;
     },
     onSuccess: () => {
-      if (isFollowing) {
-        setFollowers(followers - 1);
-      } else {
-        setFollowers(followers + 1);
-      }
+      setFollowers((prev) => (isFollowing ? prev - 1 : prev + 1));
       setIsFollowing((prev) => !prev);
       queryClient.invalidateQueries({ queryKey: ["is-following", shop.id] });
     },
-    onError: (error) => {
-      console.error("Error toggling follow:", error);
+    onError: (error: any) => {
+      console.error("Follow/unfollow failed:", error);
     },
   });
 
   useEffect(() => {
-    if (isLoading) {
-      if (!location || !deviceInfo || !user?.id) return;
+    if (!isLoading && location && deviceInfo && user?.id) {
       sendKafkaEvent({
         userId: user?.id,
         shopId: shop?.id,
@@ -123,192 +115,185 @@ const SellerProfile = ({
   }, [location, deviceInfo, isLoading]);
 
   return (
-    <div>
-      <div className="relative w-full flex justify-center">
+    <div className="flex flex-col">
+      {/* Banner */}
+      <div className="relative w-full h-[300px]">
         <Image
           src={shop?.coverBanner || SHOP_IMAGE_PLACEHOLDER}
           alt="Seller Cover"
-          className="w-full h-[400px] object-cover"
-          width={1200}
-          height={300}
+          fill
+          className="object-cover"
+          priority
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
       </div>
 
-      {/* Seller Info Section */}
-      <div className="w-[85%] lg:w-[70%] mt-[-50px] mx-auto relative z-20 flex flex-col lg:flex-row gap-6">
-        <div className="bg-gray-200 p-6 rounded-lg shadow-lg flex-1">
-          <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
-            <div className="relative w-[100px] h-[100px] rounded-full border-4 border-slate-300 overflow-hidden">
-              <Image
-                src={shop?.avatar || AVATAR_IMAGE_PLACEHOLDER}
-                alt="Seller Avatar"
-                layout="fill"
-                objectFit="cover"
-              />
-              <div className="flex-1 w-full">
-                <h1 className="text-2xl font-semibold text-slate-900">
-                  {shop?.name}
-                </h1>
-                <p className="text-slate-800 text-sm mt-1">
-                  {shop?.bio || "No bio available."}
-                </p>
-                <div className="flex items-center gap-4 mt-3">
-                  <div className="flex items-center text-blue-400 gap-1">
-                    <Star fill="#60a5fa" size={18} /> {"/"}
-                    <span>{shop?.rating || "N/A"}</span>
-                  </div>
-                  <div className="flex items-center text-slate-700 gap-1">
-                    <Users size={18} />
-                    <span>{followers} Followers</span>
-                  </div>
-                  <div className="flex items-center gap-3 mt-3 text-slate-700">
-                    <Clock size={18} />
-                    <span>
-                      {shop?.opening_hours || "Mon - Sat: 9 AM - 6 PM"}
-                    </span>
-                  </div>
+      {/* Profile Header */}
+      <div className="max-w-6xl mx-auto px-6 md:px-8 relative mt-[-60px] z-10">
+        <div className="bg-white rounded-2xl shadow-md p-6 flex flex-col md:flex-row gap-6 items-center md:items-start">
+          {/* Avatar */}
+          <div className="relative w-[120px] h-[120px] rounded-full border-4 border-white shadow-lg overflow-hidden">
+            <Image
+              src={shop?.avatar || AVATAR_IMAGE_PLACEHOLDER}
+              alt="Shop Avatar"
+              fill
+              className="object-cover"
+            />
+          </div>
 
-                  <div className="flex items-center gap-2 mt-3 text-slate-700">
-                    <MapPin size={18} />{" "}
-                    <span>{shop?.address || "No address provided"}</span>
-                  </div>
-                  <button
-                    className={`px-6 py-2 h-[40px] rounded-lg font-semibold flex items-center gap-2 transition ${
-                      isFollowing
-                        ? "bg-red-500 hover:bg-red-600"
-                        : "bg-blue-600 hover:bg-blue-700"
-                    }`}
-                    onClick={() => toggleFollowMutation.mutate()}
-                    disabled={toggleFollowMutation.isPending}
-                  >
-                    <Heart size={18} />
-                    {isFollowing ? "Unfollow" : "Follow"}
-                  </button>
-                </div>
+          {/* Info */}
+          <div className="flex-1 w-full md:pl-4">
+            <h1 className="text-3xl font-semibold text-slate-900">
+              {shop?.name || "Shop Name"}
+            </h1>
+            <p className="text-slate-600 mt-2 max-w-2xl">
+              {shop?.bio || "No bio available for this shop."}
+            </p>
+
+            <div className="flex flex-wrap gap-4 mt-4 text-slate-700 text-sm">
+              <div className="flex items-center gap-1">
+                <Star className="text-yellow-400" size={18} />
+                <span>{shop?.rating || "N/A"}</span>
               </div>
-
-              <div className="bg-gray-200 p-6 rounded-lg shadow-lg w-full lg:w-[30%]">
-                <h2 className="text-xl font-semibold text-slate-900">
-                  Shop Details
-                </h2>
-
-                <div className="flex items-center gap-3 mt-3 text-slate-700">
-                  <Calendar size={18} />
-                  <span>
-                    Joined At: {new Date(shop?.createdAt!).toLocaleDateString()}
-                  </span>
-                </div>
-
-                {shop?.website && (
-                  <div className="flex items-center gap-3 mt-3 text-slate-700">
-                    <Globe size={18} />
-                    <Link
-                      href={shop?.website}
-                      className="hover:underline text-blue-600"
-                    >
-                      {shop?.website}
-                    </Link>
-                  </div>
-                )}
-
-                {shop?.socialLink && shop.socialLink.length > 0 && (
-                  <div className="mt-3">
-                    <h3 className="text-slate-700 text-lg font-medium">
-                      Follow Us:
-                    </h3>
-                    <div className="flex gap-3 mt-2">
-                      {shop?.socialLink?.map((link: any, index: number) => (
-                        <a
-                          key={index}
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="opacity-[.9]"
-                        >
-                          {link.type === "youtube" && <Youtube />}
-                          {link.type === "x" && <XIcon />}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                )}
+              <div className="flex items-center gap-1">
+                <Users size={18} />
+                <span>
+                  {followers ? `${followers} Followers` : "No Followers"}
+                </span>
               </div>
-            </div>
-
-            {/* Tabs Section */}
-            <div className="w-[85%] lg:w-[70px] mx-auto mt-8">
-              {/* Tabs */}
-              <div className="flex border-b border-gray-300">
-                {TABS.map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`py-3 px-6 text-lg font-semibold ${
-                      activeTab === tab
-                        ? "text-slate-800 border-b-2 border-blue-600"
-                        : "text-slate-600"
-                    } transition`}
-                  >
-                    {tab}
-                  </button>
-                ))}
+              <div className="flex items-center gap-1">
+                <Clock size={18} />
+                <span>{shop?.opening_hours || "Mon - Sat: 9 AM - 6 PM"}</span>
               </div>
-
-              {/* Content */}
-              <div className="bg-gray-200 rounded-lg my-4 text-slate-700">
-                {activeTab === "Products" && (
-                  <div className="m-auto auto grid grid-cols-1 p-4 sm:grid-cols-3 md:grid-cols-4">
-                    {isLoading && (
-                      <>
-                        {Array.from({ length: 10 }).map((_, index) => (
-                          <div
-                            key={index}
-                            className="h-[250px] bg-gray-300 animate-pulse rounded-xl"
-                          ></div>
-                        ))}
-                      </>
-                    )}
-                    {products?.map((product: any) => (
-                      <ProductCard key={product.id} product={product} />
-                    ))}
-                    {products?.length === 0 && (
-                      <p className="py-2">No product avalilable yet!</p>
-                    )}
-                  </div>
-                )}
-                {activeTab === "Offers" && (
-                  <div className="m-auto auto grid grid-cols-1 p-4 sm:grid-cols-3 md:grid-cols-4">
-                    {isEventsLoading && (
-                      <>
-                        {Array.from({ length: 10 }).map((_, index) => (
-                          <div
-                            key={index}
-                            className="h-[250px] bg-gray-300 animate-pulse rounded-xl"
-                          ></div>
-                        ))}
-                      </>
-                    )}
-
-                    {events?.map((product: any) => (
-                      <ProductCard
-                        isEvent={true}
-                        key={product.id}
-                        product={product}
-                      />
-                    ))}
-                    {products?.length === 0 && (
-                      <p className="py-2">No offers available yet</p>
-                    )}
-                  </div>
-                )}
-                {activeTab === "Reviews" && (
-                    <div>
-                        <p className="text-center py-5">No reviews available yet!</p>
-                    </div>
-                )}
+              <div className="flex items-center gap-1">
+                <MapPin size={18} />
+                <span>{shop?.address || "No address provided"}</span>
               </div>
             </div>
           </div>
+
+          {/* Follow + Details */}
+          <div className="flex flex-col items-end w-full md:w-[30%] gap-3">
+            <button
+              className={`px-6 py-2 rounded-lg font-medium flex items-center justify-center gap-2 transition text-white shadow-md ${
+                isFollowing
+                  ? "bg-red-500 hover:bg-red-600"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
+              onClick={() => toggleFollowMutation.mutate()}
+              disabled={toggleFollowMutation.isPending}
+            >
+              <Heart size={18} />
+              {isFollowing ? "Unfollow" : "Follow"}
+            </button>
+
+            <div className="text-sm text-slate-700 space-y-2">
+              <div className="flex items-center gap-2">
+                <Calendar size={16} />
+                <span>
+                  Joined: {new Date(shop?.createdAt!).toLocaleDateString()}
+                </span>
+              </div>
+
+              {shop?.website && (
+                <div className="flex items-center gap-2">
+                  <Globe size={16} />
+                  <Link
+                    href={shop.website}
+                    className="text-blue-600 hover:underline"
+                    target="_blank"
+                  >
+                    {shop.website}
+                  </Link>
+                </div>
+              )}
+
+              {shop?.socialLink?.length > 0 && (
+                <div className="flex gap-3 mt-1">
+                  {shop.socialLink.map((link: any, i: number) => (
+                    <a
+                      key={i}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:opacity-80"
+                    >
+                      {link.type === "youtube" && <Youtube />}
+                      {link.type === "x" && <XIcon />}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="max-w-6xl mx-auto mt-10 px-6 md:px-8">
+        <div className="flex border-b border-gray-200">
+          {TABS.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`py-3 px-6 font-medium text-sm md:text-base transition-all ${
+                activeTab === tab
+                  ? "text-blue-600 border-b-2 border-blue-600"
+                  : "text-slate-500 hover:text-slate-700"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {/* Content */}
+        <div className="mt-6 bg-white rounded-xl shadow-sm p-6">
+          {activeTab === "Products" && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+              {isLoading &&
+                Array.from({ length: 8 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-[250px] bg-gray-200 animate-pulse rounded-xl"
+                  ></div>
+                ))}
+              {products?.map((p: any) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+              {products?.length === 0 && (
+                <p className="col-span-full text-center text-slate-500">
+                  No products available.
+                </p>
+              )}
+            </div>
+          )}
+
+          {activeTab === "Offers" && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+              {isEventsLoading &&
+                Array.from({ length: 8 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-[250px] bg-gray-200 animate-pulse rounded-xl"
+                  ></div>
+                ))}
+              {events?.map((e: any) => (
+                <ProductCard key={e.id} product={e} isEvent />
+              ))}
+              {events?.length === 0 && (
+                <p className="col-span-full text-center text-slate-500">
+                  No offers available.
+                </p>
+              )}
+            </div>
+          )}
+
+          {activeTab === "Reviews" && (
+            <div className="text-center text-slate-500 py-10">
+              No reviews yet.
+            </div>
+          )}
         </div>
       </div>
     </div>

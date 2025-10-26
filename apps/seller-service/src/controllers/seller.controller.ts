@@ -225,3 +225,274 @@ export const updateProfile = async (
     next(error);
   }
 };
+
+export const getSeller = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    console.log("Fetching seller with ID:", req.params.id);
+    const seller = await prisma.shop.findUnique({
+      where: { id: req.params.id },
+      include: {
+        followers: true,
+        review: true,
+      },
+    });
+    if (!seller) {
+      return next(new ValidationError("Shop not found"));
+    }
+    res.status(200).json({
+      success: true,
+      seller,
+    });
+  } catch (error) {
+    console.error("Get seller error:", error);
+    return next(error);
+  }
+};
+
+// Get seller products with pagination
+export const getSellerProducts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const skip = (page - 1) * limit;
+    const shopId = req.params.shopId;
+
+    const products = await prisma.product.findMany({
+      where: {
+        shopId: shopId,
+        isDeleted: false,
+        status: "Active",
+      },
+      skip,
+      take: limit,
+      include: {
+        images: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    const totalProducts = await prisma.product.count({
+      where: {
+        shopId: shopId,
+        isDeleted: false,
+        status: "Active",
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      products,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(totalProducts / limit),
+        totalItems: totalProducts,
+      },
+    });
+  } catch (error) {
+    console.error("Get seller products error:", error);
+    next(error);
+  }
+};
+
+// Check if user is following a shop
+export const isFollowingShop = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const shopId = req.params.shopId;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(200).json({ isFollowing: false });
+    }
+
+    const following = await prisma.followers.findFirst({
+      where: {
+        shopId,
+        userId,
+      },
+    });
+
+    return res.status(200).json({
+      isFollowing: following !== null,
+    });
+  } catch (error) {
+    console.error("Check following status error:", error);
+    next(error);
+    return res.status(500).json({
+      success: false,
+      message: "Error checking following status",
+    });
+  }
+};
+
+// Follow shop
+export const followShop = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { shopId } = req.body;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return next(new ValidationError("User not authenticated"));
+    }
+
+    // Check if already following
+    const existingFollow = await prisma.followers.findFirst({
+      where: {
+        shopId,
+        userId,
+      },
+    });
+
+    if (existingFollow) {
+      return next(new ValidationError("Already following this shop"));
+    }
+
+    // Create follow relationship
+    await prisma.followers.create({
+      data: {
+        Shop: {
+          connect: { id: shopId },
+        },
+        User: {
+          connect: { id: userId },
+        },
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Successfully followed shop",
+    });
+  } catch (error) {
+    console.error("Follow shop error:", error);
+    next(error);
+  }
+};
+
+// Unfollow shop
+export const unfollowShop = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { shopId } = req.body;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return next(new ValidationError("User not authenticated"));
+    }
+
+    // Delete follow relationship
+    await prisma.followers.deleteMany({
+      where: {
+        shopId,
+        userId,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Successfully unfollowed shop",
+    });
+  } catch (error) {
+    console.error("Unfollow shop error:", error);
+    next(error);
+  }
+};
+
+// Get active products with special offers/discounts
+export const getSellerEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const shopId = req.params.shopId;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const skip = (page - 1) * limit;
+
+    const now = new Date();
+
+    // Find products with active discounts/offers
+    const products = await prisma.product.findMany({
+      where: {
+        shopId: shopId,
+        isDeleted: false,
+        status: "Active",
+        AND: [
+          {
+            starting_date: {
+              lte: now,
+            },
+          },
+          {
+            ending_date: {
+              gte: now,
+            },
+          },
+        ],
+      },
+      skip,
+      take: limit,
+      include: {
+        images: true,
+        Shop: true,
+      },
+      orderBy: {
+        ending_date: "asc", // Show offers ending soon first
+      },
+    });
+
+    const totalProducts = await prisma.product.count({
+      where: {
+        shopId: shopId,
+        isDeleted: false,
+        status: "Active",
+        AND: [
+          {
+            starting_date: {
+              lte: now,
+            },
+          },
+          {
+            ending_date: {
+              gte: now,
+            },
+          },
+        ],
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      events: products,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(totalProducts / limit),
+        totalItems: totalProducts,
+      },
+    });
+  } catch (error) {
+    console.error("Get seller events error:", error);
+    next(error);
+  }
+};
