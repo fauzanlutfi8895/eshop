@@ -1,4 +1,4 @@
-import BreadCrumbs from "apps/admin-ui/src/shared/components/breadcrumbs";
+import BreadCrumbs from "@/shared/components/breadcrumbs";
 import React from "react";
 
 const Notifications = () => {

@@ -10,17 +10,16 @@ import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import {
   Search,
   Eye,
-  Plus,
   Star,
   ChevronLeft,
   ChevronRight,
   Download,
 } from "lucide-react";
 import Link from "next/link";
-import axiosInstance from "apps/admin-ui/src/utils/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import { useDeferredValue, useMemo, useState } from "react";
 import Image from "next/image";
-import Breadcrumbs from "apps/admin-ui/src/shared/components/breadcrumbs";
+import Breadcrumbs from "@/shared/components/breadcrumbs";
 import { saveAs } from "file-saver"; // ✅ pastikan file-saver terinstal: npm i file-saver
 
 const Page = () => {

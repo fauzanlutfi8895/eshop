@@ -2,7 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import Input from "packages/component/input";
+import Input from "@packages/component/input";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios, { AxiosError } from "axios";

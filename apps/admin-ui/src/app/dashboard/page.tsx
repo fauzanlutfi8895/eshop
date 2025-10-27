@@ -15,10 +15,10 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import GeographicalMap from "../../shared/components/charts/geographicalMap";
+import GeographicalMap from "@/shared/components/charts/geographicalMap";
 
 const SalesChart = dynamic(
-  () => import("../../shared/components/charts/sale-chart"),
+  () => import("@/shared/components/charts/sale-chart"),
   { ssr: false }
 );
 

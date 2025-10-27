@@ -1,7 +1,7 @@
 "use client";
 
-import useAdmin from "apps/admin-ui/src/hooks/useAdmin";
-import UseSideBar from "apps/admin-ui/src/hooks/useSideBar";
+import useAdmin from "@/hooks/useAdmin";
+import UseSideBar from "@/hooks/useSideBar";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import Box from "../box";
@@ -25,7 +25,7 @@ import {
   Wallet2Icon,
 } from "lucide-react";
 import SidebarMenu from "./sidebar.menu";
-import axiosInstance from "apps/admin-ui/src/utils/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 
 const SidebarWrapper = () => {
   const { activeSideBar, setActiveSideBar } = UseSideBar();

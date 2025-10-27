@@ -7,8 +7,8 @@ import {
   getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import Breadcrumb from "apps/admin-ui/src/shared/components/breadcrumbs";
-import axiosInstance from "apps/admin-ui/src/utils/axiosInstance";
+import Breadcrumb from "@/shared/components/breadcrumbs";
+import axiosInstance from "@/utils/axiosInstance";
 import { Eye, Search } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useMemo, useState } from "react";

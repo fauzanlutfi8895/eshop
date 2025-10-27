@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import BreadCrumbs from "apps/admin-ui/src/shared/components/breadcrumbs";
-import axiosInstance from "apps/admin-ui/src/utils/axiosInstance";
+import BreadCrumbs from "@/shared/components/breadcrumbs";
+import axiosInstance from "@/utils/axiosInstance";
 import { toast } from "react-hot-toast";
 import { FolderPlus, Plus } from "lucide-react";
 

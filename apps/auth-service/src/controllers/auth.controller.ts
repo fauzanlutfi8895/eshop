@@ -14,6 +14,7 @@ import { AuthError, ValidationError } from "@packages/error-handler";
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import { setCookie } from "../utils/cookie";
 import Stripe from "stripe";
+import { sendLog } from "@packages/utils/logs/send-logs";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-08-27.basil",
@@ -231,6 +232,12 @@ export const refreshToken = async (
 export const getUser = async (req: any, res: Response, next: NextFunction) => {
   try {
     const user = req.user;
+    sendLog({
+      type: "success",
+      message: `User data retrieved: ${user?.email}`,
+      source: "auth-service",
+    });
+
     res.status(201).json({
       success: true,
       user,
@@ -550,7 +557,7 @@ export const loginAdmin = async (
       return next(new AuthError("Invalid email or password"));
     }
 
-    const isAdmin = user.role === "admin";
+    // const isAdmin = user.role === "admin";
 
     // if (!isAdmin) {
     //   sendLog({

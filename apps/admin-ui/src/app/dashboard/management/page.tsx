@@ -13,17 +13,15 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import axiosInstance from "apps/admin-ui/src/utils/axiosInstance";
-import Breadcrumbs from "apps/admin-ui/src/shared/components/breadcrumbs";
+import axiosInstance from "@/utils/axiosInstance";
+import Breadcrumbs from "@/shared/components/breadcrumbs";
 import { toast } from "react-hot-toast";
 import {
   Search,
   UserPlus,
-  Download,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { saveAs } from "file-saver";
 
 // ----------------------
 // 🔹 Types

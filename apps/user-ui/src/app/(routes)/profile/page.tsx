@@ -1,14 +1,14 @@
 "use client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import useRequireAuth from "apps/user-ui/src/hooks/useRequiredAuth";
-import QuickActionCard from "apps/user-ui/src/shared/components/cards/quick-action.card";
-import StatCard from "apps/user-ui/src/shared/components/cards/stat-card";
-import ChangePassword from "apps/user-ui/src/shared/components/change-password";
-import ShippingAddressSection from "apps/user-ui/src/shared/components/shippingAddress";
-import OrderTable from "apps/user-ui/src/shared/components/tables/order-tables";
-import { AVATAR_IMAGE_PLACEHOLDER } from "apps/user-ui/src/shared/constant";
-import axiosInstance from "apps/user-ui/src/utils/axiosInstance";
+import useRequireAuth from "@/hooks/useRequiredAuth";
+import QuickActionCard from "@/shared/components/cards/quick-action.card";
+import StatCard from "@/shared/components/cards/stat-card";
+import ChangePassword from "@/shared/components/change-password";
+import ShippingAddressSection from "@/shared/components/shippingAddress";
+import OrderTable from "@/shared/components/tables/order-tables";
+import { AVATAR_IMAGE_PLACEHOLDER } from "@/shared/constant";
+import axiosInstance from "@/utils/axiosInstance";
 import {
   BadgeCheck,
   CheckCircle,

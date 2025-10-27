@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import axiosInstance from "../utils/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 
 const fetchAdmin = async () => {
   const response = await axiosInstance.get("/api/logged-in-admin");

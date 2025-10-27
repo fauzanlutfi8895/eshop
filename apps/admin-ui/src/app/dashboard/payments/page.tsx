@@ -9,9 +9,9 @@ import {
 } from "@tanstack/react-table";
 import { Search, Eye } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import axiosInstance from "apps/admin-ui/src/utils/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import Link from "next/link";
-import Breadcrumb from "apps/admin-ui/src/shared/components/breadcrumbs";
+import Breadcrumb from "@/shared/components/breadcrumbs";
 
 const fetchOrder = async () => {
   const res = await axiosInstance("/order/api/get-admin-orders");
