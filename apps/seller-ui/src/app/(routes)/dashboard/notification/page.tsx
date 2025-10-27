@@ -1,23 +1,22 @@
 "use client";
-
-import BreadCrumbs from "@/shared/components/breadcrumbs";
+import Breadcrumb from "@/shared/component/breadcrumbs";
 import axiosInstance from "@/utils/axiosInstance";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import React from "react";
 
-const Notifications = () => {
+const Page = () => {
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["admin-notifications"],
+    queryKey: ["seller-notifications"],
     queryFn: async () => {
       const response = await axiosInstance.get(
-        "/admin/api/get-all-notifications"
+        "/seller/api/seller-notifications"
       );
       return response.data.notifications;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000, //5 minutes
   });
 
   const markAsRead = async (notificationId: string) => {
@@ -26,7 +25,7 @@ const Notifications = () => {
         notificationId,
       });
       await queryClient.setQueryData(
-        ["admin-notifications"],
+        ["seller-notifications"],
         (oldData: any) => {
           return oldData.map((notification: any) =>
             notification.id === notificationId
@@ -44,7 +43,7 @@ const Notifications = () => {
     <div className="w-full min-h-screen p-8">
       <h2 className="text-2xl text-white font-semibold mb-2">Notifications</h2>
       {/* Breadcrumbs */}
-      <BreadCrumbs title="Notifications" />
+      <Breadcrumb title="Notifications" />
 
       {!isLoading && data?.length === 0 && (
         <p className="text-center pt-24 text-white text-sm font-Poppins">
@@ -87,4 +86,4 @@ const Notifications = () => {
   );
 };
 
-export default Notifications;
+export default Page;

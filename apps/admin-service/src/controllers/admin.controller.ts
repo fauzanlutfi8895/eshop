@@ -297,3 +297,49 @@ export const getAllSellers = async (
     next(error);
   }
 };
+
+// get all notifications
+export const getAllNotifications = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const notifications = await prisma.notification.findMany({
+      where: {
+        receiverId: "admin",
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    res.status(200).json({
+      success: true,
+      notifications,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// get all user notifications
+export const getUserNotifications = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const notifications = await prisma.notification.findMany({
+      where: {
+        receiverId: req.user.id,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    res.status(200).json({
+      success: true,
+      notifications,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

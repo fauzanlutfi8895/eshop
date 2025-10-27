@@ -6,9 +6,11 @@ import {
   getAllAdmins,
   getAllCustomization,
   getAllEvents,
+  getAllNotifications,
   getAllProducts,
   getAllSellers,
   getAllUsers,
+  getUserNotifications,
 } from "../controllers/admin.controller";
 
 const router: Router = express.Router();
@@ -20,5 +22,8 @@ router.put("/add-new-admin", isAuthenticated, isAdmin, addNewAdmin);
 router.get("/get-all-users", isAuthenticated, isAdmin, getAllUsers);
 router.get("/get-all-sellers", isAuthenticated, isAdmin, getAllSellers);
 router.get("/get-customization", getAllCustomization);
+// Notifications
+router.get("/get-all-notifications", isAuthenticated, isAdmin, getAllNotifications);
+router.get("/get-user-notifications", isAuthenticated, getUserNotifications);
 
 export default router;

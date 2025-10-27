@@ -78,6 +78,37 @@ const Page = () => {
       });
   };
 
+  const { data: notifications, isLoading: notificationsLoading } = useQuery({
+    queryKey: ["user-notifications"],
+    queryFn: async () => {
+      const response = await axiosInstance.get(
+        "/admin/api/get-user-notifications"
+      );
+      return response.data.notifications;
+    },
+    staleTime: 5 * 60 * 1000, //5 minutes
+  });
+
+  const markAsRead = async (notificationId: string) => {
+    try {
+      await axiosInstance.post("/seller/api/mark-notification-as-read", {
+        notificationId,
+      });
+      await queryClient.setQueryData(
+        ["user-notifications"],
+        (oldData: any) => {
+          return oldData.map((notification: any) =>
+            notification.id === notificationId
+              ? { ...notification, status: "Read" }
+              : notification
+          );
+        }
+      );
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
+  };
+
   return (
     <div className="bg-gray-50 p-6 pb-16">
       <div className="md:max-w-7xl mx-auto">
@@ -208,8 +239,38 @@ const Page = () => {
               <OrderTable />
             ) : activeTab === "Change Password" ? (
               <ChangePassword />
+            ) : activeTab === "Notifications" ? (
+              <div className="space-y-4 text-sm text-gray-700">
+                {!notificationsLoading && notifications?.length === 0 && (
+                  <p className="text-gray-600">No notifications available.</p>
+                )}
+                {/* If available */}
+                {!notificationsLoading && notifications?.length > 0 && (
+                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                    {notifications.map((notification: any) => (
+                      <div
+                        key={notification.id}
+                        className={`p-3 rounded-md border border-gray-200 ${
+                          notification.status === "Unread"
+                            ? "bg-blue-100"
+                            : "bg-gray-100"
+                        }`}
+                        onClick={() => markAsRead(notification.id)}
+                      >
+                        <h3 className="font-semibold text-gray-800">
+                          {notification.title}
+                        </h3>
+                        <p className="text-gray-600">{notification.message}</p>
+                        <span className="text-xs text-gray-500">
+                          {new Date(notification.createdAt).toLocaleString()}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             ) : (
-              <></>
+              <p className="text-gray-600">Content not available.</p>
             )}
           </div>
           {/* Right Quick Panel */}

@@ -281,8 +281,8 @@ export const createOrder = async (
           }
         }
 
-        //Create Order
-        await prisma.order.create({
+        //Create Order, menggunakan const artinya bisa langsung dibuat dan dipanggil jika perlu
+        const order = await prisma.order.create({
           data: {
             userId,
             shopId,
@@ -379,7 +379,7 @@ export const createOrder = async (
             totalAmount: coupon?.discountAmount
               ? totalAmount - coupon?.discountAmount
               : totalAmount,
-            trackingUrl: `https://uniloop.com/order/${sessionId}`,
+            trackingUrl: `${process.env.BASE_URL}/order/${order.id}`,
           }
         );
 
@@ -408,7 +408,7 @@ export const createOrder = async (
               message: `A customer just ordered ${productTitle} from your shop.`,
               creatorId: userId,
               receiverId: shop.sellerId,
-              redirect_link: `https://uniloop.com/order/${sessionId}`,
+              redirect_link: `/order/${order.id}`,
             },
           });
         }
@@ -419,7 +419,7 @@ export const createOrder = async (
             message: `A new order was placed by ${name}`,
             creatorId: userId,
             receiverId: "admin",
-            redirect_link: `https://uniloop.com/order/${sessionId}`,
+            redirect_link: `/order/${order.id}`,
           },
         });
 

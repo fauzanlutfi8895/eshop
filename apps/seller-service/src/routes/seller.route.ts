@@ -12,7 +12,10 @@ import {
   unfollowShop,
   getSellerEvents,
   getSeller,
+  sellerNotifications,
+  markNotificationAsRead,
 } from "../controllers/seller.controller";
+import { isSeller } from "@packages/middleware/authorizeRole";
 
 const router: Router = express.Router();
 
@@ -36,5 +39,7 @@ router.get("/is-following/:shopId", isAuthenticated, isFollowingShop);
 router.post("/follow-shop", isAuthenticated, followShop);
 router.post("/unfollow-shop", isAuthenticated, unfollowShop);
 router.get("/get-seller-events/:shopId", isAuthenticated, getSellerEvents);
+router.get("/seller-notifications", isAuthenticated, isSeller, sellerNotifications);
+router.post("/mark-notification-as-read", isAuthenticated, markNotificationAsRead);
 
 export default router;

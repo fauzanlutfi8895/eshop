@@ -496,3 +496,58 @@ export const getSellerEvents = async (
     next(error);
   }
 };
+
+// Fetching notifications for seller
+export const sellerNotifications = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const sellerId = req.seller?.id;
+
+    const notifications = await prisma.notification.findMany({
+      where: { receiverId: sellerId },
+      orderBy: { createdAt: "desc" },
+      take: 50, // Limit to latest 50 notifications
+    });
+    res.status(200).json({
+      success: true,
+      notifications,
+    });
+  } catch (error) {
+    console.error("Get seller notifications error:", error);
+    next(error);
+  }
+};
+
+// Mark Notification as Read
+export const markNotificationAsRead = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { notificationId } = req.body;
+
+    if (!notificationId)
+      return next(new ValidationError("Notification ID is required"));
+
+    const notification = await prisma.notification.update({
+      where: {
+        id: notificationId,
+      },
+      data: {
+        status: "Read",
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      notification
+    });
+  } catch (error) {
+    console.error("Mark notification as read error:", error);
+    next(error);
+  }
+};
