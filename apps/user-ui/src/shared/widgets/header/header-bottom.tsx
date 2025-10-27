@@ -1,7 +1,7 @@
 "use client";
-import { navItem } from "apps/user-ui/src/app/config/constant";
-import useUser from "apps/user-ui/src/hooks/useUser";
-import { useStore } from "apps/user-ui/src/store";
+import { navItem } from "@/app/config/constant";
+import useUser from "@/hooks/useUser";
+import { useStore } from "@/store";
 import {
   AlignLeft,
   ChevronDown,

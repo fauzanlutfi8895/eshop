@@ -4,13 +4,15 @@ import Link from "next/link";
 import React from "react";
 import { HeartIcon, Search, ShoppingCart, User } from "lucide-react";
 import HeaderBottom from "./header-bottom";
-import useUser from "apps/user-ui/src/hooks/useUser";
-import { useStore } from "apps/user-ui/src/store";
+import useUser from "@/hooks/useUser";
+import { useStore } from "@/store";
+import useLayout from "@/hooks/useLayout";
 import Image from "next/image";
 import { LOGO_IMAGE_PLACEHOLDER } from "../../constant";
 
 const Header = () => {
   const { user, isLoading } = useUser();
+  const { layout } = useLayout();
   const wishlist = useStore((state: any) => state.wishlist);
   const cart = useStore((state: any) => state.cart);
 
@@ -23,7 +25,7 @@ const Header = () => {
               style={{ width: "150px", height: "50px", position: "relative" }}
             >
               <Image
-                src={LOGO_IMAGE_PLACEHOLDER}
+                src={layout?.logo || LOGO_IMAGE_PLACEHOLDER}
                 fill
                 alt="logo"
                 style={{ objectFit: "cover" }}

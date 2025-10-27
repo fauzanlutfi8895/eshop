@@ -3,6 +3,7 @@ import {
   createShop,
   createStripeConnectLink,
   getAdmin,
+  getLayoutData,
   getSeller,
   getUser,
   loginAdmin,
@@ -50,6 +51,9 @@ router.get("/logout-seller", logOutSeller);
 router.post("/login-admin", loginAdmin);
 router.get("/logged-in-admin", isAuthenticated, getAdmin);
 router.get("/logout-admin", logOutAdmin);
+
+// Layout
+router.get("/get-layout", getLayoutData);
 
 //Both
 router.post("/refresh-token", refreshToken);
