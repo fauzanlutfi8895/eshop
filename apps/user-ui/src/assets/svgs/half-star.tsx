@@ -42,7 +42,7 @@ export default function StarHalf({
            9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
         fill="none"
         stroke={color}
-        strokeWidth="0"
+        strokeWidth="0.5"
       />
 
       {/* Isi setengah kiri */}

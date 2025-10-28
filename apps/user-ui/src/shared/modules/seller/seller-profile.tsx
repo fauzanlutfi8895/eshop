@@ -74,7 +74,7 @@ const SellerProfile = ({
         const res = await axiosInstance.get(
           `/seller/api/is-following/${shop?.id}`
         );
-        setIsFollowing(res.data.isFollowing !== null);
+        setIsFollowing(res.data.isFollowing);
       } catch (error) {
         console.error("Error fetching followers:", error);
       }

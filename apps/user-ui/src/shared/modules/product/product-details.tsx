@@ -5,6 +5,12 @@ import useUser from "@/hooks/useUser";
 import React, { useEffect, useState } from "react";
 import { PRODUCT_IMAGE_PLACEHOLDER } from "../../constant";
 
+import dynamic from "next/dynamic";
+
+const ClientLocation = dynamic(() => import("@/shared/components/clientLocation/ClientLocation"), {
+  ssr: false,
+});
+
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 import {
@@ -25,6 +31,7 @@ import ProductCard from "../../components/cards/product-card";
 import axiosInstance from "@/utils/axiosInstance";
 import { useRouter } from "next/navigation";
 import { isProtected } from "@/utils/protected";
+import { sendKafkaEvent } from "@/actions/track-user";
 
 const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   const { user } = useUser();
@@ -120,6 +127,20 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!isLoading && location && deviceInfo && user?.id) {
+      sendKafkaEvent({
+        userId: user?.id,
+        productId: productDetails?.id,
+        shopId: productDetails?.Shop?.id,
+        action: "product_view",
+        country: location?.country || "Unknown",
+        city: location?.city || "Unknown",
+        device: deviceInfo || "Unknown device",
+      });
+    }
+  }, [location, deviceInfo, isLoading]);
 
   return (
     <div className="w-full bg-[#f5f5f5] py-5">
@@ -350,7 +371,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             <span className="text-sm text-gray-600">Delivery Option</span>
             <div className="flex items-center text-gray-600 gap-1">
               <MapPin size={18} className="ml-[-5px]" />
-              <span>{location?.city + ", " + location?.country}</span>
+              <ClientLocation />
             </div>
           </div>
           <div className="mb-1 px-3 pb-1 border-b border-b-gray-100">

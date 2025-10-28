@@ -770,8 +770,12 @@ export const getFilteredShops = async (
     }
 
     if (countries && String(countries).length > 0) {
-      filters.country = {
-        in: Array.isArray(countries) ? countries : String(countries).split(","),
+      filters.seller = {
+        country: {
+          in: Array.isArray(countries)
+            ? countries
+            : String(countries).split(","),
+        },
       };
     }
 
