@@ -1,6 +1,5 @@
 import express from "express";
 import "./jobs/product-crone.job";
-import cors from "cors";
 import { errorMiddleware } from "@packages/error-handler/error-middleware";
 import cookieParser from "cookie-parser";
 import router from "./routes/product.routes";
@@ -9,13 +8,6 @@ const swaggerDocument = require("./swagger-output.json");
 
 const app = express();
 
-app.use(
-  cors({
-    origin: ["http://localhost:3000"],
-    allowedHeaders: ["Authorization", "Content-Type"],
-    credentials: true,
-  })
-);
 // Limit body size to 10mb for product data and image uploads
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));

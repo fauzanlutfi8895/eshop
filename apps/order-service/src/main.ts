@@ -10,14 +10,6 @@ import { createOrder } from "./controllers/order.controller";
 
 const app = express();
 
-app.use(
-  cors({
-    origin: ["http://localhost:3000"],
-    allowedHeaders: ["Authorization", "Content-Type"],
-    credentials: true,
-  })
-);
-
 //only for stripe
 app.post(
   "/api/create-order",

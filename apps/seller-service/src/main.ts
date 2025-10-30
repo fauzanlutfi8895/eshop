@@ -1,20 +1,11 @@
 import express from "express";
-import cors from "cors";
 import { errorMiddleware } from "@packages/error-handler/error-middleware";
 import cookieParser from "cookie-parser";
 import router from "./routes/seller.route";
-import swaggerUi from "swagger-ui-express";
 // const swaggerDocument = require("./swagger-output.json");
 
 const app = express();
 
-app.use(
-  cors({
-    origin: ["http://localhost:3000"],
-    allowedHeaders: ["Authorization", "Content-Type"],
-    credentials: true,
-  })
-);
 // Limit body size to 5mb (accounts for base64 encoding overhead)
 // Base64 encoding increases size by ~33%, so 3MB image = ~4MB base64
 app.use(express.json({ limit: "5mb" }));

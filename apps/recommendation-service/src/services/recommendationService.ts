@@ -39,7 +39,7 @@ export const recommendProducts = async (
   }
 
   const processedData = preProcessData(userActions, allProducts);
-  if (!processedData || processedData.interactions || !processedData.products) {
+  if (!processedData || !processedData.interactions || !processedData.products) {
     return [];
   }
 
