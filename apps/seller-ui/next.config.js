@@ -14,6 +14,8 @@ const nextConfig = {
   images: {
     remotePatterns: [{ hostname: "ik.imagekit.io" }],
   },
+  // Enable standalone output for minimal Docker images
+  output: "standalone",
 
   webpack: (config) => {
     config.resolve.alias["@packages"] = path.resolve(

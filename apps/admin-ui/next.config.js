@@ -13,6 +13,8 @@ const nextConfig = {
   images: {
     remotePatterns: [{ hostname: "ik.imagekit.io" }],
   },
+  // Enable standalone output for minimal Docker images
+  output: "standalone",
 };
 
 const plugins = [

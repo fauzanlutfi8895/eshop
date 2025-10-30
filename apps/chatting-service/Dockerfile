@@ -10,7 +10,7 @@ COPY tsconfig.base.json ./
 COPY prisma ./prisma
 
 # Copy service-specific files
-COPY apps/auth-service ./apps/auth-service
+COPY apps/chatting-service ./apps/chatting-service
 
 # Install dependencies (including devDependencies for build)
 RUN npm ci
@@ -19,37 +19,37 @@ RUN npm ci
 RUN npx prisma generate
 
 # Build the service
-RUN npx nx build auth-service --prod
+RUN npx nx build chatting-service --prod
 
 # Production stage
 FROM node:20-alpine AS runner
 
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0
-ENV PORT=3000
+ENV PORT=3007
 
 WORKDIR /app
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 authservice
+    adduser --system --uid 1001 chattingservice
 
 # Copy Prisma schema and client
-COPY --from=builder --chown=authservice:nodejs /app/prisma ./prisma
-COPY --from=builder --chown=authservice:nodejs /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder --chown=authservice:nodejs /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder --chown=chattingservice:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=chattingservice:nodejs /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder --chown=chattingservice:nodejs /app/node_modules/@prisma ./node_modules/@prisma
 
 # Copy built application
-COPY --from=builder --chown=authservice:nodejs /app/dist/apps/auth-service ./
+COPY --from=builder --chown=chattingservice:nodejs /app/dist/apps/chatting-service ./
 
 # Copy package.json for production dependencies
-COPY --from=builder --chown=authservice:nodejs /app/apps/auth-service/package.json ./package.json
+COPY --from=builder --chown=chattingservice:nodejs /app/apps/chatting-service/package.json ./package.json
 
 # Install only production dependencies
 RUN npm ci --only=production && npm cache clean --force
 
-USER authservice
+USER chattingservice
 
-EXPOSE 3000
+EXPOSE 3007
 
 CMD ["node", "main.js"]
