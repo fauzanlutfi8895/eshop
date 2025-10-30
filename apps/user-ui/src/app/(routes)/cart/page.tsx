@@ -7,7 +7,6 @@ import useUser from "@/hooks/useUser";
 import { PRODUCT_IMAGE_PLACEHOLDER } from "@/shared/constant";
 import { useStore } from "@/store";
 import axiosInstance from "@/utils/axiosInstance";
-import { error } from "console";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

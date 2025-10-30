@@ -16,8 +16,8 @@ import {
   UseQueryResult,
 } from "@tanstack/react-query";
 import { saveAs } from "file-saver";
-import axiosInstance from "apps/admin-ui/src/utils/axiosInstance";
-import Breadcrumbs from "apps/admin-ui/src/shared/components/breadcrumbs";
+import axiosInstance from "@/utils/axiosInstance";
+import Breadcrumbs from "@/shared/components/breadcrumbs";
 import { toast } from "react-hot-toast"; // ✅ Tambahkan notifikasi UX
 
 // ----------------------

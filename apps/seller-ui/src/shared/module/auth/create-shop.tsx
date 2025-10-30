@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { shopCategories } from "apps/seller-ui/src/utils/categories";
+import { shopCategories } from "@/utils/categories";
 import axios, {AxiosError} from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
