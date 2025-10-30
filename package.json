@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "npx nx run-many --target=serve -all -maxParallel=10",
-    "postinstall": "shx test -d patches && patch-package || echo '⚠️ No patches found or patch failed. If patch is required, copy manually.'",
+    "postinstall": "shx test -d patches && patch-package || echo '⚠️ No patches found or patch failed. If patch is required, copy manually or already applied.'",
     "postinstall:ci": "patch-package",
     "auth-docs": "cd apps/auth-service/src && node swagger.js",
     "product-docs": "cd apps/product-service/src && node swagger.js",
