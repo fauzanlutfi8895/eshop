@@ -7,9 +7,12 @@ import { PRODUCT_IMAGE_PLACEHOLDER } from "../../constant";
 
 import dynamic from "next/dynamic";
 
-const ClientLocation = dynamic(() => import("@/shared/components/clientLocation/ClientLocation"), {
-  ssr: false,
-});
+const ClientLocation = dynamic(
+  () => import("@/shared/components/clientLocation/ClientLocation"),
+  {
+    ssr: false,
+  }
+);
 
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
@@ -48,10 +51,6 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
     productDetails?.sizes[0] || ""
   );
   const [quantity, setQuantity] = useState(1);
-  const [priceRange, setPriceRange] = useState([
-    productDetails?.sale_price,
-    1199,
-  ]);
   const [recommendedProducts, setRecommendedProducts] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -93,7 +92,6 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
     try {
       const query = new URLSearchParams();
 
-      query.set("priceRange", priceRange.join(","));
       query.set("page", "1");
       query.set("limit", "5");
 
@@ -108,7 +106,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
   useEffect(() => {
     fetchFilteredProducts();
-  }, [priceRange]);
+  }, []);
 
   const handleChat = async () => {
     if (isLoading) return;

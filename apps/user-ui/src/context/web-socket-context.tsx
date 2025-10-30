@@ -94,6 +94,14 @@ export const WebSocketProvider = ({
           return;
         }
 
+        // Update unread counts if sender info is included
+        if (data.sender && data.type === "MESSAGE") {
+          setUnreadCounts((prev) => ({
+            ...prev,
+            [data.sender]: (prev[data.sender] || 0) + 1,
+          }));
+        }
+
         // Broadcast ke window listener
         window.dispatchEvent(new CustomEvent("ws:event", { detail: data }));
 

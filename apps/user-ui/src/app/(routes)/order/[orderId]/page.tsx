@@ -15,6 +15,7 @@ const Page = () => {
 
   useEffect(() => {
     const fetchOrder = async () => {
+      setLoading(true);
       try {
         const res = await axiosInstance.get(
           `/order/api/get-order-details/${orderId}`
@@ -22,6 +23,8 @@ const Page = () => {
         setOrder(res.data.order);
       } catch (error) {
         console.error("Failed to fetch order details: ", error);
+      } finally {
+        setLoading(false);
       }
     };
     if (orderId) fetchOrder();
