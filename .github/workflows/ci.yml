@@ -18,6 +18,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Normalize line endings
+        run: |
+          git config --global core.autocrlf input
+          git config --global core.eol lf
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
