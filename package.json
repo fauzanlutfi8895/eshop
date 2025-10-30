@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "npx nx run-many --target=serve -all -maxParallel=10",
-    "postinstall": "patch-package || echo '⚠️ Patch-package failed, continuing build..'",
+    "postinstall": "shx test -d patches && patch-package || echo '⚠️ No patches found or patch failed. If patch is required, copy manually.'",
+    "postinstall:ci": "patch-package",
     "auth-docs": "cd apps/auth-service/src && node swagger.js",
     "product-docs": "cd apps/product-service/src && node swagger.js",
     "user-ui": "npx nx run-many --target=dev --all --projects=user-ui --port=3000",
@@ -110,6 +111,7 @@
     "postcss": "8.4.38",
     "prisma": "^6.14.0",
     "react-refresh": "^0.10.0",
+    "shx": "^0.4.0",
     "tailwindcss": "3.4.3",
     "ts-jest": "^29.4.0",
     "tslib": "^2.3.0",
