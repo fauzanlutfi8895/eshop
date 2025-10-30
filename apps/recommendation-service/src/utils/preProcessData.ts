@@ -1,14 +1,14 @@
 import { Product } from "@prisma/client";
 
-export const preProcessData = (userActions: any, products: Product) => {
-    const interactions: any = [];
-    
-    userActions.forEach((action: any) => {
-        interactions.push({
-            userId: action.userId,
-            productId: action.productId,
-            actionType: action.actionType,
-        });
+export const preProcessData = (userActions: any, products: Product[]) => {
+  const interactions: any = [];
+
+  userActions.forEach((action: any) => {
+    interactions.push({
+      userId: action.userId,
+      productId: action.productId,
+      actionType: action.actionType,
     });
-    return {interactions, products};
-}
+  });
+  return { interactions, products };
+};
