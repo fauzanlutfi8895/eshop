@@ -1,0 +1,29 @@
+{
+  "name": "@eshop/user-service",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "targets": {
+      "serve": {
+        "continuous": true,
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "buildTarget": "@eshop/user-service:build",
+          "runBuildTargetDependencies": false
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "@eshop/user-service:build:development"
+          },
+          "production": {
+            "buildTarget": "@eshop/user-service:build:production"
+          }
+        }
+      }
+    }
+  }
+}

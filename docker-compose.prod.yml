@@ -1,0 +1,327 @@
+version: "3.8"
+
+services:
+  # Infrastructure Services
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.2.15
+    container_name: zookeeper-prod
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    restart: always
+    networks:
+      - eshop-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  kafka:
+    image: confluentinc/cp-kafka:7.2.15
+    container_name: kafka-prod
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT_INTERNAL://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_INTERNAL://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    restart: always
+    networks:
+      - eshop-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "kafka-broker-api-versions",
+          "--bootstrap-server",
+          "localhost:29092",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Backend Services
+  auth-service:
+    image: ${REGISTRY:-localhost}/eshop-auth-service:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/auth-service/Dockerfile
+    container_name: auth-service-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - eshop-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:3000/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  product-service:
+    image: ${REGISTRY:-localhost}/eshop-product-service:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/product-service/Dockerfile
+    container_name: product-service-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - eshop-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:3001/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  user-service:
+    image: ${REGISTRY:-localhost}/eshop-user-service:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/user-service/Dockerfile
+    container_name: user-service-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - eshop-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:3002/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  admin-service:
+    image: ${REGISTRY:-localhost}/eshop-admin-service:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/admin-service/Dockerfile
+    container_name: admin-service-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=3003
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - eshop-network
+
+  order-service:
+    image: ${REGISTRY:-localhost}/eshop-order-service:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/order-service/Dockerfile
+    container_name: order-service-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=3004
+      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - eshop-network
+
+  seller-service:
+    image: ${REGISTRY:-localhost}/eshop-seller-service:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/seller-service/Dockerfile
+    container_name: seller-service-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=3005
+      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - eshop-network
+
+  recommendation-service:
+    image: ${REGISTRY:-localhost}/eshop-recommendation-service:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/recommendation-service/Dockerfile
+    container_name: recommendation-service-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=3006
+      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - eshop-network
+
+  chatting-service:
+    image: ${REGISTRY:-localhost}/eshop-chatting-service:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/chatting-service/Dockerfile
+    container_name: chatting-service-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=3007
+      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - eshop-network
+
+  kafka-service:
+    image: ${REGISTRY:-localhost}/eshop-kafka-service:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/kafka-service/Dockerfile
+    container_name: kafka-service-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=3008
+      - KAFKA_BROKERS=kafka:29092
+    env_file:
+      - .env
+    depends_on:
+      - kafka
+    restart: always
+    networks:
+      - eshop-network
+
+  logger-service:
+    image: ${REGISTRY:-localhost}/eshop-logger-service:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/logger-service/Dockerfile
+    container_name: logger-service-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=3009
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - eshop-network
+
+  api-gateway:
+    image: ${REGISTRY:-localhost}/eshop-api-gateway:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/api-gateway/Dockerfile
+    container_name: api-gateway-prod
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+    env_file:
+      - .env
+    depends_on:
+      - auth-service
+      - product-service
+      - user-service
+      - order-service
+      - seller-service
+    restart: always
+    networks:
+      - eshop-network
+
+  # Frontend Services
+  user-ui:
+    image: ${REGISTRY:-localhost}/eshop-user-ui:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/user-ui/Dockerfile
+    container_name: user-ui-prod
+    ports:
+      - "3010:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    env_file:
+      - apps/user-ui/.env
+    restart: always
+    networks:
+      - eshop-network
+
+  seller-ui:
+    image: ${REGISTRY:-localhost}/eshop-seller-ui:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/seller-ui/Dockerfile
+    container_name: seller-ui-prod
+    ports:
+      - "3011:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    env_file:
+      - apps/seller-ui/.env
+    restart: always
+    networks:
+      - eshop-network
+
+  admin-ui:
+    image: ${REGISTRY:-localhost}/eshop-admin-ui:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/admin-ui/Dockerfile
+    container_name: admin-ui-prod
+    ports:
+      - "3012:3002"
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+    env_file:
+      - apps/admin-ui/.env
+    restart: always
+    networks:
+      - eshop-network
+
+networks:
+  eshop-network:
+    driver: bridge

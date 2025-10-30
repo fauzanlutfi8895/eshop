@@ -1,8 +1,61 @@
 import Express, { Router } from "express";
-import { userRegistration } from "../controllers/auth.controller";
+import {
+  createShop,
+  createStripeConnectLink,
+  getAdmin,
+  getLayoutData,
+  getSeller,
+  getUser,
+  loginAdmin,
+  loginSeller,
+  loginUser,
+  logOutAdmin,
+  logOutSeller,
+  logOutUser,
+  refreshToken,
+  registerSeller,
+  resetPassword,
+  updatePassword,
+  userForgotPassword,
+  userRegistration,
+  verifySeller,
+  verifyUser,
+  verifyUserForgotPassword,
+} from "../controllers/auth.controller";
+import isAuthenticated from "@packages/middleware/isAuthenticated";
+import { isSeller, isUser } from "@packages/middleware/authorizeRole";
 
 const router: Router = Express.Router();
 
+//User
 router.post("/user-registration", userRegistration);
+router.post("/verify-user", verifyUser);
+router.post("/login", loginUser);
+router.get("/logged-in-user", isAuthenticated, isUser, getUser);
+router.post("/forgot-password-user", userForgotPassword);
+router.post("/reset-password-user", resetPassword);
+router.post("/verify-forgot-password-user", verifyUserForgotPassword);
+router.get("/logout-user", logOutUser);
+router.post("/change-password", isAuthenticated, updatePassword);
 
-export default router
+//Seller
+router.post("/seller-registration", registerSeller);
+router.post("/verify-seller", verifySeller);
+router.post("/create-shop", createShop);
+router.post("/create-stripe-link", createStripeConnectLink);
+router.post("/login-seller", loginSeller);
+router.get("/logged-in-seller", isAuthenticated, isSeller, getSeller);
+router.get("/logout-seller", logOutSeller);
+
+//admin
+router.post("/login-admin", loginAdmin);
+router.get("/logged-in-admin", isAuthenticated, getAdmin);
+router.get("/logout-admin", logOutAdmin);
+
+// Layout
+router.get("/get-layout", getLayoutData);
+
+//Both
+router.post("/refresh-token", refreshToken);
+
+export default router;

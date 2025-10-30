@@ -16,29 +16,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          filter: tree:0
           fetch-depth: 0
 
-      
-      # This enables task distribution via Nx Cloud
-      # Run this command as early as possible, before dependencies are installed
-      # Learn more at https://nx.dev/ci/reference/nx-cloud-cli#npx-nxcloud-startcirun
-      # Uncomment this line to enable task distribution
-      # - run: npx nx start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
+      - name: Normalize line endings
+        run: |
+          git config --global core.autocrlf input
+          git config --global core.eol lf
 
-      
-      # Cache node_modules
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 20.18.1
           cache: 'npm'
-       
-      - run: npm ci --legacy-peer-deps
 
+      - name: Clean dependencies
+        run: rm -rf node_modules && rm -rf ~/.npm && rm -rf ~/.nx
 
-      # Prepend any command with "nx-cloud record --" to record its logs to Nx Cloud
-      # - run: npx nx-cloud record -- echo Hello World
-      - run: npx nx run-many -t lint test build
-      # Nx Cloud recommends fixes for failures to help you get CI green faster. Learn more: https://nx.dev/ci/features/self-healing-ci
-      - run: npx nx fix-ci
-        if: always()
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Lint, Test, and Build
+        run: npx nx run-many -t lint test build

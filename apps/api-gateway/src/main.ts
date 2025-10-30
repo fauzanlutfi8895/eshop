@@ -9,23 +9,27 @@ import cors from "cors";
 import proxy from "express-http-proxy";
 import morgan from "morgan";
 import { rateLimit, ipKeyGenerator } from "express-rate-limit";
-import swaggerUi from "swagger-ui-express";
-import axios from "axios";
 import cookieParser from "cookie-parser";
+import initializeSiteConfig from "./libs/initializeSiteConfig";
 
 const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:3002",
+    ],
     allowedHeaders: ["Authorization", "Content-Type"],
     credentials: true,
   })
 );
 
 app.use(morgan("dev"));
-app.use(express.json({ limit: "100mb" }));
-app.use(express.urlencoded({ limit: "100mb", extended: true }));
+// Limit body size to 10mb for general requests (enough for base64 encoded images)
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(cookieParser());
 app.set("trust proxy", 1);
 
@@ -50,10 +54,23 @@ app.get("/gateway-health", (req, res) => {
   res.send({ message: "Welcome to api-gateway!" });
 });
 
+app.use("/recommendation", proxy("http://localhost:6008"));
+app.use("/chatting", proxy("http://localhost:6007"));
+app.use("/admin", proxy("http://localhost:6006"));
+app.use("/order", proxy("http://localhost:6005"));
+app.use("/user", proxy("http://localhost:6004"));
+app.use("/seller", proxy("http://localhost:6003"));
+app.use("/product", proxy("http://localhost:6002"));
 app.use("/", proxy("http://localhost:6001"));
 
 const port = process.env.PORT || 8080;
 const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`);
+  try {
+    initializeSiteConfig();
+    console.log("Site config Initialized successfully!");
+  } catch (error) {
+    console.error("❌ Failed to initialize site config: ", error);
+  }
 });
 server.on("error", console.error);

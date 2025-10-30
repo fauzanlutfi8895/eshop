@@ -1,0 +1,29 @@
+{
+  "name": "@eshop/chatting-service",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "targets": {
+      "serve": {
+        "continuous": true,
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "buildTarget": "@eshop/chatting-service:build",
+          "runBuildTargetDependencies": false
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "@eshop/chatting-service:build:development"
+          },
+          "production": {
+            "buildTarget": "@eshop/chatting-service:build:production"
+          }
+        }
+      }
+    }
+  }
+}
