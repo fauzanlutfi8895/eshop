@@ -6,7 +6,12 @@
     "rootDir": "../../",
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo"
   },
-  "include": ["src/**/*.ts", "../../packages/**/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "../../packages/**/*.ts",
+    "../../packages/component/color-selector/index.tsx",
+    "../../packages/component/custom-properties/index.tsx"
+, "../../packages/component/size-selector/index.tsx"  ],
   "exclude": [
     "out-tsc",
     "dist",

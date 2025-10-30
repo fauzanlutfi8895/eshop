@@ -1,0 +1,352 @@
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.3B13A9F0.tlog/Cl.items.tlog b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.3B13A9F0.tlog/Cl.items.tlog
+deleted file mode 100644
+index 91dd7c2..0000000
+--- a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.3B13A9F0.tlog/Cl.items.tlog
++++ /dev/null
+@@ -1 +0,0 @@
+-C:\nvm\v18.20.4\node_modules\npm\node_modules\node-gyp\src\win_delay_load_hook.cc;C:\Users\Fauzan Luthfi\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\build\Release\obj\action_after_build\win_delay_load_hook.obj
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.3B13A9F0.tlog/CustomBuild.command.1.tlog b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.3B13A9F0.tlog/CustomBuild.command.1.tlog
+deleted file mode 100644
+index fd947dc..0000000
+--- a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.3B13A9F0.tlog/CustomBuild.command.1.tlog
++++ /dev/null
+@@ -1,3 +0,0 @@
+-^C:\USERS\FAUZAN~1\APPDATA\LOCAL\TEMP\TMP-1712-FTKAPTYHGF6C\NODE_MODULES\@TENSORFLOW\TFJS-NODE\BUILD\RELEASE\TFJS_BINDING.NODE
+-call mkdir "C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\lib\napi-v8" 2>nul & set ERRORLEVEL=0 & copy /Y "C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\build\Release\tfjs_binding.node" "C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\lib\napi-v8\tfjs_binding.node"
+-if %errorlevel% neq 0 exit /b %errorlevel%
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.3B13A9F0.tlog/CustomBuild.read.1.tlog b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.3B13A9F0.tlog/CustomBuild.read.1.tlog
+deleted file mode 100644
+index b4ce416..0000000
+--- a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.3B13A9F0.tlog/CustomBuild.read.1.tlog
++++ /dev/null
+@@ -1 +0,0 @@
+-^C:\USERS\FAUZAN~1\APPDATA\LOCAL\TEMP\TMP-1712-FTKAPTYHGF6C\NODE_MODULES\@TENSORFLOW\TFJS-NODE\BUILD\RELEASE\TFJS_BINDING.NODE
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.3B13A9F0.tlog/CustomBuild.write.1.tlog b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.3B13A9F0.tlog/CustomBuild.write.1.tlog
+deleted file mode 100644
+index 766b5fa..0000000
+--- a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.3B13A9F0.tlog/CustomBuild.write.1.tlog
++++ /dev/null
+@@ -1,2 +0,0 @@
+-^C:\USERS\FAUZAN~1\APPDATA\LOCAL\TEMP\TMP-1712-FTKAPTYHGF6C\NODE_MODULES\@TENSORFLOW\TFJS-NODE\BUILD\RELEASE\TFJS_BINDING.NODE
+-C:\USERS\FAUZAN~1\APPDATA\LOCAL\TEMP\TMP-1712-FTKAPTYHGF6C\NODE_MODULES\@TENSORFLOW\TFJS-NODE\LIB\NAPI-V8\TFJS_BINDING.NODE
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.C3468C8D.tlog/Cl.items.tlog b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.C3468C8D.tlog/Cl.items.tlog
+new file mode 100644
+index 0000000..112b2d7
+--- /dev/null
++++ b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.C3468C8D.tlog/Cl.items.tlog
+@@ -0,0 +1 @@
++C:\nvm\v18.20.4\node_modules\npm\node_modules\node-gyp\src\win_delay_load_hook.cc;D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\build\Release\obj\action_after_build\win_delay_load_hook.obj
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.C3468C8D.tlog/CustomBuild.command.1.tlog b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.C3468C8D.tlog/CustomBuild.command.1.tlog
+new file mode 100644
+index 0000000..d8a0977
+--- /dev/null
++++ b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.C3468C8D.tlog/CustomBuild.command.1.tlog
+@@ -0,0 +1,3 @@
++^D:\PROJEK (2025)\ESHOP\NODE_MODULES\@TENSORFLOW\TFJS-NODE\BUILD\RELEASE\TFJS_BINDING.NODE
++call mkdir "D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\lib\napi-v8" 2>nul & set ERRORLEVEL=0 & copy /Y "D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\build\Release\tfjs_binding.node" "D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\lib\napi-v8\tfjs_binding.node"
++if %errorlevel% neq 0 exit /b %errorlevel%
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.C3468C8D.tlog/CustomBuild.read.1.tlog b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.C3468C8D.tlog/CustomBuild.read.1.tlog
+new file mode 100644
+index 0000000..f0f2549
+--- /dev/null
++++ b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.C3468C8D.tlog/CustomBuild.read.1.tlog
+@@ -0,0 +1 @@
++^D:\PROJEK (2025)\ESHOP\NODE_MODULES\@TENSORFLOW\TFJS-NODE\BUILD\RELEASE\TFJS_BINDING.NODE
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.C3468C8D.tlog/CustomBuild.write.1.tlog b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.C3468C8D.tlog/CustomBuild.write.1.tlog
+new file mode 100644
+index 0000000..ec8c8e2
+--- /dev/null
++++ b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.C3468C8D.tlog/CustomBuild.write.1.tlog
+@@ -0,0 +1,2 @@
++^D:\PROJEK (2025)\ESHOP\NODE_MODULES\@TENSORFLOW\TFJS-NODE\BUILD\RELEASE\TFJS_BINDING.NODE
++D:\PROJEK (2025)\ESHOP\NODE_MODULES\@TENSORFLOW\TFJS-NODE\LIB\NAPI-V8\TFJS_BINDING.NODE
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.3B13A9F0.tlog/action_after_build.lastbuildstate b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.C3468C8D.tlog/action_after_build.lastbuildstate
+similarity index 50%
+rename from node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.3B13A9F0.tlog/action_after_build.lastbuildstate
+rename to node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.C3468C8D.tlog/action_after_build.lastbuildstate
+index d5379d4..11f19dd 100644
+--- a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.3B13A9F0.tlog/action_after_build.lastbuildstate
++++ b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_a.C3468C8D.tlog/action_after_build.lastbuildstate
+@@ -1,2 +1,2 @@
+ PlatformToolSet=v143:VCToolArchitecture=Native64Bit:VCToolsVersion=14.44.35207:TargetPlatformVersion=10.0.26100.0:
+-Release|x64|C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\build\|
++Release|x64|D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\build\|
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_after_build.recipe b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_after_build.recipe
+index 65afb0c..11ec034 100644
+--- a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_after_build.recipe
++++ b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/action_after_build/action_after_build.recipe
+@@ -2,10 +2,10 @@
+ <Project>
+   <ProjectOutputs>
+     <ProjectOutput>
+-      <FullPath>C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\build\Release\tfjs_binding.node</FullPath>
++      <FullPath>D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\build\Release\tfjs_binding.node</FullPath>
+     </ProjectOutput>
+     <ProjectOutput>
+-      <FullPath>C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\build\Release\action_after_build</FullPath>
++      <FullPath>D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\build\Release\action_after_build</FullPath>
+     </ProjectOutput>
+   </ProjectOutputs>
+   <ContentFiles />
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/binding/tfjs_backend.obj b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/binding/tfjs_backend.obj
+index fbe1964..181cad7 100644
+Binary files a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/binding/tfjs_backend.obj and b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/binding/tfjs_backend.obj differ
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/binding/tfjs_binding.obj b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/binding/tfjs_binding.obj
+index 7049c9c..3883fcc 100644
+Binary files a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/binding/tfjs_binding.obj and b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/binding/tfjs_binding.obj differ
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.node.recipe b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.node.recipe
+index 7daa49a..e707741 100644
+--- a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.node.recipe
++++ b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.node.recipe
+@@ -2,7 +2,7 @@
+ <Project>
+   <ProjectOutputs>
+     <ProjectOutput>
+-      <FullPath>C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\build\Release\tfjs_binding.node</FullPath>
++      <FullPath>D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\build\Release\tfjs_binding.node</FullPath>
+     </ProjectOutput>
+   </ProjectOutputs>
+   <ContentFiles />
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/CL.command.1.tlog b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/CL.command.1.tlog
+index f453d21..3a107f4 100644
+Binary files a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/CL.command.1.tlog and b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/CL.command.1.tlog differ
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/CL.read.1.tlog b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/CL.read.1.tlog
+index dffcf23..ee2c676 100644
+Binary files a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/CL.read.1.tlog and b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/CL.read.1.tlog differ
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/CL.write.1.tlog b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/CL.write.1.tlog
+index de4d3b2..0f1b500 100644
+Binary files a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/CL.write.1.tlog and b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/CL.write.1.tlog differ
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/Cl.items.tlog b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/Cl.items.tlog
+index 14da364..5863a5a 100644
+--- a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/Cl.items.tlog
++++ b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/Cl.items.tlog
+@@ -1,3 +1,3 @@
+-C:\Users\Fauzan Luthfi\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\binding\tfjs_backend.cc;C:\Users\Fauzan Luthfi\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\build\Release\obj\tfjs_binding\binding\tfjs_backend.obj
+-C:\Users\Fauzan Luthfi\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\binding\tfjs_binding.cc;C:\Users\Fauzan Luthfi\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\build\Release\obj\tfjs_binding\binding\tfjs_binding.obj
+-C:\nvm\v18.20.4\node_modules\npm\node_modules\node-gyp\src\win_delay_load_hook.cc;C:\Users\Fauzan Luthfi\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\build\Release\obj\tfjs_binding\win_delay_load_hook.obj
++D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\binding\tfjs_backend.cc;D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\build\Release\obj\tfjs_binding\binding\tfjs_backend.obj
++D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\binding\tfjs_binding.cc;D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\build\Release\obj\tfjs_binding\binding\tfjs_binding.obj
++C:\nvm\v18.20.4\node_modules\npm\node_modules\node-gyp\src\win_delay_load_hook.cc;D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\build\Release\obj\tfjs_binding\win_delay_load_hook.obj
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/link.command.1.tlog b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/link.command.1.tlog
+index 326900e..8fb8522 100644
+Binary files a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/link.command.1.tlog and b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/link.command.1.tlog differ
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/link.read.1.tlog b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/link.read.1.tlog
+index ca58ecb..05659dc 100644
+Binary files a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/link.read.1.tlog and b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/link.read.1.tlog differ
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/link.secondary.1.tlog b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/link.secondary.1.tlog
+index 46411e6..96af2c4 100644
+--- a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/link.secondary.1.tlog
++++ b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/link.secondary.1.tlog
+@@ -1,5 +1,5 @@
+-^C:\USERS\FAUZAN LUTHFI\APPDATA\LOCAL\TEMP\TMP-1712-FTKAPTYHGF6C\NODE_MODULES\@TENSORFLOW\TFJS-NODE\BUILD\RELEASE\OBJ\TFJS_BINDING\BINDING\TFJS_BACKEND.OBJ|C:\USERS\FAUZAN LUTHFI\APPDATA\LOCAL\TEMP\TMP-1712-FTKAPTYHGF6C\NODE_MODULES\@TENSORFLOW\TFJS-NODE\BUILD\RELEASE\OBJ\TFJS_BINDING\BINDING\TFJS_BINDING.OBJ|C:\USERS\FAUZAN LUTHFI\APPDATA\LOCAL\TEMP\TMP-1712-FTKAPTYHGF6C\NODE_MODULES\@TENSORFLOW\TFJS-NODE\BUILD\RELEASE\OBJ\TFJS_BINDING\WIN_DELAY_LOAD_HOOK.OBJ
+-C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\build\Release\tfjs_binding.LIB
+-C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\build\Release\tfjs_binding.EXP
+-C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\build\Release\tfjs_binding.IPDB
+-C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\build\Release\tfjs_binding.IOBJ
++^D:\PROJEK (2025)\ESHOP\NODE_MODULES\@TENSORFLOW\TFJS-NODE\BUILD\RELEASE\OBJ\TFJS_BINDING\BINDING\TFJS_BACKEND.OBJ|D:\PROJEK (2025)\ESHOP\NODE_MODULES\@TENSORFLOW\TFJS-NODE\BUILD\RELEASE\OBJ\TFJS_BINDING\BINDING\TFJS_BINDING.OBJ|D:\PROJEK (2025)\ESHOP\NODE_MODULES\@TENSORFLOW\TFJS-NODE\BUILD\RELEASE\OBJ\TFJS_BINDING\WIN_DELAY_LOAD_HOOK.OBJ
++D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\build\Release\tfjs_binding.LIB
++D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\build\Release\tfjs_binding.EXP
++D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\build\Release\tfjs_binding.IPDB
++D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\build\Release\tfjs_binding.IOBJ
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/link.write.1.tlog b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/link.write.1.tlog
+index 3fcba62..72acfcc 100644
+Binary files a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/link.write.1.tlog and b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/link.write.1.tlog differ
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/tfjs_binding.lastbuildstate b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/tfjs_binding.lastbuildstate
+index d5379d4..11f19dd 100644
+--- a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/tfjs_binding.lastbuildstate
++++ b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/tfjs_binding.tlog/tfjs_binding.lastbuildstate
+@@ -1,2 +1,2 @@
+ PlatformToolSet=v143:VCToolArchitecture=Native64Bit:VCToolsVersion=14.44.35207:TargetPlatformVersion=10.0.26100.0:
+-Release|x64|C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\build\|
++Release|x64|D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\build\|
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/win_delay_load_hook.obj b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/win_delay_load_hook.obj
+index cc17587..0640ab3 100644
+Binary files a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/win_delay_load_hook.obj and b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/obj/tfjs_binding/win_delay_load_hook.obj differ
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.exp b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.exp
+index 25e5abb..58541a1 100644
+Binary files a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.exp and b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.exp differ
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.iobj b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.iobj
+index e350d5f..aff7c0b 100644
+Binary files a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.iobj and b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.iobj differ
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.ipdb b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.ipdb
+index 4480fa8..9ffe043 100644
+Binary files a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.ipdb and b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.ipdb differ
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.node b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.node
+index 849c652..e808813 100644
+Binary files a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.node and b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.node differ
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.pdb b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.pdb
+index c1244dc..b6abec5 100644
+Binary files a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.pdb and b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/Release/tfjs_binding.pdb differ
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/action_after_build.vcxproj b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/action_after_build.vcxproj
+index ba4a04b..187117f 100644
+--- a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/action_after_build.vcxproj
++++ b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/action_after_build.vcxproj
+@@ -11,7 +11,7 @@
+     </ProjectConfiguration>
+   </ItemGroup>
+   <PropertyGroup Label="Globals">
+-    <ProjectGuid>{3B13A9F0-25BC-BE6E-BF46-B06D6483FD9C}</ProjectGuid>
++    <ProjectGuid>{C3468C8D-63D5-6CE0-D037-926964A1A285}</ProjectGuid>
+     <Keyword>Win32Proj</Keyword>
+     <RootNamespace>action_after_build</RootNamespace>
+     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+@@ -132,14 +132,14 @@
+   <ItemGroup>
+     <CustomBuild Include="$(OutDir)\tfjs_binding.node">
+       <FileType>Document</FileType>
+-      <Command>call mkdir &quot;C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\lib\napi-v8&quot; 2&gt;nul &amp; set ERRORLEVEL=0 &amp; copy /Y &quot;$(OutDir)tfjs_binding.node&quot; &quot;C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\lib\napi-v8\tfjs_binding.node&quot;&#xD;&#xA;if %errorlevel% neq 0 exit /b %errorlevel%</Command>
+-      <Message>Copying $(OutDir)/tfjs_binding.node to C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\lib\napi-v8</Message>
+-      <Outputs>C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\lib\napi-v8\tfjs_binding.node</Outputs>
++      <Command>call mkdir &quot;D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\lib\napi-v8&quot; 2&gt;nul &amp; set ERRORLEVEL=0 &amp; copy /Y &quot;$(OutDir)tfjs_binding.node&quot; &quot;D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\lib\napi-v8\tfjs_binding.node&quot;&#xD;&#xA;if %errorlevel% neq 0 exit /b %errorlevel%</Command>
++      <Message>Copying $(OutDir)/tfjs_binding.node to D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\lib\napi-v8</Message>
++      <Outputs>D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\lib\napi-v8\tfjs_binding.node</Outputs>
+     </CustomBuild>
+   </ItemGroup>
+   <ItemGroup>
+     <ProjectReference Include="tfjs_binding.vcxproj">
+-      <Project>{0F1FD169-977E-616C-F9B4-652EBE8EE280}</Project>
++      <Project>{4C896A4F-513E-2A2B-1E0C-05DD9FA01C52}</Project>
+       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+     </ProjectReference>
+   </ItemGroup>
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/binding.sln b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/binding.sln
+index 7f1f800..405ded6 100644
+--- a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/binding.sln
++++ b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/binding.sln
+@@ -1,11 +1,11 @@
+ Microsoft Visual Studio Solution File, Format Version 12.00
+ # Visual Studio 2015
+-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "action_after_build", "action_after_build.vcxproj", "{3B13A9F0-25BC-BE6E-BF46-B06D6483FD9C}"
++Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "action_after_build", "action_after_build.vcxproj", "{C3468C8D-63D5-6CE0-D037-926964A1A285}"
+ 	ProjectSection(ProjectDependencies) = postProject
+-		{0F1FD169-977E-616C-F9B4-652EBE8EE280} = {0F1FD169-977E-616C-F9B4-652EBE8EE280}
++		{4C896A4F-513E-2A2B-1E0C-05DD9FA01C52} = {4C896A4F-513E-2A2B-1E0C-05DD9FA01C52}
+ 	EndProjectSection
+ EndProject
+-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tfjs_binding", "tfjs_binding.vcxproj", "{0F1FD169-977E-616C-F9B4-652EBE8EE280}"
++Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tfjs_binding", "tfjs_binding.vcxproj", "{4C896A4F-513E-2A2B-1E0C-05DD9FA01C52}"
+ EndProject
+ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+@@ -13,14 +13,14 @@ Global
+ 		Debug|x64 = Debug|x64
+ 	EndGlobalSection
+ 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+-		{0F1FD169-977E-616C-F9B4-652EBE8EE280}.Release|x64.ActiveCfg = Release|x64
+-		{0F1FD169-977E-616C-F9B4-652EBE8EE280}.Release|x64.Build.0 = Release|x64
+-		{0F1FD169-977E-616C-F9B4-652EBE8EE280}.Debug|x64.ActiveCfg = Debug|x64
+-		{0F1FD169-977E-616C-F9B4-652EBE8EE280}.Debug|x64.Build.0 = Debug|x64
+-		{3B13A9F0-25BC-BE6E-BF46-B06D6483FD9C}.Release|x64.ActiveCfg = Release|x64
+-		{3B13A9F0-25BC-BE6E-BF46-B06D6483FD9C}.Release|x64.Build.0 = Release|x64
+-		{3B13A9F0-25BC-BE6E-BF46-B06D6483FD9C}.Debug|x64.ActiveCfg = Debug|x64
+-		{3B13A9F0-25BC-BE6E-BF46-B06D6483FD9C}.Debug|x64.Build.0 = Debug|x64
++		{4C896A4F-513E-2A2B-1E0C-05DD9FA01C52}.Release|x64.ActiveCfg = Release|x64
++		{4C896A4F-513E-2A2B-1E0C-05DD9FA01C52}.Release|x64.Build.0 = Release|x64
++		{4C896A4F-513E-2A2B-1E0C-05DD9FA01C52}.Debug|x64.ActiveCfg = Debug|x64
++		{4C896A4F-513E-2A2B-1E0C-05DD9FA01C52}.Debug|x64.Build.0 = Debug|x64
++		{C3468C8D-63D5-6CE0-D037-926964A1A285}.Release|x64.ActiveCfg = Release|x64
++		{C3468C8D-63D5-6CE0-D037-926964A1A285}.Release|x64.Build.0 = Release|x64
++		{C3468C8D-63D5-6CE0-D037-926964A1A285}.Debug|x64.ActiveCfg = Debug|x64
++		{C3468C8D-63D5-6CE0-D037-926964A1A285}.Debug|x64.Build.0 = Debug|x64
+ 	EndGlobalSection
+ 	GlobalSection(SolutionProperties) = preSolution
+ 		HideSolutionNode = FALSE
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/config.gypi b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/config.gypi
+index 1cd1fa8..06d56a0 100644
+--- a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/config.gypi
++++ b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/config.gypi
+@@ -411,18 +411,18 @@
+     "standalone_static_library": 1,
+     "msbuild_path": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
+     "fallback_to_build": "true",
+-    "module": "C:\\Users\\FAUZAN~1\\AppData\\Local\\Temp\\tmp-1712-fTkaPtYHGF6c\\node_modules\\@tensorflow\\tfjs-node\\lib\\napi-v8\\tfjs_binding.node",
++    "module": "D:\\Projek (2025)\\eshop\\node_modules\\@tensorflow\\tfjs-node\\lib\\napi-v8\\tfjs_binding.node",
+     "module_name": "tfjs_binding",
+-    "module_path": "C:\\Users\\FAUZAN~1\\AppData\\Local\\Temp\\tmp-1712-fTkaPtYHGF6c\\node_modules\\@tensorflow\\tfjs-node\\lib\\napi-v8",
++    "module_path": "D:\\Projek (2025)\\eshop\\node_modules\\@tensorflow\\tfjs-node\\lib\\napi-v8",
+     "napi_version": "9",
+     "node_abi_napi": "napi",
+     "node_napi_label": "napi-v8",
++    "build_from_source": "true",
+     "cache": "C:\\Users\\Fauzan Luthfi\\AppData\\Local\\npm-cache",
+-    "force": "true",
+     "globalconfig": "C:\\nvm4w\\nodejs\\etc\\npmrc",
+     "global_prefix": "C:\\nvm4w\\nodejs",
+     "init_module": "C:\\Users\\Fauzan Luthfi\\.npm-init.js",
+-    "local_prefix": "C:\\Users\\FAUZAN~1\\AppData\\Local\\Temp\\tmp-1712-fTkaPtYHGF6c",
++    "local_prefix": "D:\\Projek (2025)\\eshop",
+     "node_gyp": "C:\\nvm\\v18.20.4\\node_modules\\npm\\node_modules\\node-gyp\\bin\\node-gyp.js",
+     "npm_version": "10.7.0",
+     "prefix": "C:\\nvm4w\\nodejs",
+diff --git a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/tfjs_binding.vcxproj b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/tfjs_binding.vcxproj
+index d2bf6e3..24933d6 100644
+--- a/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/tfjs_binding.vcxproj
++++ b/node_modules/@tensorflow/tfjs-node/build-tmp-napi-v8/tfjs_binding.vcxproj
+@@ -11,7 +11,7 @@
+     </ProjectConfiguration>
+   </ItemGroup>
+   <PropertyGroup Label="Globals">
+-    <ProjectGuid>{0F1FD169-977E-616C-F9B4-652EBE8EE280}</ProjectGuid>
++    <ProjectGuid>{4C896A4F-513E-2A2B-1E0C-05DD9FA01C52}</ProjectGuid>
+     <Keyword>Win32Proj</Keyword>
+     <RootNamespace>tfjs_binding</RootNamespace>
+     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+@@ -48,7 +48,7 @@
+   </PropertyGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+     <ClCompile>
+-      <AdditionalIncludeDirectories>C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\include\node;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\src;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\openssl\config;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\openssl\openssl\include;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\uv\include;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\zlib;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\v8\include;..\..;C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\include\node;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\src;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\openssl\config;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\openssl\openssl\include;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\uv\include;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\zlib;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\v8\include;..\..;D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <AdditionalOptions>/Zc:__cplusplus -std:c++17 %(AdditionalOptions)</AdditionalOptions>
+       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+       <BufferSecurityCheck>true</BufferSecurityCheck>
+@@ -73,7 +73,7 @@
+     </Lib>
+     <Link>
+       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\\Users\\Fauzan Luthfi\\AppData\\Local\\node-gyp\\Cache\\18.20.4\\x64\\node.lib&quot;;tensorflow.lib</AdditionalDependencies>
+-      <AdditionalLibraryDirectories>C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\deps\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
++      <AdditionalLibraryDirectories>D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\deps\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <AdditionalOptions>/LTCG:INCREMENTAL /ignore:4199 %(AdditionalOptions)</AdditionalOptions>
+       <DelayLoadDLLs>node.exe;%(DelayLoadDLLs)</DelayLoadDLLs>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+@@ -85,13 +85,13 @@
+       <TargetMachine>MachineX64</TargetMachine>
+     </Link>
+     <ResourceCompile>
+-      <AdditionalIncludeDirectories>C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\include\node;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\src;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\openssl\config;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\openssl\openssl\include;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\uv\include;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\zlib;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\v8\include;..\..;C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\include\node;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\src;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\openssl\config;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\openssl\openssl\include;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\uv\include;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\zlib;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\v8\include;..\..;D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=tfjs_binding;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;V8_DEPRECATION_WARNINGS;V8_IMMINENT_DEPRECATION_WARNINGS;_GLIBCXX_USE_CXX11_ABI=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;OPENSSL_NO_PINSHARED;OPENSSL_THREADS;COMPILER_MSVC;BUILDING_NODE_EXTENSION;HOST_BINARY=&quot;node.exe&quot;;DEBUG;_DEBUG;V8_ENABLE_CHECKS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ResourceCompile>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+     <ClCompile>
+-      <AdditionalIncludeDirectories>C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\include\node;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\src;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\openssl\config;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\openssl\openssl\include;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\uv\include;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\zlib;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\v8\include;..\..;C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\include\node;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\src;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\openssl\config;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\openssl\openssl\include;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\uv\include;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\zlib;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\v8\include;..\..;D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <AdditionalOptions>/Zc:__cplusplus -std:c++17 %(AdditionalOptions)</AdditionalOptions>
+       <BufferSecurityCheck>true</BufferSecurityCheck>
+       <DebugInformationFormat>OldStyle</DebugInformationFormat>
+@@ -119,7 +119,7 @@
+     </Lib>
+     <Link>
+       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\\Users\\Fauzan Luthfi\\AppData\\Local\\node-gyp\\Cache\\18.20.4\\x64\\node.lib&quot;;tensorflow.lib</AdditionalDependencies>
+-      <AdditionalLibraryDirectories>C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\deps\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
++      <AdditionalLibraryDirectories>D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\deps\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <AdditionalOptions>/LTCG:INCREMENTAL /ignore:4199 %(AdditionalOptions)</AdditionalOptions>
+       <DelayLoadDLLs>node.exe;%(DelayLoadDLLs)</DelayLoadDLLs>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+@@ -131,7 +131,7 @@
+       <TargetMachine>MachineX64</TargetMachine>
+     </Link>
+     <ResourceCompile>
+-      <AdditionalIncludeDirectories>C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\include\node;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\src;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\openssl\config;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\openssl\openssl\include;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\uv\include;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\zlib;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\v8\include;..\..;C:\Users\FAUZAN~1\AppData\Local\Temp\tmp-1712-fTkaPtYHGF6c\node_modules\@tensorflow\tfjs-node\deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\include\node;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\src;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\openssl\config;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\openssl\openssl\include;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\uv\include;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\zlib;C:\Users\Fauzan Luthfi\AppData\Local\node-gyp\Cache\18.20.4\deps\v8\include;..\..;D:\Projek (2025)\eshop\node_modules\@tensorflow\tfjs-node\deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=tfjs_binding;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;V8_DEPRECATION_WARNINGS;V8_IMMINENT_DEPRECATION_WARNINGS;_GLIBCXX_USE_CXX11_ABI=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;OPENSSL_NO_PINSHARED;OPENSSL_THREADS;COMPILER_MSVC;BUILDING_NODE_EXTENSION;HOST_BINARY=&quot;node.exe&quot;;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ResourceCompile>
+   </ItemDefinitionGroup>
+diff --git a/node_modules/@tensorflow/tfjs-node/lib/napi-v8/tensorflow.dll b/node_modules/@tensorflow/tfjs-node/lib/napi-v8/tensorflow.dll
+new file mode 100644
+index 0000000..ec72d03
+Binary files /dev/null and b/node_modules/@tensorflow/tfjs-node/lib/napi-v8/tensorflow.dll differ
+diff --git a/node_modules/@tensorflow/tfjs-node/lib/napi-v8/tfjs_binding.node b/node_modules/@tensorflow/tfjs-node/lib/napi-v8/tfjs_binding.node
+index 849c652..e808813 100644
+Binary files a/node_modules/@tensorflow/tfjs-node/lib/napi-v8/tfjs_binding.node and b/node_modules/@tensorflow/tfjs-node/lib/napi-v8/tfjs_binding.node differ
