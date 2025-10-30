@@ -37,7 +37,3 @@ jobs:
 
       - name: Lint, Test, and Build
         run: npx nx run-many -t lint test build
-
-      - name: Auto-fix CI suggestions (Nx)
-        if: always()
-        run: npx nx fix-ci
