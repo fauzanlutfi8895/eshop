@@ -1,5 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
+
+if (os.platform() !== 'win32') {
+  console.log('⚠️ Not Windows, skipping tensorflow.dll copy');
+  process.exit(0);
+}
 
 const src = path.join(__dirname, '..', 'node_modules', '@tensorflow', 'tfjs-node', 'lib', 'napi-v9', 'tensorflow.dll');
 const destDir = path.join(__dirname, '..', 'node_modules', '@tensorflow', 'tfjs-node', 'lib', 'napi-v8');
@@ -17,5 +23,5 @@ try {
   }
 } catch (err) {
   console.error('❌ Error copying tensorflow.dll:', err);
-  process.exit(1); // Fail build if copy fails
+  process.exit(1);
 }
