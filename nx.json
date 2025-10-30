@@ -17,7 +17,6 @@
       "{workspaceRoot}/.github/workflows/ci.yml"
     ]
   },
-  "nxCloudId": "689da53bbdfd7305f748c06c",
   "plugins": [
     {
       "plugin": "@nx/js/typescript",
@@ -65,23 +64,6 @@
       }
     }
   ],
-  "targetDefaults": {
-    "@nx/esbuild:esbuild": {
-      "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production"
-      ]
-    },
-    "test": {
-      "dependsOn": [
-        "^build"
-      ]
-    }
-  },
   "generators": {
     "@nx/next": {
       "application": {
